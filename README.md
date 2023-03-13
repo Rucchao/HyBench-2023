@@ -1,2 +1,2 @@
 # HyBench
-A new benchmark for HTAP RDMBS
+A new benchmark for HTAP RDBMS

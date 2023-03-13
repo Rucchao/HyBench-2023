@@ -366,7 +366,7 @@ sql="SELECT applicantid FROM loantrans ORDER BY RAND() LIMIT 1"
 [IQ-6]
 sql =""" With abnormal_accounts as
 (select distinct(applicantid) as id, amount from loantrans lt1
-where contract_timestamp is not null and date(contract_timestamp) + duration < str_to_date('2024-01-01','%Y-%m-%d') order by amount DESC)
+where contract_timestamp is not null and date(contract_timestamp) + duration < str_to_date('2024-01-01','%Y-%m-%d') order by amount DESC limit 100)
 Select  aa.id, lt2.amount, lt2.loantrans_ts, lt2.status, la.loanapps_ts
 from loantrans lt2, loanapps la, abnormal_accounts aa
 where aa.id=lt2.applicantid and la.id= lt2.appid; """

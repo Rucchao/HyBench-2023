@@ -68,6 +68,10 @@ public class HyBench {
             job.setSqls(sqls);
             tasks.add(job);
         }
+	else {
+            logger.warn("There is no an available tp client");
+            return;
+        }
         ExecutorService es = Executors.newFixedThreadPool(tasks.size());
         List<Future> future = new ArrayList<Future>();
         for (final Client j : tasks) {

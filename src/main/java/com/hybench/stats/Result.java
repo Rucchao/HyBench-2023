@@ -24,6 +24,15 @@ public class Result {
     private double freshness = 0;
     private int apclient ;
     private int tpclient;
+    private String riskRate;
+
+    public void setRiskRate(String riskRate) {
+        this.riskRate = riskRate;
+    }
+
+    public String getRiskRate() {
+        return this.riskRate;
+    }
 
     public Result(){
         hist = new Histogram();
@@ -123,6 +132,7 @@ public class Result {
         System.out.println("Test ends at " + getEndTs());
         System.out.println("AP Concurrency is " + getApclient());
         System.out.println("TP Concurrency is " + getTpclient());
+	System.out.println("Risk Rate is " + getRiskRate());
         switch(type){
             case 0:
                 System.out.println("Total amount of AP Queries is " + getApTotal());

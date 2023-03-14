@@ -248,6 +248,7 @@ public abstract class Client {
             ret.setApclient(threads);
         if(clientName.equalsIgnoreCase("tpclient"))
             ret.setTpclient(threads);
+	ret.setRiskRate(String.valueOf(risk_rate));
 
         final int _duration = intParameter("runMins");
         final int _fresh_interval = intParameter("fresh_interval",20);

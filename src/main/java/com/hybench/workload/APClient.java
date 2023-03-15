@@ -33,15 +33,9 @@ public class APClient extends Client{
 
     }
 
-    public int Get_blocked_transfer_Id() {
-        int Id = 0;
-        int index = rg.getRandomint(Related_Blocked_Transfer_ids.size());
-        int i = 0;
-        for (Integer obj : Related_Blocked_Transfer_ids) {
-            if (i == index)
-                Id = obj;
-            i++;
-        }
+    public int Get_blocked_transfer_Id(){
+        int Id=0;
+        Id=Related_Blocked_Transfer_ids.get(rg.getRandomint(Related_Blocked_Transfer_ids.size()));
         return Id;
     }
 
@@ -72,8 +66,11 @@ public class APClient extends Client{
             pstmt = conn.prepareStatement(sqls.ap_iq1());
 
             double rate= rg.getRandomDouble();
-            if(rate<risk_rate)
+            if(rate<risk_rate/2)
                 custid = Get_blocked_transfer_Id();
+            else if (rate<risk_rate){
+                custid = Get_blocked_account_Id();
+            }
             else
                 custid=rg.getRandomint(customer_no);
 

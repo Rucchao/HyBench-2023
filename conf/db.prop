@@ -29,3 +29,4 @@ runMins=1
 risk_rate=0.1
 
 fresh_interval=20
+contention_num=100

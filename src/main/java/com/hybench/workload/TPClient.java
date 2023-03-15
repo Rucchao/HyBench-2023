@@ -8,6 +8,7 @@ package com.hybench.workload;
  *   TP Client Processor,include TP transactions and AT transactions
  **/
 
+import com.hybench.ConfigLoader;
 import com.hybench.dbconn.ConnectionMgr;
 import com.hybench.util.RandomGenerator;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +30,7 @@ public class TPClient extends Client {
     RandomGenerator rg = new RandomGenerator();
     int customer_no = 0;
     int company_no = 0;
-
+    int contention_num=0;
     // set init parameter before run
     @Override
     public void doInit() {
@@ -48,46 +49,21 @@ public class TPClient extends Client {
         Long companynumber = CR.company_number;
         customer_no = customernumer.intValue() + 1;
         company_no = companynumber.intValue();
+        contention_num = Integer.parseInt(ConfigLoader.prop.getProperty("contention_num"));
     }
 
     public int Get_blocked_transfer_Id(){
         int Id=0;
-        int index = rg.getRandomint(Related_Blocked_Transfer_ids.size());
-        int i = 0;
-        for(Integer obj : Related_Blocked_Transfer_ids)
-        {
-            if (i == index)
-                Id=obj;
-            i++;
-        }
+        Id=Related_Blocked_Transfer_ids.get(rg.getRandomint(Related_Blocked_Transfer_ids.size()));
         return Id;
     }
 
     public int Get_blocked_checking_Id(){
         int Id=0;
-        int index = rg.getRandomint(Related_Blocked_Checking_ids.size());
-        int i = 0;
-        for(Integer obj : Related_Blocked_Checking_ids)
-        {
-            if (i == index)
-                Id=obj;
-            i++;
-        }
+        Id=Related_Blocked_Checking_ids.get(rg.getRandomint(Related_Blocked_Checking_ids.size()));
         return Id;
     }
 
-    public int Get_blocked_Loanapps_Id(){
-        int Id=0;
-        int index = rg.getRandomint(Related_Blocked_LoanApp_ids.size());
-        int i = 0;
-        for(Integer obj : Related_Blocked_LoanApp_ids)
-        {
-            if (i == index)
-                Id=obj;
-            i++;
-        }
-        return Id;
-    }
 
     // 6 Analytical Transactions (AT)
     public ClientResult execAT1(Connection conn) {
@@ -779,7 +755,7 @@ public class TPClient extends Client {
 
                     // add blocked accountid for IQ2
                     queue_ids.add(AT6_applicantid);
-                    if(queue_ids.size()>100)
+                    if(queue_ids.size()>contention_num)
                         queue_ids.remove();
                 }
                 else{
@@ -1565,7 +1541,11 @@ public class TPClient extends Client {
             rs.close();
 
             if(status=="accept") {
-                Date date = rg.getRandomTimestamp(appts.getTime(), CR.endDate.getTime());
+                Date date=null;
+                if(appts.getTime()>CR.endDate.getTime())
+                     date = rg.getRandomTimestamp(CR.endDate.getTime(),appts.getTime());
+                else
+                     date = rg.getRandomTimestamp(appts.getTime(), CR.endDate.getTime());
                 contract_ts = new Timestamp(date.getTime());
 
                 // Insert into the LOANTRANS
@@ -1659,8 +1639,13 @@ public class TPClient extends Client {
                 amount = rs.getDouble(3);
                 contract_ts =rs.getTimestamp(4);
                 Date date = CR.endDate;
-                if(contract_ts!=null)
-                    date = rg.getRandomTimestamp(contract_ts.getTime(), CR.endDate.getTime());
+                if(contract_ts!=null){
+                    if(contract_ts.getTime()>CR.endDate.getTime())
+                        date = rg.getRandomTimestamp(CR.endDate.getTime(),contract_ts.getTime());
+                    else
+                        date = rg.getRandomTimestamp(contract_ts.getTime(), CR.endDate.getTime());
+                }
+
                 current_ts = new Timestamp(date.getTime());
             }
             rs.close();

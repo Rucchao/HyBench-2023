@@ -59,7 +59,7 @@ CREATE SEQUENCE TRANSFER_SEQ INCREMENT BY 1 START WITH 1;
 CREATE
         TABLE TRANSFER
         (
-                id       int PRIMARY KEY,
+                id       NUMBER(19,0) PRIMARY KEY,
                 sourceID int            ,
                 targetID int            ,
                 amount   real           ,

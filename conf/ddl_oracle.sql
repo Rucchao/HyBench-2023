@@ -65,7 +65,7 @@ CREATE
                 amount   real           ,
                 type     char(10)       ,
                 timestamp timestamp     ,
-                fresh_ts timestamp default null
+                fresh_ts timestamp default current_timestamp
         );
 
 CREATE SEQUENCE CHECKING_SEQ INCREMENT BY 1 START WITH 1;        

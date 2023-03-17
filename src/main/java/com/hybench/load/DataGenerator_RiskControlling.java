@@ -4,7 +4,7 @@ package com.hybench.load;
  * @version 1.0.0
  * @file DataGenerator_RiskControlling.java
  * @description
- *   generate test data
+ *
  **/
 
 import com.hybench.ConfigLoader;
@@ -20,6 +20,29 @@ public class DataGenerator_RiskControlling {
     public DataGenerator_RiskControlling(String sf){
         this.sf = sf;
     }
+
+    public Integer[] reservoir_sampling(String filename, Integer[] list) throws IOException {
+        File f = new File(filename);
+        BufferedReader b = new BufferedReader(new FileReader(f));
+
+        String l;
+        int c = 0, r;
+        Random rg = new Random();
+
+        while((l = b.readLine()) != null)
+        {
+            if (c < list.length)
+                r = c++;
+            else
+                r = rg.nextInt(++c);
+
+            if (r < list.length)
+                list[r] = Integer.parseInt(l);
+        }
+        b.close();
+        return list;
+    }
+
     public void dataGenerator() {
         System.out.println("This is a data generator of HyBench, Version 0.1");
         System.out.println("----------------");
@@ -69,11 +92,13 @@ public class DataGenerator_RiskControlling {
         // Generate 1% blocked ids
         Set<Integer> Blocked_ids = new HashSet<>();
         // AT1 Risk Controlling
-        Set<Integer> Related_Blocked_Transfer_ids = new HashSet<>();
+        List<Integer> Related_Blocked_Transfer_ids = new ArrayList<>();
+        FileWriter blocked_transfer_fileWriter = null;
+        BufferedWriter blocked_transfer_bufferedWriter = null;
         // AT2 Risk Controlling
-        Set<Integer> Related_Blocked_Checking_ids = new HashSet<>();
-        // AT3 Risk Controlling
-        Set<Integer> Related_Rejected_LoanApp_ids = new HashSet<>();
+        List<Integer> Related_Blocked_Checking_ids = new ArrayList<>();
+        FileWriter blocked_checking_fileWriter = null;
+        BufferedWriter blocked_checking_bufferedWriter = null;
 
         int account_bound = customerNumber.intValue() + companyNumber.intValue();
         int blocked_num = (int) (account_bound * 0.01);
@@ -92,6 +117,15 @@ public class DataGenerator_RiskControlling {
             savingAccount_bufferedWriter = new BufferedWriter(savingAccount_fileWriter);
             checkingAccount_fileWriter = new FileWriter(DataPath + checkingAccount_writePath, true);
             checkingAccount_bufferedWriter = new BufferedWriter(checkingAccount_fileWriter);
+
+            blocked_transfer_fileWriter =  new FileWriter(DataPath + "blocked_transfer.csv", false);
+            blocked_transfer_bufferedWriter = new BufferedWriter(blocked_transfer_fileWriter);
+
+
+            blocked_checking_fileWriter =  new FileWriter(DataPath + "blocked_checking.csv", false);
+            blocked_checking_bufferedWriter = new BufferedWriter(blocked_checking_fileWriter);
+
+
             // generate the Customers with accounts
             for (int i = 1; i <= CR.customer_number; i++) {
                 // generate the gender
@@ -213,11 +247,11 @@ public class DataGenerator_RiskControlling {
                 }
 
                 // add the related ids into the blocked set
-                if(Blocked_ids.contains(tar))
-                    Related_Blocked_Transfer_ids.add(src);
+                if(Blocked_ids.contains(tar)){
+                    blocked_transfer_bufferedWriter.write(String.valueOf(src));
+                    blocked_transfer_bufferedWriter.write(NEW_LINE_SEPARATOR);
+                }
 
-                // add the negative loanapp ids into the blocked set
-                double rand = RG.getRandomDouble();
                 double amount=RG.getRandomDouble(CR.customer_savingbalance * 0.01);
 //                if(rand<0.01){
 //                    Related_Rejected_LoanApp_ids.add(i);
@@ -245,11 +279,11 @@ public class DataGenerator_RiskControlling {
                 }
 
                 // add the related ids into the blocked set
-                if(Blocked_ids.contains(tar))
-                    Related_Blocked_Transfer_ids.add(src);
+                if(Blocked_ids.contains(tar)){
+                    blocked_transfer_bufferedWriter.write(String.valueOf(src));
+                    blocked_transfer_bufferedWriter.write(NEW_LINE_SEPARATOR);
+                }
 
-                // add the negative loanapp ids into the blocked set
-                double rand = RG.getRandomDouble();
                 double amount=RG.getRandomDouble(CR.customer_savingbalance * 0.01);
 //                if(rand<0.01){
 //                    Related_Rejected_LoanApp_ids.add(i);
@@ -265,24 +299,12 @@ public class DataGenerator_RiskControlling {
             }
             transfer_bufferedWriter.flush();
             transfer_bufferedWriter.close();
+
+            blocked_transfer_bufferedWriter.flush();
+            blocked_transfer_bufferedWriter.close();
         }
         catch (IOException e) {
             e.printStackTrace();
-        }
-
-        // write the blockedIds
-        try {
-            FileOutputStream f1 = new FileOutputStream(new File(DataPath+"Related_transfer_bids.txt"));
-            ObjectOutputStream o1 = new ObjectOutputStream(f1);
-            // Write objects to file
-            o1.writeObject(Related_Blocked_Transfer_ids);
-            o1.close();
-            f1.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
         }
 
         // generate the checks
@@ -301,8 +323,10 @@ public class DataGenerator_RiskControlling {
                 }
 
                 // add the related ids into the blocked set
-                if(Blocked_ids.contains(tar))
-                    Related_Blocked_Checking_ids.add(src);
+                if(Blocked_ids.contains(tar)){
+                    blocked_checking_bufferedWriter.write(String.valueOf(src));
+                    blocked_checking_bufferedWriter.write(NEW_LINE_SEPARATOR);
+                }
 
                 // generate the date based on the created date
                 Date date = RG.getRandomTimestamp(CR.midPointDate, CR.endDate);
@@ -325,8 +349,10 @@ public class DataGenerator_RiskControlling {
                 }
 
                 // add the related ids into the blocked set
-                if(Blocked_ids.contains(tar))
-                    Related_Blocked_Checking_ids.add(src);
+                if(Blocked_ids.contains(tar)){
+                    blocked_checking_bufferedWriter.write(String.valueOf(src));
+                    blocked_checking_bufferedWriter.write(NEW_LINE_SEPARATOR);
+                }
 
                 Date date = RG.getRandomTimestamp(CR.midPointDate, CR.endDate);
                 // generate the new trans
@@ -336,31 +362,12 @@ public class DataGenerator_RiskControlling {
             }
             checking_bufferedWriter.flush();
             checking_bufferedWriter.close();
+
+            blocked_checking_bufferedWriter.flush();
+            blocked_checking_bufferedWriter.close();
         }
         catch (IOException e) {
             e.printStackTrace();
-        }
-
-        // write the blockedIds
-        try {
-            FileOutputStream f1 = new FileOutputStream(new File(DataPath+"Blocked_ids.txt"));
-            ObjectOutputStream o1 = new ObjectOutputStream(f1);
-            // Write objects to file
-            o1.writeObject(Blocked_ids);
-            o1.close();
-            f1.close();
-
-            FileOutputStream f2 = new FileOutputStream(new File(DataPath+"Related_checking_bids.txt"));
-            ObjectOutputStream o2 = new ObjectOutputStream(f2);
-            // Write objects to file
-            o2.writeObject(Related_Blocked_Checking_ids);
-            o2.close();
-            f2.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (IOException e) {
-            System.out.println("Error initializing stream");
         }
 
         // generate the loan applications
@@ -440,20 +447,40 @@ public class DataGenerator_RiskControlling {
             e.printStackTrace();
         }
 
-//        // write the blockedIds
-//        try {
-//            FileOutputStream f2 = new FileOutputStream(new File(DataPath+"Related_loanApp_bids.txt"));
-//            ObjectOutputStream o2 = new ObjectOutputStream(f2);
-//            // Write objects to file
-//            o2.writeObject(Related_Rejected_LoanApp_ids);
-//            o2.close();
-//            f2.close();
-//
-//        } catch (FileNotFoundException e) {
-//            System.out.println("File not found");
-//        } catch (IOException e) {
-//            System.out.println("Error initializing stream");
-//        }
+        // parameter curation
+        try {
+            Integer contention_num = Integer.parseInt(ConfigLoader.prop.getProperty("contention_num"));
+            Integer[] list1 = new Integer[contention_num];
+            Related_Blocked_Transfer_ids = Arrays.asList(reservoir_sampling(DataPath + "blocked_transfer.csv", list1));
+            Integer[] list2 = new Integer[contention_num];
+            Related_Blocked_Checking_ids = Arrays.asList(reservoir_sampling(DataPath + "blocked_checking.csv", list2));
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // write the anomalies
+        try {
+            FileOutputStream f = new FileOutputStream(new File(DataPath+"Blocked_ids"));
+            ObjectOutputStream o = new ObjectOutputStream(f);
+            o.writeObject(Blocked_ids);
+
+            f = new FileOutputStream(new File(DataPath+"Related_transfer_bids"));
+            o = new ObjectOutputStream(f);
+            o.writeObject(Related_Blocked_Transfer_ids);
+
+            f = new FileOutputStream(new File(DataPath+"Related_checking_bids"));
+            o = new ObjectOutputStream(f);
+            o.writeObject(Related_Blocked_Checking_ids);
+
+            o.close();
+            f.close();
+
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (IOException e) {
+            System.out.println("Error initializing stream");
+        }
 
         long millisEnd = System.currentTimeMillis();
         System.out.println("Data is ready under the Data folder!");

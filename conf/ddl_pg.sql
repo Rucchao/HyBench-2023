@@ -56,7 +56,8 @@ CREATE TABLE transfer (
   targetID int,
   amount real,
   type char(10),
-  timestamp timestamp
+  timestamp timestamp,
+  fresh_ts timestamp  default current_timestamp
 );
 
 CREATE TABLE checking (

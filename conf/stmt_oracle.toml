@@ -594,12 +594,9 @@ sql = "SELECT * FROM (SELECT APPLICANTID, ID, TIMESTAMP, DURATION  FROM LOANAPPS
 
 [AT-4]
 sql = [
-"select count(distinct sa2.accountid)
-	from transfer t, savingAccount sa1, savingAccount sa2, loantrans lt
-	where sa1.accountid=? and sa1.accountid=t.targetid and t.sourceid=sa2.accountid
-		and lt.applicantid=sa2.accountid and lt.status='accept';",
-"UPDATE savingAccount SET balance = balance + ? where accountID = ?;",
-"UPDATE LoanTrans SET status = 'lent', contract_timestamp=? where id = ?;"
+"select count(distinct sa2.accountid) from transfer t, savingAccount sa1, savingAccount sa2, loantrans lt where sa1.accountid=? and sa1.accountid=t.targetid and t.sourceid=sa2.accountid and lt.applicantid=sa2.accountid and lt.status='accept'",
+"UPDATE savingAccount SET balance = balance + ? where accountID = ?",
+"UPDATE LoanTrans SET status = 'lent', contract_timestamp=? where id = ?"
 ]
 
 [AT-4.1]

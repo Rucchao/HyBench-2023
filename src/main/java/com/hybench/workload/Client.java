@@ -16,6 +16,7 @@ import com.hybench.stats.Result;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.lang.reflect.InvocationTargetException;
@@ -49,10 +50,8 @@ public abstract class Client {
     boolean verbose = true;
     int round = 1;
 
-    Set<Integer> Blocked_ids = null;
-    Set<Integer> Related_Blocked_Transfer_ids=null;
-    Set<Integer> Related_Blocked_Checking_ids=null;
-    Set<Integer> Related_Blocked_LoanApp_ids=null;
+    List<Integer> Related_Blocked_Transfer_ids=null;
+    List<Integer> Related_Blocked_Checking_ids=null;
     double risk_rate=0;
     PriorityQueue<Integer> queue_ids= null;
 
@@ -187,19 +186,19 @@ public abstract class Client {
         queue_ids=new PriorityQueue<Integer>();
         try {
             // load the blocking-related transfer accounts
-            String DataPath = "Data_" + ConfigLoader.prop.getProperty("sf") + "/";
-            FileInputStream fi1 = new FileInputStream(new File(DataPath+"Related_transfer_bids.txt"));
+            String DataPath = "Data_" + ConfigLoader.prop.getProperty("sf");
+            FileInputStream fi1 = new FileInputStream(new File(DataPath+"/Related_transfer_bids"));
             ObjectInputStream oi1 = new ObjectInputStream(fi1);
             // Read objects
-            Related_Blocked_Transfer_ids = (Set<Integer>) oi1.readObject();
+            Related_Blocked_Transfer_ids = (List<Integer>) oi1.readObject();
             oi1.close();
             fi1.close();
 
             // load the blocking-related checking accounts
-            FileInputStream fi2 = new FileInputStream(new File(DataPath+"Related_checking_bids.txt"));
+            FileInputStream fi2 = new FileInputStream(new File(DataPath+"/Related_checking_bids"));
             ObjectInputStream oi2 = new ObjectInputStream(fi2);
             // Read objects
-            Related_Blocked_Checking_ids = (Set<Integer>) oi2.readObject();
+            Related_Blocked_Checking_ids = (List<Integer>) oi2.readObject();
             oi2.close();
             fi2.close();
 

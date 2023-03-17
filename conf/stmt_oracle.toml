@@ -619,7 +619,7 @@ sql = "SELECT * FROM (SELECT applicantid FROM loantrans WHERE status='lent' and 
 
 [AT-6]
 sql = [
-"SELECT distinct(applicantid) FROM LoanTrans WHERE delinquency=1 and to_date(contract_timestamp+duration+30)<cast('2024-01-01' as date) and applicantid =?;",
+"SELECT count(applicantid) FROM LoanTrans WHERE delinquency=1 and to_date(contract_timestamp+duration+30)<cast('2024-01-01' as date) and applicantid =?;",
 "UPDATE savingaccount SET isBlocked = 1 where accountID = ?;",
 "UPDATE checkingaccount SET isBlocked = 1 where accountID = ?;"
 ]

@@ -35,6 +35,7 @@ public class ExecSQL {
         StringBuffer sql = new StringBuffer();
 
         try {
+            conn.setAutoCommit(true);
             stmt = conn.createStatement();
             BufferedReader in = new BufferedReader
                     (new FileReader(filePath));

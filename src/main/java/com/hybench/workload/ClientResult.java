@@ -17,6 +17,7 @@ public class ClientResult {
     public final static ClientResult SUCCEED = new ClientResult();
     public final static ClientResult FAILED = new ClientResult(false,"-1","UNKNOWN REASON");
     private double rt = 0L;
+    private int apRound = 0;
 
     public ClientResult(){
 
@@ -26,6 +27,14 @@ public class ClientResult {
         this.succeed = res;
         this.errorCode = errCode;
         this.errorMsg = errMsg;
+    }
+
+    public int getApRound() {
+        return apRound;
+    }
+
+    public void setApRound(int apRound) {
+        this.apRound = apRound;
     }
 
     public double getRt(){

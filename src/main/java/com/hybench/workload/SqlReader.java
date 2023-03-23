@@ -79,9 +79,14 @@ public class SqlReader {
             sqls.setTp_txn14(getSqlArrayFromList(toml.getList("TP-14.sql")));
             sqls.setTp_txn15(getSqlArrayFromList(toml.getList("TP-15.sql")));
             sqls.setTp_txn16(getSqlArrayFromList(toml.getList("TP-16.sql")));
+            sqls.setTp_txn17(getSqlArrayFromList(toml.getList("TP-17.sql")));
+            sqls.setTp_txn18(getSqlArrayFromList(toml.getList("TP-18.sql")));
 
             sqls.setFresh_iq1(toml.getString("fresh.sql"));
 
+            sqls.setBlocked_id(toml.getString("blocked_id.sql"));
+            sqls.setBlocked_checking_id(toml.getString("blocked_checking_id.sql"));
+            sqls.setBlocked_transfer_id(toml.getString("blocked_transfer_id.sql"));
         }catch(Exception e){
             e.printStackTrace();
         }

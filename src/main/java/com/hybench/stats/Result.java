@@ -12,6 +12,8 @@ public class Result {
     private String dbType = null;
     private long tpTotal;
     private long apTotal;
+    private long atTotal;
+    private long iqTotal;
     private double tps;
     private double qps;
     private double xptps;
@@ -24,7 +26,19 @@ public class Result {
     private double freshness = 0;
     private int apclient ;
     private int tpclient;
+    private int xapclient ;
+    private int xtpclient;
     private String riskRate;
+    private int apRound;
+
+
+    public void setApRound(int round) {
+        this.apRound = round;
+    }
+
+    public int getApRound() {
+        return this.apRound;
+    }
 
     public void setRiskRate(String riskRate) {
         this.riskRate = riskRate;
@@ -90,6 +104,22 @@ public class Result {
         this.tpclient = tpclient;
     }
 
+    public int getXapclient() {
+        return xapclient;
+    }
+
+    public void setXapclient(int xapclient) {
+        this.xapclient = xapclient;
+    }
+
+    public int getXtpclient() {
+        return xtpclient;
+    }
+
+    public void setXtpclient(int xtpclient) {
+        this.xtpclient = xtpclient;
+    }
+
     public String getDbType() {
         return dbType;
     }
@@ -130,56 +160,73 @@ public class Result {
         System.out.println("====================Test Summary========================");
         System.out.println("Test starts at " + getStartTS());
         System.out.println("Test ends at " + getEndTs());
-        System.out.println("AP Concurrency is " + getApclient());
-        System.out.println("TP Concurrency is " + getTpclient());
-	System.out.println("Risk Rate is " + getRiskRate());
+	    System.out.println("Risk Rate is " + getRiskRate());
         switch(type){
             case 0:
-                System.out.println("Total amount of AP Queries is " + getApTotal());
-                System.out.println("Total amount of TP Transaction is " + getTpTotal());
+                System.out.println("XP-IQ Concurrency is " + getXapclient());
+                System.out.println("XP-AT Concurrency is " + getXtpclient());
+                System.out.println("Total amount of XP-IQ Queries is " + getIqTotal());
+                System.out.println("Total amount of XP-AT Transaction is " + getAtTotal());
                 System.out.println("XP-QPS is " + getXpqps());
                 System.out.println("XP-TPS is " + getXptps());
                 break;
             case 1:
+                System.out.println("AP Concurrency is " + getApclient());
+                System.out.println("TP Concurrency is " + getTpclient());
                 System.out.println("Total amount of TP Transaction is " + getTpTotal());
                 System.out.println("TPS is " + getTps());
                 break;
-            case 2:
+            case 2 :
+            case 7 :
+                System.out.println("AP Concurrency is " + getApclient());
+                System.out.println("TP Concurrency is " + getTpclient());
+                System.out.println("Total Round is " + getApRound());
                 System.out.println("Total amount of AP Queries is " + getApTotal());
                 System.out.println("QPS is " + getQps());
                 break;
             case 3:
+                System.out.println("AP Concurrency is " + getApclient());
+                System.out.println("TP Concurrency is " + getTpclient());
+                System.out.println("XP-IQ Concurrency is " + getXapclient());
+                System.out.println("XP-AT Concurrency is " + getXtpclient());
                 System.out.println("Total amount of TP Transaction is " + getTpTotal());
                 System.out.println("TPS is " + getTps());
                 System.out.println("Total amount of AP Queries is " + getApTotal());
                 System.out.println("QPS is " + getQps());
-                System.out.println("Total amount of AP Queries is " + getApTotal());
-                System.out.println("Total amount of TP Transaction is " + getTpTotal());
+                System.out.println("Total amount of XP-IQ Queries is " + getIqTotal());
+                System.out.println("Total amount of XP-AT Transaction is " + getAtTotal());
                 System.out.println("XP-QPS is " + getXpqps());
                 System.out.println("XP-TPS is " + getXptps());
                 break;
             case 4:
-                System.out.println("Total amount of AP Queries is " + getApTotal());
-                System.out.println("Total amount of TP Transaction is " + getTpTotal());
+                System.out.println("XP-IQ Concurrency is " + getXapclient());
+                System.out.println("XP-AT Concurrency is " + getXtpclient());
+                System.out.println("Total amount of XP-IQ Queries is " + getIqTotal());
+                System.out.println("Total amount of XP-AT Transaction is " + getAtTotal());
                 System.out.println("Fresh-XP-QPS is " + getXpqps());
                 System.out.println("Fresh-XP-TPS is " + getXptps());
                 break;
             case 6:
+                System.out.println("AP Concurrency is " + getApclient());
+                System.out.println("TP Concurrency is " + getTpclient());
                 System.out.println("Total amount of TP Transaction is " + getTpTotal());
                 System.out.println("TPS is " + getTps());
                 System.out.println("Total amount of AP Queries is " + getApTotal());
                 System.out.println("QPS is " + getQps());
-                System.out.println("Total amount of AP Queries is " + getApTotal());
-                System.out.println("Total amount of TP Transaction is " + getTpTotal());
+                System.out.println("XP-IQ Concurrency is " + getXapclient());
+                System.out.println("XP-AT Concurrency is " + getXtpclient());
+                System.out.println("Total amount of XP-IQ Queries is " + getIqTotal());
+                System.out.println("Total amount of XP-AT Transaction is " + getAtTotal());
                 System.out.println("Fresh-XP-QPS is " + getXpqps());
                 System.out.println("Fresh-XP-TPS is " + getXptps());
                 break;
+
         }
         System.out.println("Query/Transaction response time(ms) histogram : ");
-        if( type == 2 || type == 6) {
+        if( type == 2 || type == 6 || type == 7) {
             System.out.println("------------AP-------------------");
             for (int apidx = 0; apidx < 12; apidx++) {
-                System.out.printf("AP Query %2d max rt : %10.2f min rt : %10.2f avg rt : %10.2f 95%% rt : %10.2f 99%% rt : %10.2f \n",
+                System.out.printf("AP Query %2d : max rt : %10.2f | min rt : %10.2f | avg rt : %10.2f | 95%% rt : %10.2f | 99%% rt : %10.2f \n",
                         (apidx + 1),
                         hist.getAPItem(apidx).getMax(),
                         hist.getAPItem(apidx).getMin(),
@@ -191,8 +238,8 @@ public class Result {
 
         if(type == 1 || type == 6) {
             System.out.println("------------TP-------------------");
-            for (int tpidx = 0; tpidx < 16; tpidx++) {
-                System.out.printf("TP Transaction %2d max rt : %10.2f min rt : %10.2f avg rt : %10.2f 95%% rt : %10.2f 99%% rt : %10.2f \n",
+            for (int tpidx = 0; tpidx < 18; tpidx++) {
+                System.out.printf("TP Transaction %2d : max rt : %10.2f | min rt : %10.2f | avg rt : %10.2f | 95%% rt : %10.2f | 99%% rt : %10.2f \n",
                         (tpidx + 1),
                         hist.getTPItem(tpidx).getMax(),
                         hist.getTPItem(tpidx).getMin(),
@@ -205,7 +252,7 @@ public class Result {
         if(type == 0 || type == 4 || type == 6){
             System.out.println("-----------XP-IQ--------------------");
             for (int xpidx = 0; xpidx < 6; xpidx++) {
-                System.out.printf("Interative Query %d max rt : %10.2f min rt : %10.2f avg rt : %10.2f 95%% rt : %10.2f 99%% rt : %10.2f \n",
+                System.out.printf("Interative Query %d : max rt : %10.2f | min rt : %10.2f | avg rt : %10.2f | 95%% rt : %10.2f | 99%% rt : %10.2f \n",
                         (xpidx + 1),
                         hist.getXPIQItem(xpidx).getMax(),
                         hist.getXPIQItem(xpidx).getMin(),
@@ -218,7 +265,7 @@ public class Result {
         if(type == 0 || type == 4 || type == 6) {
             System.out.println("-----------XP-AT--------------------");
             for (int tpidx = 0; tpidx < 6; tpidx++) {
-                System.out.printf("Analytical Transaction AT%d max rt : %10.2f min rt : %10.2f avg rt : %10.2f 95%% rt : %10.2f 99%% rt : %10.2f \n",
+                System.out.printf("Analytical Transaction AT%d : max rt : %10.2f | min rt : %10.2f | avg rt : %10.2f | 95%% rt : %10.2f | 99%% rt : %10.2f \n",
                         (tpidx + 1),
                         hist.getXPATItem(tpidx).getMax(),
                         hist.getXPATItem(tpidx).getMin(),
@@ -295,5 +342,21 @@ public class Result {
 
     public void setAtps(double atps) {
         this.atps = atps;
+    }
+
+    public long getAtTotal() {
+        return atTotal;
+    }
+
+    public void setAtTotal(long atTotal) {
+        this.atTotal = atTotal;
+    }
+
+    public long getIqTotal() {
+        return iqTotal;
+    }
+
+    public void setIqTotal(long iqTotal) {
+        this.iqTotal = iqTotal;
     }
 }

@@ -449,7 +449,7 @@ public class DataGenerator_RiskControlling {
 
         // parameter curation
         try {
-            Integer contention_num = Integer.parseInt(ConfigLoader.prop.getProperty("contention_num"));
+            Integer contention_num = Integer.parseInt(ConfigLoader.prop.getProperty("contention_num","100"));
             Integer[] list1 = new Integer[contention_num];
             Related_Blocked_Transfer_ids = Arrays.asList(reservoir_sampling(DataPath + "blocked_transfer.csv", list1));
             Integer[] list2 = new Integer[contention_num];
@@ -461,19 +461,38 @@ public class DataGenerator_RiskControlling {
 
         // write the anomalies
         try {
-            FileOutputStream f = new FileOutputStream(new File(DataPath+"Blocked_ids"));
-            ObjectOutputStream o = new ObjectOutputStream(f);
-            o.writeObject(Blocked_ids);
+            FileWriter f = new FileWriter(new File(DataPath+"Blocked_ids"));
+            BufferedWriter fw = new BufferedWriter(f);
+            for(int id : Blocked_ids){
+                fw.write(String.valueOf(id));
+                fw.write(NEW_LINE_SEPARATOR);
+            }
+         //   ObjectOutputStream o = new ObjectOutputStream(f);
+       //     o.writeObject(Blocked_ids);
+            fw.flush();
+            fw.close();
 
-            f = new FileOutputStream(new File(DataPath+"Related_transfer_bids"));
-            o = new ObjectOutputStream(f);
-            o.writeObject(Related_Blocked_Transfer_ids);
+            f = new FileWriter(new File(DataPath+"Related_transfer_bids"));
+            fw = new BufferedWriter(f);
+            for(int id : Related_Blocked_Transfer_ids){
+                fw.write(String.valueOf(id));
+                fw.write(NEW_LINE_SEPARATOR);
+            }
+        //    o = new ObjectOutputStream(f);
+        //    o.writeObject(Related_Blocked_Transfer_ids);
+            fw.flush();
+            fw.close();
 
-            f = new FileOutputStream(new File(DataPath+"Related_checking_bids"));
-            o = new ObjectOutputStream(f);
-            o.writeObject(Related_Blocked_Checking_ids);
-
-            o.close();
+            f = new FileWriter(new File(DataPath+"Related_checking_bids"));
+            fw = new BufferedWriter(f);
+            for(int id : Related_Blocked_Checking_ids){
+                fw.write(String.valueOf(id));
+                fw.write(NEW_LINE_SEPARATOR);
+            }
+         //   o = new ObjectOutputStream(f);
+        //    o.writeObject(Related_Blocked_Checking_ids);
+            fw.flush();
+            fw.close();
             f.close();
 
         } catch (FileNotFoundException e) {

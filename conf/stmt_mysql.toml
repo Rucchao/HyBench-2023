@@ -1,7 +1,8 @@
 [AP-1]
 sql =""" select  sourceid,targetid,
 case when sourceid = ? then 'outbound' when targetid= ? then 'inbound' end as direction,
-sum(amount) as total_amount
+sum(amount) as total_amount,
+rank() over (partition by targetid order by sum(amount) desc) as ranking
 from transfer where sourceid= ? or targetid = ?
 group by sourceid,targetid
 order by total_amount desc;"""
@@ -15,16 +16,23 @@ where cu.custID=la.applicantid and la.id=lt.appid and cu.custID = ?;"""
 sql = "SELECT applicantid FROM loanapps where applicantid<? ORDER BY RAND() LIMIT 1;"
 
 [AP-3]
-sql = """select cu.custid,cu.name,sum(tr.amount),sum(ch.amount)
-from customer cu,checking ch,transfer tr
-where cu.custid=ch.sourceid and cu.custid = tr.sourceid and cu.custid=?
-group by cu.custid,cu.name;"""
+sql = """select custId, name,phone,sum(amount)
+from
+(select cu.custid,cu.name,cu.phone,t.amount
+from customer cu join transfer t on cu.custid = t.targetid where custid= ?
+union all
+select cu.custid, cu.name,cu.phone,ch.amount
+from customer cu join checking ch on cu.custid = ch.targetid where cu.custid= ?) income
+group by custid,name,phone"""
 
 [AP-4]
-sql = """select co.companyid,co.name,sum(sa.balance),sum(tr.amount),sum(ch.amount)
-from company co,checking ch,transfer tr , savingaccount sa
-where co.companyid=ch.sourceid and co.companyid=tr.sourceid and sa.userid = co.companyid and  co.companyid = ?
-group by co.companyid;"""
+sql = """select custid, name,phone,sum(amount)
+from (select cu.custid,cu.name,cu.phone,t.amount
+from customer cu join transfer t on cu.custid = t.sourceid where custid= ?
+union all
+select cu.custid,cu.name,cu.phone,ch.amount
+from customer cu join checking ch on cu.custid = ch.sourceid where cu.custid= ?) outcome
+group by custid,name,phone"""
 
 [AP-5]
 sql = """select cu.custid ,sum(tr.amount) as total_amount
@@ -171,13 +179,11 @@ sql = "select * from CHECKINGACCOUNT where accountid=?;"
 
 [TP-5]
 sql = """select * from transfer where sourceid = ? or targetid = ?
-order by transfer_ts desc
-limit 1;"""
+order by transfer_ts desc limit 1;"""
 
 [TP-6]
 sql = """select * from checking where sourceid = ? or targetid = ?
-order by checking_ts desc
-limit 1;"""
+order by checking_ts desc limit 1;"""
 
 [TP-7]
 sql = """select * from loanapps where applicantid=?
@@ -235,6 +241,7 @@ sql = [
 "UPDATE SAVINGACCOUNT SET BALANCE = BALANCE + ? WHERE ACCOUNTID = ?;",
 "UPDATE LOANTRANS SET STATUS='lent', LOANTRANS_TS=? WHERE ID=?;"
 ]
+
 [TP-15]
 sql = [
 "SELECT id, APPLICANTID, duration, LOANTRANS_TS FROM LOANTRANS WHERE status='lent' order by LOANTRANS_TS limit 1;",
@@ -248,6 +255,23 @@ sql = [
 "UPDATE SAVINGACCOUNT SET BALANCE = BALANCE - ? WHERE ACCOUNTID = ?;",
 "UPDATE LOANTRANS SET status='repaid',LOANTRANS_TS=? WHERE id=?;"
 ]
+
+[TP-17]
+sql = [
+"select balance,isblocked from savingAccount where accountid = ?",
+"select balance,isblocked from checkingAccount where accountid =?",
+"UPDATE SAVINGACCOUNT SET BALANCE = BALANCE - ? WHERE ACCOUNTID = ?",
+"update checkingAccount set balance = balance + ? where accountid = ?"
+]
+
+[TP-18]
+sql = [
+"select balance,isblocked from savingAccount where accountid = ?",
+"select balance,isblocked from checkingAccount where accountid =?",
+"update checkingAccount set balance = balance - ? where accountid = ?",
+"UPDATE SAVINGACCOUNT SET BALANCE = BALANCE + ? WHERE ACCOUNTID = ?"
+]
+
 
 [AT-1]
 sql = [
@@ -283,7 +307,12 @@ group by sid) as inbound""",
 ]
 
 [AT-3.1]
-sql = "SELECT applicantid, id, loanapps_ts, duration FROM loanapps where status='under_review' ORDER BY RAND() LIMIT 1;"
+sql = """SELECT t1.applicantid, t1.id, t1.loanapps_ts, t1.duration
+FROM loanapps t1
+where t1.id >= (SELECT ROUND(RAND()*(SELECT MAX(id) FROM loanapps where status='under_review')) AS id)
+and t1.status='under_review'  ORDER BY t1.id LIMIT 1;
+"""
+
 
 [AT-4]
 sql = [
@@ -293,9 +322,11 @@ sql = [
 ]
 
 [AT-4.1]
-sql = """SELECT applicantid, amount, id, loantrans_ts
-FROM loantrans
-where status='accept' ORDER BY RAND() LIMIT 1"""
+sql = """SELECT t1.applicantid, t1.amount,t1.id, t1.loantrans_ts
+FROM loantrans t1
+where t1.id >= (SELECT ROUND(RAND()*(SELECT MAX(id) FROM loantrans where status='accept')) AS id)
+and t1.status='accept'  ORDER BY t1.id LIMIT 1;
+"""
 
 [AT-5]
 sql = [
@@ -306,13 +337,15 @@ sql = [
 [AT-5.1]
 sql ="SELECT applicantid FROM loantrans where status='lent' ORDER BY RAND() LIMIT 1;"
 
+
 [AT-6.1]
 sql = "SELECT applicantid FROM loantrans where status='lent' and delinquency=1 ORDER BY RAND() LIMIT 1"
+
 
 [AT-6]
 sql = [
 "SELECT count(applicantid) FROM LoanTrans WHERE date(contract_timestamp) + duration + 365 < str_to_date('2024-01-01','%Y-%m-%d') and applicantid=?;",
-" UPDATE savingaccount SET isBlocked = 1  where accountID = ?;",
+"UPDATE savingaccount SET isBlocked = 1  where accountID = ?;",
 "UPDATE checkingaccount SET isBlocked = 1 where accountID = ?;"
 ]
 
@@ -352,6 +385,7 @@ UNION
 from customer cu, transfer t
 where t.sourceid =? and t.type='invest' and
 t.targetid= cu.custid);"""
+
 [IQ-5]
 sql="""select t.amount, t.targetid, co.name, cu.name
 from loantrans lt
@@ -376,3 +410,12 @@ sql = """select t.fresh_ts, t.transfer_ts, t.amount, c.custid, c.name
 from transfer t, customer c
 where t.targetid=? and t.targetid=c.custid and t.fresh_ts is not null
 order by t.fresh_ts DESC limit 1 """
+
+[blocked_id]
+sql = "SELECT t1.id FROM blocked_ids AS t1 JOIN (SELECT ROUND(RAND()*(SELECT MAX(id) FROM blocked_ids)) AS id) AS t2 WHERE t1.id>=t2.id ORDER BY t1.id LIMIT 1;"
+
+[blocked_transfer_id]
+sql = "SELECT t1.id FROM related_transfer_bids AS t1 JOIN (SELECT ROUND(RAND()*(SELECT MAX(id) FROM related_transfer_bids)) AS id) AS t2 WHERE t1.id>=t2.id ORDER BY t1.id LIMIT 1;"
+
+[blocked_checking_id]
+sql = "SELECT t1.id FROM related_checking_bids AS t1 JOIN (SELECT ROUND(RAND()*(SELECT MAX(id) FROM related_checking_bids)) AS id) AS t2 WHERE t1.id>=t2.id ORDER BY t1.id LIMIT 1;"

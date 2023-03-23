@@ -50,6 +50,8 @@ public class Sqlstmts {
    private  String[] tp_txn14 = null;
    private  String[] tp_txn15 = null;
    private  String[] tp_txn16 = null;
+   private  String[] tp_txn17 = null;
+   private  String[] tp_txn18 = null;
     // IQ SQLs total 6
    private  String ap_iq1 = null;
    private  String ap_iq2 = null;
@@ -61,6 +63,11 @@ public class Sqlstmts {
 
     // Fresh sql
    private  String fresh_iq1 = null;
+
+   // get risk id
+    private String blocked_id = null;
+    private String blocked_transfer_id = null;
+    private String blocked_checking_id = null;
 
     public String[] tp_at1() { return tp_at1; }
 
@@ -352,6 +359,22 @@ public class Sqlstmts {
         this.tp_txn16 = tp_txn16;
     }
 
+    public String[] tp_txn17() {
+        return tp_txn17;
+    }
+
+    public void setTp_txn17(String[] tp_txn17) {
+        this.tp_txn17 = tp_txn17;
+    }
+
+    public String[] tp_txn18() {
+        return tp_txn18;
+    }
+
+    public void setTp_txn18(String[] tp_txn18) {
+        this.tp_txn18 = tp_txn18;
+    }
+
     public String ap_iq1() {
         return ap_iq1;
     }
@@ -421,5 +444,29 @@ public class Sqlstmts {
 
     public void setTp_at6_1(String tp_at6_1) {
         this.tp_at6_1 = tp_at6_1;
+    }
+
+    public String blocked_id() {
+        return blocked_id;
+    }
+
+    public void setBlocked_id(String blocked_id) {
+        this.blocked_id = blocked_id;
+    }
+
+    public String blocked_transfer_id() {
+        return blocked_transfer_id;
+    }
+
+    public void setBlocked_transfer_id(String related_transfer_id) {
+        this.blocked_transfer_id = related_transfer_id;
+    }
+
+    public String blocked_checking_id() {
+        return blocked_checking_id;
+    }
+
+    public void setBlocked_checking_id(String related_checking_id) {
+        this.blocked_checking_id = related_checking_id;
     }
 }

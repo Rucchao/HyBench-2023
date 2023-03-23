@@ -13,14 +13,12 @@ import com.hybench.Constant;
 import com.hybench.load.ConfigReader;
 import com.hybench.stats.Histogram;
 import com.hybench.stats.Result;
+import com.hybench.util.RandomGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -41,6 +39,8 @@ public abstract class Client {
     int threads = 0;
     static long tpTotalCount = 0L;
     static long apTotalCount = 0L;
+    static long atTotalCount = 0L;
+    static long iqTotalCount = 0L;
     static long apTotalTime = 0L;
     Lock lock = new ReentrantLock();
     protected int taskType = 0; // 0 : xp ,1: tp,2 : ap , 3:xp ,4: htap
@@ -49,13 +49,17 @@ public abstract class Client {
     Histogram hist = null;
     boolean verbose = true;
     int round = 1;
+    static int testid=2;
+    RandomGenerator rg = new RandomGenerator();
 
-    List<Integer> Related_Blocked_Transfer_ids=null;
-    List<Integer> Related_Blocked_Checking_ids=null;
     double risk_rate=0;
     PriorityQueue<Integer> queue_ids= null;
 
-    ExecutorService es = Executors.newFixedThreadPool(5);
+    ExecutorService es = null;//Executors.newFixedThreadPool(5);
+
+    public void setTestid(int random_num){
+        this.testid = random_num;
+    }
 
     public void setVerbose(boolean verbose){
         this.verbose = verbose;
@@ -161,12 +165,23 @@ public abstract class Client {
     }
     // get data size and create thread pool according to client number
     public void doInit_wrapper(String clientName) {
-        threads = intParameter("tpclient");
+        if(taskType == 0 ) {
+            threads = intParameter("xtpclient");
+        }
+        else if (taskType == 4){
+            threads = intParameter("xtpclient") + 1;
+        }
+        else if(taskType == 1){
+            threads = intParameter("tpclient");
+        }
         CR = new ConfigReader(strParameter("sf","1x"));
         String db = strParameter("db");
         setDbType(getDbType(db));
         if(clientName.equals("APClient") ){
             if(taskType == 0 || taskType == 4){
+                threads = intParameter("xapclient");
+            }
+            else if( taskType == 7){
                 threads = intParameter("apclient");
             }
             else if(taskType == 2) {
@@ -184,29 +199,14 @@ public abstract class Client {
 
         risk_rate = Double.valueOf(ConfigLoader.prop.getProperty("risk_rate","0.1"));
         queue_ids=new PriorityQueue<Integer>();
-        try {
-            // load the blocking-related transfer accounts
-            String DataPath = "Data_" + ConfigLoader.prop.getProperty("sf");
-            FileInputStream fi1 = new FileInputStream(new File(DataPath+"/Related_transfer_bids"));
-            ObjectInputStream oi1 = new ObjectInputStream(fi1);
-            // Read objects
-            Related_Blocked_Transfer_ids = (List<Integer>) oi1.readObject();
-            oi1.close();
-            fi1.close();
+        //set test id
+        Long customernumer = CR.customer_number;
+        Long companynumber = CR.company_number;
+        int customer_no = customernumer.intValue() + 1;
+        int company_no = companynumber.intValue();
 
-            // load the blocking-related checking accounts
-            FileInputStream fi2 = new FileInputStream(new File(DataPath+"/Related_checking_bids"));
-            ObjectInputStream oi2 = new ObjectInputStream(fi2);
-            // Read objects
-            Related_Blocked_Checking_ids = (List<Integer>) oi2.readObject();
-            oi2.close();
-            fi2.close();
-
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found");
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error initializing stream");
-        }
+        int random_num=rg.getRandomint(1, customer_no+company_no);
+        setTestid(random_num);
 
         doInit();
     }
@@ -234,7 +234,7 @@ public abstract class Client {
     }
     // client work from here. A new thread named timer to output response time histogram every 1/10 duration
     public void startTask() {
-
+        int testTime = 0;
         ClientResult _res = null;
         Thread timer = null;
         String db = strParameter("db");
@@ -243,17 +243,38 @@ public abstract class Client {
             hist = ret.getHist();
         }
 
-        if(clientName.equalsIgnoreCase("APClient"))
-            ret.setApclient(threads);
-        if(clientName.equalsIgnoreCase("tpclient"))
-            ret.setTpclient(threads);
-	ret.setRiskRate(String.valueOf(risk_rate));
+        if(clientName.equalsIgnoreCase("APClient")){
+            if(taskType == 0 || taskType == 4)
+                ret.setXapclient(threads);
+            else
+                ret.setApclient(threads);
+        }
 
-        final int _duration = intParameter("runMins");
+        if(clientName.equalsIgnoreCase("tpclient")){
+            if(taskType == 0 || taskType == 4)
+                ret.setXtpclient(threads);
+            else
+                ret.setTpclient(threads);
+        }
+
+
+	    ret.setRiskRate(String.valueOf(risk_rate));
+
+
         final int _fresh_interval = intParameter("fresh_interval",20);
 
         round = intParameter("apround",1);
 
+        if (taskType == 7){
+            testTime = intParameter("apRunMins");
+        }
+        else if (taskType == 1){
+            testTime = intParameter("tpRunMins");
+        }
+        else if(taskType == 0 || taskType == 4){
+            testTime = intParameter("xpRunMins");
+        }
+        final int _duration = testTime;
         if(taskType == 2) {
             logger.info("Begin to run :" + clientName + ", Test is " + round + " round");
         }
@@ -261,7 +282,7 @@ public abstract class Client {
             logger.info("Begin to run :" + clientName + ", Test Duration is "  + _duration + " mins");
         }
 
-        setTestTime(intParameter("runMins"));
+        setTestTime(testTime);
         if (_duration > 0) {
             timer = new Thread() {
                 public void run() {
@@ -277,26 +298,32 @@ public abstract class Client {
                                         if(hist.getAPItem(apidx).getN() == 0)
                                             continue;
                                         logger.info("Query " + (apidx+1)
-                                                + " max rt : " + hist.getAPItem(apidx).getMax()
-                                                + " min rt :" + hist.getAPItem(apidx).getMin()
-                                                + " avg rt : " + String.format("%.2f",hist.getAPItem(apidx).getMean())
-                                                + " 95% rt : " + String.format("%.2f",hist.getAPItem(apidx).getPercentile(95))
-                                                + " 99% rt : " + String.format("%.2f",hist.getAPItem(apidx).getPercentile(99)));
+                                                + " : max rt : " + hist.getAPItem(apidx).getMax()
+                                                + " | min rt :" + hist.getAPItem(apidx).getMin()
+                                                + " | avg rt : " + String.format("%.2f",hist.getAPItem(apidx).getMean())
+                                                + " | 95% rt : " + String.format("%.2f",hist.getAPItem(apidx).getPercentile(95))
+                                                + " | 99% rt : " + String.format("%.2f",hist.getAPItem(apidx).getPercentile(99)));
                                     }
-                                    logger.info("Current " + (i + 1) + "/10 time AP QPS is " + String.format("%.2f", apTotalCount / (elpased_time / 1000.0)));
+                                    if(taskType == 4 || taskType == 0)
+                                        logger.info("Current " + (i + 1) + "/10 time AP QPS is " + String.format("%.2f", iqTotalCount / (elpased_time / 1000.0)));
+                                    else
+                                        logger.info("Current " + (i + 1) + "/10 time AP QPS is " + String.format("%.2f", apTotalCount / (elpased_time / 1000.0)));
                                 }
                                 if(clientName.equalsIgnoreCase("TPClient")) {
-                                    for(int tpidx = 0;tpidx < 16;tpidx++) {
+                                    for(int tpidx = 0;tpidx < 18;tpidx++) {
                                         if(hist.getTPItem(tpidx).getN() == 0)
                                             continue;
                                         logger.info("Transaction " + (tpidx+1)
-                                                + " max rt : " + hist.getTPItem(tpidx).getMax()
-                                                + " min rt :" + hist.getTPItem(tpidx).getMin()
-                                                + " avg rt : " + String.format("%.2f",hist.getTPItem(tpidx).getMean())
-                                                + " 95% rt : " + String.format("%.2f",hist.getTPItem(tpidx).getPercentile(95))
-                                                + " 99% rt : " + String.format("%.2f",hist.getTPItem(tpidx).getPercentile(99)));
+                                                + " : max rt : " + hist.getTPItem(tpidx).getMax()
+                                                + " | min rt :" + hist.getTPItem(tpidx).getMin()
+                                                + " | avg rt : " + String.format("%.2f",hist.getTPItem(tpidx).getMean())
+                                                + " | 95% rt : " + String.format("%.2f",hist.getTPItem(tpidx).getPercentile(95))
+                                                + " | 99% rt : " + String.format("%.2f",hist.getTPItem(tpidx).getPercentile(99)));
                                     }
-                                    logger.info("Current " + (i + 1) + "/10 time TP TPS is " + String.format("%.2f", tpTotalCount / (elpased_time / 1000.0)));
+                                    if(taskType == 4 || taskType == 0)
+                                        logger.info("Current " + (i + 1) + "/10 time TP TPS is " + String.format("%.2f", atTotalCount / (elpased_time / 1000.0)));
+                                    else
+                                        logger.info("Current " + (i + 1) + "/10 time TP TPS is " + String.format("%.2f", tpTotalCount / (elpased_time / 1000.0)));
                                 }
                             }
 
@@ -320,12 +347,11 @@ public abstract class Client {
         fs = new Future[_num_thread];
         for (int i = 1; i <= _num_thread; i++) {
             final String threadId = "T" + i;
-
             Callable<ClientResult> r = new Callable<ClientResult>() {
 
                 public ClientResult call() throws Exception {
                     // TODO Auto-generated method stub
-                 
+                    Thread.currentThread().setName(threadId);
                     ClientResult result= execute();
                     return result;
                 }
@@ -338,14 +364,48 @@ public abstract class Client {
 
         }
 
+        double maxElapsedTime = 0L;
         for (int i = 0; i < _num_thread; i++) {
             try {
                 fs[i] = cs.take();
                 if(fs[i] != null && !fs[i].isCancelled() && fs[i].isDone() ) {
                     _res = fs[i].get();
+                    if(_res.getRt() > maxElapsedTime)
+                        maxElapsedTime = _res.getRt();
                 }
             } catch (Exception e) {
                 logger.error("Waiting for load worker", e);
+            }
+        }
+
+        if(clientName.equalsIgnoreCase("APClient")){
+
+
+            if(taskType == 2){
+                ret.setApRound(round);
+                ret.setApTotal(apTotalCount);
+                ret.setQps(Double.valueOf(String.format("%.2f",apTotalCount/(apTotalTime/1000.0))));
+            }
+            else if(taskType == 0 || taskType == 4 ){
+                ret.setIqTotal(iqTotalCount);
+                ret.setXpqps(Double.valueOf(String.format("%.2f",iqTotalCount/(testDuration * 60.0))));
+            }
+            else if(taskType == 7){
+                ret.setApTotal(apTotalCount);
+                ret.setApRound(_res.getApRound());
+                ret.setQps(Double.valueOf(String.format("%.2f",apTotalCount/(maxElapsedTime/1000.0))));
+            }
+        }
+
+        if(clientName.equalsIgnoreCase("TPClient")) {
+
+            if (taskType == 1) {
+                ret.setTpTotal(tpTotalCount);
+                ret.setTps(Double.valueOf(String.format("%.2f", tpTotalCount / (testDuration * 60.0))));
+            }
+            else if(taskType == 0 || taskType == 4){
+                ret.setAtTotal(atTotalCount);
+                ret.setXptps(Double.valueOf(String.format("%.2f",atTotalCount/(testDuration * 60.0))));
             }
         }
 
@@ -356,33 +416,6 @@ public abstract class Client {
         if (!es.isShutdown() || !es.isTerminated()) {
             es.shutdownNow();
         }
-
-        if(clientName.equalsIgnoreCase("APClient")){
-            ret.setApTotal(apTotalCount);
-            if(taskType == 2){
-                ret.setQps(Double.valueOf(String.format("%.2f",apTotalCount/(apTotalTime/1000.0))));
-            }
-            else if(taskType == 0 || taskType == 4){
-                ret.setXpqps(Double.valueOf(String.format("%.2f",apTotalCount/(testDuration * 60.0))));
-            }
-        }
-
-        if(clientName.equalsIgnoreCase("TPClient")) {
-            ret.setTpTotal(tpTotalCount);
-            if (taskType == 1) {
-                ret.setTps(Double.valueOf(String.format("%.2f", tpTotalCount / (testDuration * 60.0))));
-            }
-            else if(taskType == 0 || taskType == 4){
-                ret.setXptps(Double.valueOf(String.format("%.2f",tpTotalCount/(testDuration * 60.0))));
-            }
-            else if(taskType == 5){
-                ret.setIqps(Double.valueOf(String.format("%.2f",apTotalCount/(testDuration * 60.0))));
-            }
-            else if(taskType == 6){
-                ret.setAtps(Double.valueOf(String.format("%.2f",tpTotalCount/(testDuration * 60.0))));
-            }
-        }
-
         logger.info( "Finished to execute " + clientName );
     }
     public abstract void doInit();
@@ -392,10 +425,26 @@ public abstract class Client {
     public void stopTask() {
         exitFlag =  true;
         int p = 0;
-        if(fs != null){
-            for(Future ft:fs){
-                ft.cancel(true);
+        if(taskType != 7){
+            if(fs != null){
+                for(Future ft:fs){
+                    ft.cancel(true);
+                }
             }
         }
+    }
+
+    public ArrayList<Integer> getRandomList(int minValue, int maxValue){
+        ArrayList<Integer> rList = new ArrayList<Integer>();
+        LinkedList<Integer> source= new LinkedList<Integer>();
+        for(int i=minValue;i<=maxValue;i++) {
+            source.add(i);
+        }
+        while(source.size() > 0) {
+            int idx = ThreadLocalRandom.current().nextInt(source.size());
+            rList.add(source.get(idx));
+            source.remove(idx);
+        }
+        return rList;
     }
 }

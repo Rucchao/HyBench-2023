@@ -15,13 +15,13 @@ public class Histogram {
     public SynchronizedDescriptiveStatistics[] apstat = new SynchronizedDescriptiveStatistics[12];
     public SynchronizedDescriptiveStatistics[] xpstat_iq = new SynchronizedDescriptiveStatistics[6];
     public SynchronizedDescriptiveStatistics[] xpstat_at = new SynchronizedDescriptiveStatistics[6];
-    public SynchronizedDescriptiveStatistics[] tpstat = new SynchronizedDescriptiveStatistics[16];
+    public SynchronizedDescriptiveStatistics[] tpstat = new SynchronizedDescriptiveStatistics[18];
 
     public Histogram(){
         for(int i = 0;i<12;i++){
             apstat[i] = new SynchronizedDescriptiveStatistics();
         }
-        for(int i = 0;i<16;i++){
+        for(int i = 0;i<18;i++){
             tpstat[i] = new SynchronizedDescriptiveStatistics();
         }
         for(int i = 0;i<6;i++){

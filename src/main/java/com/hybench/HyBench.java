@@ -68,7 +68,7 @@ public class HyBench {
             job.setSqls(sqls);
             tasks.add(job);
         }
-	else {
+	    else {
             logger.warn("There is no an available tp client");
             return;
         }
@@ -102,7 +102,7 @@ public class HyBench {
         logger.info("TP Workload is done.");
     }
 
-    public void runAP(){
+    public void runAPower(){
         logger.info("Begin AP Workload");
         taskType = 2;
         res.setStartTS(dateFormat.format(new Date()));
@@ -136,19 +136,56 @@ public class HyBench {
         logger.info("AP Workload is done.");
     }
 
+    public void runAP(){
+        logger.info("Begin AP Workload");
+        taskType = 7;
+        res.setStartTS(dateFormat.format(new Date()));
+        String apClient = ConfigLoader.prop.getProperty("apclient");
+
+        Client job = Client.initTask(ConfigLoader.prop,"APClient",taskType);
+        job.setRet(res);
+        job.setSqls(sqls);
+        job.setVerbose(verbose);
+        ExecutorService es = Executors.newFixedThreadPool(1);
+        Future future = es.submit(new Runnable() {
+            public void run() {
+                // TODO Auto-generated method stub
+                job.startTask();
+            }}
+        );
+
+        if (future != null && !future.isCancelled() && !future.isDone()) {
+            try {
+                future.get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (!es.isShutdown() || !es.isTerminated()) {
+            es.shutdownNow();
+        }
+        res.setEndTs(dateFormat.format(new Date()));
+        logger.info("AP Workload is done.");
+    }
+
     public void runXP(int tt){
         logger.info("Begin XP Workload");
         taskType = tt;
         res.setStartTS(dateFormat.format(new Date()));
-        String tpClient = ConfigLoader.prop.getProperty("tpclient");
-        String apClient = ConfigLoader.prop.getProperty("apclient");
-        // for weight 5 is IQS(n,0), 6 is ATS(0,m)
-        if(taskType == 5){
-            tpClient="0";
+        String tpClient = ConfigLoader.prop.getProperty("xtpclient","-1");
+        if(tpClient.equalsIgnoreCase("-1")) {
+            logger.error("Missing configuration xtpclient");
+            System.exit(-1);
         }
-        else if(taskType == 6){
-            apClient="0";
+        String apClient = ConfigLoader.prop.getProperty("xapclient","-1");
+        if(tpClient.equalsIgnoreCase("-1")) {
+            logger.error("Missing configuration xapclient");
+            System.exit(-1);
         }
+
         List<Client> tasks = new ArrayList<Client>();
         if(Integer.parseInt(tpClient) > 0){
             Client job = Client.initTask(ConfigLoader.prop,"TPClient",taskType);
@@ -177,7 +214,7 @@ public class HyBench {
         }
         Thread freshness = null;
         if(taskType == 4){
-            final int _duration = Integer.parseInt(ConfigLoader.prop.getProperty("runMins"));
+            final int _duration = Integer.parseInt(ConfigLoader.prop.getProperty("xpRunMins"));
             final int _fresh_interval = Integer.parseInt(ConfigLoader.prop.getProperty("fresh_interval",String.valueOf(20)));
             String db = ConfigLoader.prop.getProperty("db");
             int dbType = Constant.getDbType(db);
@@ -308,8 +345,12 @@ public class HyBench {
                     hybench.runTP();
                 }
                 else if(cmd.equalsIgnoreCase("runap")){
-                    type=2;
+                    type=7;
                     hybench.runAP();
+                }
+                else if(cmd.equalsIgnoreCase("runappower")){
+                    type=2;
+                    hybench.runAPower();
                 }
                 else if(cmd.equalsIgnoreCase("runhtap")){
                     type=3;
@@ -326,6 +367,11 @@ public class HyBench {
                     hybench.runAP();
                     hybench.runTP();
                     hybench.runFreshness(4);
+                }
+                else{
+                    logger.error("Run task not found : " + cmd);
+                    cmdProcessor.printHelp();
+                    System.exit(-1);
                 }
                 logger.info("Congs~ Test is done! Bye!");
                 hybench.getRes().printResult(type);

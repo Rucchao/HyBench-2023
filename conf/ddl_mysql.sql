@@ -94,3 +94,18 @@ CREATE TABLE IF NOT EXISTS  loantrans (
   delinquency int,
   PRIMARY KEY(id)
 ) ;
+
+CREATE TABLE IF NOT EXISTS Blocked_ids(
+    id int;
+);
+
+CREATE TABLE IF NOT EXISTS Related_transfer_bids(
+    id int;
+);
+
+CREATE TABLE IF NOT EXISTS Related_checking_bids(
+    id int;
+);
+
+
+

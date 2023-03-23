@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 
 public class Freshness {
     public static Logger logger = LogManager.getLogger(Freshness.class);
-    int testid = 2;
+    int testid = Client.testid;;
     int dbType;
     Sqlstmts sqls =null;
     Connection conn_tp = null;
@@ -41,6 +41,8 @@ public class Freshness {
         CompletableFuture.allOf(queryAP,queryTP).join();
         try {
             freshness = Long.valueOf(queryTP.get()) - Long.valueOf(queryAP.get());
+            if(freshness < 0)
+                freshness = 0;
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -57,10 +59,12 @@ public class Freshness {
         try {
             pstmt_tp = conn_tp.prepareStatement(sqls.fresh_iq1());
             pstmt_tp.setInt(1,testid);
-            //pstmt_tp.setInt(2,testid);
             rs_tp = pstmt_tp.executeQuery();
             if(rs_tp.next()){
-                max_ts_tp = rs_tp.getTimestamp(1);
+                Timestamp ret = rs_tp.getTimestamp(1);
+                if( ret != null){
+                    max_ts_tp = ret;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -81,10 +85,12 @@ public class Freshness {
         try {
             pstmt_ap = conn_ap.prepareStatement(sqls.fresh_iq1());
             pstmt_ap.setInt(1,testid);
-        //    pstmt_ap.setInt(2,testid);
             rs_ap = pstmt_ap.executeQuery();
             if(rs_ap.next()){
-                max_ts_ap = rs_ap.getTimestamp(1);
+                Timestamp ret = rs_ap.getTimestamp(1);
+                if( ret != null){
+                    max_ts_ap = ret;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

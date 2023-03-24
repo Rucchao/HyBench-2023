@@ -15,16 +15,23 @@ where cu.custid=la.applicantid and la.id=lt.appid and cu.custid = ?;"""
 sql = "SELECT applicantid FROM loanapps where applicantid<? ORDER BY RANDOM() LIMIT 1;"
 
 [AP-3]
-sql = """select cu.custid,cu.name,sum(tr.amount),sum(ch.amount)
-from customer cu,checking ch,transfer tr
-where cu.custid=ch.sourceid and cu.custid = tr.sourceid and cu.custid=?
-group by cu.custid, cu.name;"""
+sql = """select custid, name,phone,sum(amount)
+from
+(select cu.custid,cu.name,cu.phone,t.amount
+from customer cu join transfer t on cu.custid = t.targetid where custid= ?
+union all
+select cu.custid, cu.name,cu.phone,ch.amount
+from customer cu join checking ch on cu.custid = ch.targetid where cu.custid= ?) income
+group by custid,name,phone"""
 
 [AP-4]
-sql = """select co.companyid,co.name,sum(sa.balance),sum(tr.amount),sum(ch.amount)
-from company co,checking ch,transfer tr, savingaccount sa
-where co.companyid=ch.sourceid and co.companyid=tr.sourceid and sa.userid = co.companyid and co.companyid = ?
-group by co.companyid, co.name;"""
+sql = """select custid, name,phone,sum(amount)
+from (select cu.custid,cu.name,cu.phone,t.amount
+from customer cu join transfer t on cu.custid = t.sourceid where custid= ?
+union all
+select cu.custid,cu.name,cu.phone,ch.amount
+from customer cu join checking ch on cu.custid = ch.sourceid where cu.custid= ?) outcome
+group by custid,name,phone"""
 
 [AP-5]
 sql = """select cu.custid,sum(tr.amount) as total_amount
@@ -153,6 +160,11 @@ and co.companyid=la.applicantid and la.applicantid=lt.applicantid
 group by cid
 order by rate DESC limit 10;"""
 
+[AP-13]
+sql = """select sourceid, targetid, province, amount, rank() over (partition by province order by amount desc) as ranking
+from transfer tr, customer cu
+where tr.targetid=cu.custid and tr.sourceid=?;"""
+
 [TP-1]
 sql = "select * from customer where custid=?;"
 
@@ -243,6 +255,22 @@ sql = [
     "SELECT balance from SAVINGACCOUNT WHERE ACCOUNTID = ?",
     "UPDATE SAVINGACCOUNT SET BALANCE = BALANCE - ? WHERE ACCOUNTID = ?",
     "UPDATE LOANTRANS SET status='repaid',timestamp=? WHERE id=?"
+]
+
+[TP-17]
+sql = [
+    "select balance,isblocked from savingAccount where accountid = ?",
+    "select balance,isblocked from checkingAccount where accountid =?",
+    "UPDATE SAVINGACCOUNT SET BALANCE = BALANCE - ? WHERE ACCOUNTID = ?",
+    "update checkingAccount set balance = balance + ? where accountid = ?"
+]
+
+[TP-18]
+sql = [
+    "select balance,isblocked from savingAccount where accountid = ?",
+    "select balance,isblocked from checkingAccount where accountid =?",
+    "update checkingAccount set balance = balance - ? where accountid = ?",
+    "UPDATE SAVINGACCOUNT SET BALANCE = BALANCE + ? WHERE ACCOUNTID = ?"
 ]
 
 [AT-1]

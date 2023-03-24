@@ -12,7 +12,7 @@ import org.apache.commons.math3.stat.descriptive.SynchronizedDescriptiveStatisti
 
 
 public class Histogram {
-    public SynchronizedDescriptiveStatistics[] apstat = new SynchronizedDescriptiveStatistics[12];
+    public SynchronizedDescriptiveStatistics[] apstat = new SynchronizedDescriptiveStatistics[13];
     public SynchronizedDescriptiveStatistics[] xpstat_iq = new SynchronizedDescriptiveStatistics[6];
     public SynchronizedDescriptiveStatistics[] xpstat_at = new SynchronizedDescriptiveStatistics[6];
     public SynchronizedDescriptiveStatistics[] tpstat = new SynchronizedDescriptiveStatistics[18];

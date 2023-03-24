@@ -102,7 +102,7 @@ public class TPClient extends Client {
         Long companynumber = CR.company_number;
         customer_no = customernumer.intValue() + 1;
         company_no = companynumber.intValue();
-        contention_num = Integer.parseInt(ConfigLoader.prop.getProperty("contention_num"));
+        contention_num = Integer.parseInt(ConfigLoader.prop.getProperty("contention_num","100"));
     }
 
     public int Get_blocked_transfer_Id(){
@@ -2183,6 +2183,8 @@ public class TPClient extends Client {
                         if(rand < fresh_percent){
                             cr = execFresh(conn);
                         }
+                        else
+                            continue;
                     }
                     else{
                         if(rand < at1_percent){

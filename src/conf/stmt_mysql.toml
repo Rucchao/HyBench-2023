@@ -252,7 +252,7 @@ sql = [
 [AT-1]
 sql = [
 "SELECT isblocked,balance FROM savingAccount WHERE accountID = ?",
-"select count(*) from transfer t, savingaccount s where t.targetid=? and s.isblocked=1  and t.sourceid = s.accountid;",
+"select count(*) from transfer t, savingaccount s where t.sourceid=? and s.isblocked=1  and t.targetid = s.accountid;",
 "UPDATE savingAccount SET balance = balance - ? where accountID = ?",
 "UPDATE savingAccount SET balance = balance + ? where accountID = ?",
 "INSERT INTO transfer(id,sourceID,targetID,amount,type,transfer_ts) VALUES (0, ?,?,?,?,?)"

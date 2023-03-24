@@ -29,24 +29,24 @@ public class TPClient extends Client {
 
     int fresh_percent = 50;
 
-    int tp1_percent = 35;
-    int tp2_percent = 25;
-    int tp3_percent = 25;
-    int tp4_percent = 25;
-    int tp5_percent = 25;
-    int tp6_percent = 25;
-    int tp7_percent = 25;
-    int tp8_percent = 25;
-    int tp9_percent = 25;
-    int tp10_percent = 25;
-    int tp11_percent = 25;
-    int tp12_percent = 25;
-    int tp13_percent = 25;
-    int tp14_percent = 25;
-    int tp15_percent = 25;
-    int tp16_percent = 25;
-    int tp17_percent = 25;
-    int tp18_percent = 25;
+    int tp1_percent = 5;
+    int tp2_percent = 3;
+    int tp3_percent = 5;
+    int tp4_percent = 5;
+    int tp5_percent = 3;
+    int tp6_percent = 3;
+    int tp7_percent = 3;
+    int tp8_percent = 3;
+    int tp9_percent = 7;
+    int tp10_percent = 7;
+    int tp11_percent = 7;
+    int tp12_percent = 7;
+    int tp13_percent = 6;
+    int tp14_percent = 4;
+    int tp15_percent = 4;
+    int tp16_percent = 4;
+    int tp17_percent = 12;
+    int tp18_percent = 12;
 
  //   RandomGenerator rg = new RandomGenerator();
     int customer_no = 0;
@@ -105,50 +105,16 @@ public class TPClient extends Client {
         contention_num = Integer.parseInt(ConfigLoader.prop.getProperty("contention_num"));
     }
 
-    public int Get_blocked_transfer_Id(Connection conn){
-        int id=1;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery(sqls.blocked_transfer_id());
-            if(rs.next()){
-                id = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                rs.close();
-                stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return id;
+    public int Get_blocked_transfer_Id(){
+        int Id=0;
+        Id=Related_Blocked_Transfer_ids.get(rg.getRandomint(Related_Blocked_Transfer_ids.size()));
+        return Id;
     }
 
-    public int Get_blocked_checking_Id(Connection conn){
-        int id=1;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery( sqls.blocked_checking_id());
-            if(rs.next()){
-                id = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                rs.close();
-                stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return id;
+    public int Get_blocked_checking_Id(){
+        int Id=0;
+        Id=Related_Blocked_Checking_ids.get(rg.getRandomint(Related_Blocked_Checking_ids.size()));
+        return Id;
     }
 
     public ClientResult execFresh(Connection conn) {
@@ -240,7 +206,7 @@ public class TPClient extends Client {
         // Get a random blocked ids for targetid with the specified risk_rate
         double rand = rg.getRandomDouble();
         if(rand<risk_rate){
-            targetId = Get_blocked_transfer_Id(conn);
+            targetId = Get_blocked_transfer_Id();
         }
         else
             targetId = rg.getRandomint(1,customer_no+company_no);
@@ -360,7 +326,7 @@ public class TPClient extends Client {
 
         double rand = rg.getRandomDouble();
         if(rand<risk_rate){
-            sourceid = Get_blocked_checking_Id(conn);
+            sourceid = Get_blocked_checking_Id();
         }
 
         else

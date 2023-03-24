@@ -1,8 +1,7 @@
 [AP-1]
 sql =""" select  sourceid,targetid,
 case when sourceid = ? then 'outbound' when targetid= ? then 'inbound' end as direction,
-sum(amount) as total_amount,
-rank() over (partition by targetid order by sum(amount) desc) as ranking
+sum(amount) as total_amount
 from transfer where sourceid= ? or targetid = ?
 group by sourceid,targetid
 order by total_amount desc;"""
@@ -276,7 +275,7 @@ sql = [
 [AT-1]
 sql = [
 "SELECT isblocked,balance FROM savingAccount WHERE accountID = ?",
-"select count(*) from transfer t, savingaccount s where t.targetid=? and s.isblocked=1  and t.sourceid = s.accountid;",
+"select count(*) from transfer t, savingaccount s where t.sourceid=? and s.isblocked=1  and t.targetid = s.accountid;",
 "UPDATE savingAccount SET balance = balance - ? where accountID = ?",
 "UPDATE savingAccount SET balance = balance + ? where accountID = ?",
 "INSERT INTO transfer(id,sourceID,targetID,amount,type,transfer_ts) VALUES (0, ?,?,?,?,?)"
@@ -411,11 +410,3 @@ from transfer t, customer c
 where t.targetid=? and t.targetid=c.custid and t.fresh_ts is not null
 order by t.fresh_ts DESC limit 1 """
 
-[blocked_id]
-sql = "SELECT t1.id FROM blocked_ids AS t1 JOIN (SELECT ROUND(RAND()*(SELECT MAX(id) FROM blocked_ids)) AS id) AS t2 WHERE t1.id>=t2.id ORDER BY t1.id LIMIT 1;"
-
-[blocked_transfer_id]
-sql = "SELECT t1.id FROM related_transfer_bids AS t1 JOIN (SELECT ROUND(RAND()*(SELECT MAX(id) FROM related_transfer_bids)) AS id) AS t2 WHERE t1.id>=t2.id ORDER BY t1.id LIMIT 1;"
-
-[blocked_checking_id]
-sql = "SELECT t1.id FROM related_checking_bids AS t1 JOIN (SELECT ROUND(RAND()*(SELECT MAX(id) FROM related_checking_bids)) AS id) AS t2 WHERE t1.id>=t2.id ORDER BY t1.id LIMIT 1;"

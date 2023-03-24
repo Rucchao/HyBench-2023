@@ -34,28 +34,10 @@ public class APClient extends Client{
 
     }
 
-
-    public int Get_blocked_transfer_Id(Connection conn){
-        int id=1;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery( sqls.blocked_transfer_id());
-            if(rs.next()){
-                id = rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                rs.close();
-                stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return id;
+    public int Get_blocked_transfer_Id(){
+        int Id=0;
+        Id=Related_Blocked_Transfer_ids.get(rg.getRandomint(Related_Blocked_Transfer_ids.size()));
+        return Id;
     }
 
     public int Get_blocked_account_Id(){
@@ -87,7 +69,7 @@ public class APClient extends Client{
 
             double rate= rg.getRandomDouble();
             if(rate<risk_rate/2)
-                custid = Get_blocked_transfer_Id(conn);
+                custid = Get_blocked_transfer_Id();
             else if (rate<risk_rate){
                 custid = Get_blocked_account_Id();
             }
@@ -738,6 +720,37 @@ public class APClient extends Client{
         return cr;
     }
 
+    public ClientResult execQ13(Connection conn){
+        ClientResult cr = new ClientResult();
+        PreparedStatement pstmt = null;
+        long responseTime = 0L;
+        try {
+            pstmt = conn.prepareStatement(sqls.ap_q13());
+            long currentStarttTs = System.currentTimeMillis();
+            pstmt.execute();
+            long currentEndTs = System.currentTimeMillis();
+            responseTime = currentEndTs - currentStarttTs;
+            logger.debug(pstmt.toString());
+            hist.getAPItem(12).addValue(responseTime);
+            lock.lock();
+            apTotalCount++;
+            lock.unlock();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            cr.setResult(false);
+            cr.setErrorMsg(e.getMessage());
+            cr.setErrorCode(String.valueOf(e.getErrorCode()));
+        }  finally {
+            cr.setRt(responseTime);
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return cr;
+    }
+
     @Override
     public ClientResult execute() {
         int type = getTaskType();
@@ -749,7 +762,7 @@ public class APClient extends Client{
             if(type == 2){
                 for(int r = 1;r <= round ;r++) {
                     long roundElapsedTime = 0L;
-                    for (int i = 1; i <= 12; i++) {
+                    for (int i = 1; i <= 13; i++) {
                         Method method = apClass.getMethod("execQ" + i, Connection.class);
                         ClientResult cr = (ClientResult) method.invoke(this, conn);
                         logger.info("AP Task Q" + i + " elapsed time is  " + String.format("%.2f", cr.getRt()) + "(ms)");
@@ -767,14 +780,14 @@ public class APClient extends Client{
                 int round = 1;
                 while(!exitFlag){
                     long roundElapsedTime = 0L;
-                    ArrayList<Integer> runList = getRandomList(1,12);
+                    ArrayList<Integer> runList = getRandomList(1,13);
                     StringBuilder sb = new StringBuilder("Current thread " + Thread.currentThread().getName() + " - Run List in current round "+ round+" : ");
                     for(int idx:runList){
                         sb.append("Q").append(idx).append(" ");
                     }
                     logger.info(sb.toString());
                     int i = 0;
-                    for ( i = 0; i < 12; i++) {
+                    for ( i = 0; i < 13; i++) {
                         Method method = apClass.getMethod("execQ" + runList.get(i), Connection.class);
                         ClientResult cr = (ClientResult) method.invoke(this, conn);
                         totalElapsedTime += cr.getRt();

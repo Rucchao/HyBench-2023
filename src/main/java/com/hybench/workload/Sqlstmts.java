@@ -8,66 +8,63 @@ package com.hybench.workload;
  *
  **/
 public class Sqlstmts {
+
+    // AP queries total 13
+    private  String ap_q1 = null;
+    private  String ap_q2 = null;
+    private  String ap_q2_1 = null;
+    private  String ap_q3 = null;
+    private  String ap_q4 = null;
+    private  String ap_q5 = null;
+    private  String ap_q6 = null;
+    private  String ap_q7 = null;
+    private  String ap_q8 = null;
+    private  String ap_q9 = null;
+    private  String ap_q10 = null;
+    private  String ap_q11 = null;
+    private  String ap_q12 = null;
+    private  String ap_q13 = null;
+    // TP querys total 18
+    private  String tp_txn1 = null;
+    private  String tp_txn2 = null;
+    private  String tp_txn3 = null;
+    private  String tp_txn4 = null;
+    private  String tp_txn5 = null;
+    private  String tp_txn6 = null;
+    private  String tp_txn7 = null;
+    private  String tp_txn8 = null;
+    private  String[] tp_txn9 = null;
+    private  String[] tp_txn10 = null;
+    private  String[] tp_txn11 = null;
+    private  String[] tp_txn12 = null;
+    private  String[] tp_txn13 = null;
+    private  String[] tp_txn14 = null;
+    private  String[] tp_txn15 = null;
+    private  String[] tp_txn16 = null;
+    private  String[] tp_txn17 = null;
+    private  String[] tp_txn18 = null;
     // AT SQLs, total 6
-   private  String[] tp_at1 = null;
-   private  String[] tp_at2 = null;
-   private  String[] tp_at3 = null;
-   private  String tp_at3_1 = null;
-   private  String[] tp_at4 = null;
-   private  String tp_at4_1 = null;
-   private  String[] tp_at5 = null;
-   private  String tp_at5_1 = null;
+    private  String[] tp_at1 = null;
+    private  String[] tp_at2 = null;
+    private  String[] tp_at3 = null;
+    private  String tp_at3_1 = null;
+    private  String[] tp_at4 = null;
+    private  String tp_at4_1 = null;
+    private  String[] tp_at5 = null;
+    private  String tp_at5_1 = null;
     private  String tp_at6_1 = null;
-   private  String[] tp_at6 = null;
-    // AP queries total 12
-   private  String ap_q1 = null;
-   private  String ap_q2 = null;
-   private  String ap_q2_1 = null;
-   private  String ap_q3 = null;
-   private  String ap_q4 = null;
-   private  String ap_q5 = null;
-   private  String ap_q6 = null;
-   private  String ap_q7 = null;
-   private  String ap_q8 = null;
-   private  String ap_q9 = null;
-   private  String ap_q10 = null;
-   private  String ap_q11 = null;
-   private  String ap_q12 = null;
-    // TP querys total 16
-   private  String tp_txn1 = null;
-   private  String tp_txn2 = null;
-   private  String tp_txn3 = null;
-   private  String tp_txn4 = null;
-   private  String tp_txn5 = null;
-   private  String tp_txn6 = null;
-   private  String tp_txn7 = null;
-   private  String tp_txn8 = null;
-   private  String[] tp_txn9 = null;
-   private  String[] tp_txn10 = null;
-   private  String[] tp_txn11 = null;
-   private  String[] tp_txn12 = null;
-   private  String[] tp_txn13 = null;
-   private  String[] tp_txn14 = null;
-   private  String[] tp_txn15 = null;
-   private  String[] tp_txn16 = null;
-   private  String[] tp_txn17 = null;
-   private  String[] tp_txn18 = null;
+    private  String[] tp_at6 = null;
     // IQ SQLs total 6
-   private  String ap_iq1 = null;
-   private  String ap_iq2 = null;
-   private  String ap_iq3 = null;
-   private  String ap_iq4 = null;
-   private  String ap_iq5 = null;
-   private  String ap_iq5_1 = null;
-   private  String ap_iq6 = null;
+    private  String ap_iq1 = null;
+    private  String ap_iq2 = null;
+    private  String ap_iq3 = null;
+    private  String ap_iq4 = null;
+    private  String ap_iq5 = null;
+    private  String ap_iq5_1 = null;
+    private  String ap_iq6 = null;
 
     // Fresh sql
-   private  String fresh_iq1 = null;
-
-   // get risk id
-    private String blocked_id = null;
-    private String blocked_transfer_id = null;
-    private String blocked_checking_id = null;
+    private  String fresh_iq1 = null;
 
     public String[] tp_at1() { return tp_at1; }
 
@@ -230,6 +227,10 @@ public class Sqlstmts {
     public void setAp_q12(String ap_q12) {
         this.ap_q12 = ap_q12;
     }
+
+    public String ap_q13() { return ap_q13; }
+
+    public void setAp_q13(String ap_q13) { this.ap_q13 = ap_q13; }
 
     public String tp_txn1() {
         return tp_txn1;
@@ -446,27 +447,5 @@ public class Sqlstmts {
         this.tp_at6_1 = tp_at6_1;
     }
 
-    public String blocked_id() {
-        return blocked_id;
-    }
 
-    public void setBlocked_id(String blocked_id) {
-        this.blocked_id = blocked_id;
-    }
-
-    public String blocked_transfer_id() {
-        return blocked_transfer_id;
-    }
-
-    public void setBlocked_transfer_id(String related_transfer_id) {
-        this.blocked_transfer_id = related_transfer_id;
-    }
-
-    public String blocked_checking_id() {
-        return blocked_checking_id;
-    }
-
-    public void setBlocked_checking_id(String related_checking_id) {
-        this.blocked_checking_id = related_checking_id;
-    }
 }

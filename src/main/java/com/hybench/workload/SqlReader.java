@@ -42,6 +42,7 @@ public class SqlReader {
             sqls.setAp_q10(toml.getString("AP-10.sql"));
             sqls.setAp_q11(toml.getString("AP-11.sql"));
             sqls.setAp_q12(toml.getString("AP-12.sql"));
+            sqls.setAp_q13(toml.getString("AP-13.sql"));
 
             sqls.setAp_iq1(toml.getString("IQ-1.sql"));
             sqls.setAp_iq2(toml.getString("IQ-2.sql"));
@@ -84,9 +85,6 @@ public class SqlReader {
 
             sqls.setFresh_iq1(toml.getString("fresh.sql"));
 
-            sqls.setBlocked_id(toml.getString("blocked_id.sql"));
-            sqls.setBlocked_checking_id(toml.getString("blocked_checking_id.sql"));
-            sqls.setBlocked_transfer_id(toml.getString("blocked_transfer_id.sql"));
         }catch(Exception e){
             e.printStackTrace();
         }

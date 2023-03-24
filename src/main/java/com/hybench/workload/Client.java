@@ -50,6 +50,8 @@ public abstract class Client {
     boolean verbose = true;
     int round = 1;
     static int testid=2;
+    List<Integer> Related_Blocked_Transfer_ids=null;
+    List<Integer> Related_Blocked_Checking_ids=null;
     RandomGenerator rg = new RandomGenerator();
 
     double risk_rate=0;
@@ -208,6 +210,30 @@ public abstract class Client {
         int random_num=rg.getRandomint(1, customer_no+company_no);
         setTestid(random_num);
 
+        try {
+            // load the blocking-related transfer accounts
+            String DataPath = "Data_" + ConfigLoader.prop.getProperty("sf");
+            FileInputStream fi1 = new FileInputStream(new File(DataPath+"/Related_transfer_bids"));
+            ObjectInputStream oi1 = new ObjectInputStream(fi1);
+            // Read objects
+            Related_Blocked_Transfer_ids = (List<Integer>) oi1.readObject();
+            oi1.close();
+            fi1.close();
+
+            // load the blocking-related checking accounts
+            FileInputStream fi2 = new FileInputStream(new File(DataPath+"/Related_checking_bids"));
+            ObjectInputStream oi2 = new ObjectInputStream(fi2);
+            // Read objects
+            Related_Blocked_Checking_ids = (List<Integer>) oi2.readObject();
+            oi2.close();
+            fi2.close();
+
+        } catch (FileNotFoundException e) {
+            logger.error("File not found");
+        } catch (IOException | ClassNotFoundException e) {
+            logger.error("Error initializing stream");
+        }
+
         doInit();
     }
 
@@ -294,7 +320,7 @@ public abstract class Client {
                             elpased_time += _duration * 60 * 100L;
                             if(verbose){
                                 if(clientName.equalsIgnoreCase("APClient")) {
-                                    for(int apidx = 0;apidx < 12;apidx++) {
+                                    for(int apidx = 0;apidx < 13;apidx++) {
                                         if(hist.getAPItem(apidx).getN() == 0)
                                             continue;
                                         logger.info("Query " + (apidx+1)
@@ -379,8 +405,6 @@ public abstract class Client {
         }
 
         if(clientName.equalsIgnoreCase("APClient")){
-
-
             if(taskType == 2){
                 ret.setApRound(round);
                 ret.setApTotal(apTotalCount);

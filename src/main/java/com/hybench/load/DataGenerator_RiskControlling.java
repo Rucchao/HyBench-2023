@@ -425,19 +425,6 @@ public class DataGenerator_RiskControlling {
                 loantrans_bufferedWriter.write(NEW_LINE_SEPARATOR);
             }
 
-//            int j=loansapps_company_number_ub;
-//            for (Integer i: Related_Rejected_LoanApp_ids){
-//                Date contractTimestamp=null;
-//                double amount = RG.getRandomDouble(CR.company_loanbalance * CR.loan_rate);
-//                Date loan_date = RG.getRandomTimestamp(loanDate, endDate);
-//                int duration = RG.getRandomLoanDuration();
-//                String status = "under_review";
-//                LoanApps loanapp = new LoanApps(j, i, amount, duration, status, loan_date);
-//                loanapps_bufferedWriter.write(loanapp.toString());
-//                loanapps_bufferedWriter.write(NEW_LINE_SEPARATOR);
-//                j++;
-//            }
-
             loanapps_bufferedWriter.flush();
             loanapps_bufferedWriter.close();
             loantrans_bufferedWriter.flush();
@@ -458,41 +445,18 @@ public class DataGenerator_RiskControlling {
         catch (IOException e) {
             e.printStackTrace();
         }
-
         // write the anomalies
         try {
-            FileWriter f = new FileWriter(new File(DataPath+"Blocked_ids"));
-            BufferedWriter fw = new BufferedWriter(f);
-            for(int id : Blocked_ids){
-                fw.write(String.valueOf(id));
-                fw.write(NEW_LINE_SEPARATOR);
-            }
-         //   ObjectOutputStream o = new ObjectOutputStream(f);
-       //     o.writeObject(Blocked_ids);
-            fw.flush();
-            fw.close();
 
-            f = new FileWriter(new File(DataPath+"Related_transfer_bids"));
-            fw = new BufferedWriter(f);
-            for(int id : Related_Blocked_Transfer_ids){
-                fw.write(String.valueOf(id));
-                fw.write(NEW_LINE_SEPARATOR);
-            }
-        //    o = new ObjectOutputStream(f);
-        //    o.writeObject(Related_Blocked_Transfer_ids);
-            fw.flush();
-            fw.close();
+            FileOutputStream f = new FileOutputStream(new File(DataPath+"Related_transfer_bids"));
+            ObjectOutputStream o = new ObjectOutputStream(f);
+            o.writeObject(Related_Blocked_Transfer_ids);
 
-            f = new FileWriter(new File(DataPath+"Related_checking_bids"));
-            fw = new BufferedWriter(f);
-            for(int id : Related_Blocked_Checking_ids){
-                fw.write(String.valueOf(id));
-                fw.write(NEW_LINE_SEPARATOR);
-            }
-         //   o = new ObjectOutputStream(f);
-        //    o.writeObject(Related_Blocked_Checking_ids);
-            fw.flush();
-            fw.close();
+            f = new FileOutputStream(new File(DataPath+"Related_checking_bids"));
+            o = new ObjectOutputStream(f);
+            o.writeObject(Related_Blocked_Checking_ids);
+
+            o.close();
             f.close();
 
         } catch (FileNotFoundException e) {
@@ -500,6 +464,47 @@ public class DataGenerator_RiskControlling {
         } catch (IOException e) {
             System.out.println("Error initializing stream");
         }
+//        // write the anomalies
+//        try {
+//            FileWriter f = new FileWriter(new File(DataPath+"Blocked_ids"));
+//            BufferedWriter fw = new BufferedWriter(f);
+//            for(int id : Blocked_ids){
+//                fw.write(String.valueOf(id));
+//                fw.write(NEW_LINE_SEPARATOR);
+//            }
+//         //   ObjectOutputStream o = new ObjectOutputStream(f);
+//       //     o.writeObject(Blocked_ids);
+//            fw.flush();
+//            fw.close();
+//
+//            f = new FileWriter(new File(DataPath+"Related_transfer_bids"));
+//            fw = new BufferedWriter(f);
+//            for(int id : Related_Blocked_Transfer_ids){
+//                fw.write(String.valueOf(id));
+//                fw.write(NEW_LINE_SEPARATOR);
+//            }
+//        //    o = new ObjectOutputStream(f);
+//        //    o.writeObject(Related_Blocked_Transfer_ids);
+//            fw.flush();
+//            fw.close();
+//
+//            f = new FileWriter(new File(DataPath+"Related_checking_bids"));
+//            fw = new BufferedWriter(f);
+//            for(int id : Related_Blocked_Checking_ids){
+//                fw.write(String.valueOf(id));
+//                fw.write(NEW_LINE_SEPARATOR);
+//            }
+//         //   o = new ObjectOutputStream(f);
+//        //    o.writeObject(Related_Blocked_Checking_ids);
+//            fw.flush();
+//            fw.close();
+//            f.close();
+//
+//        } catch (FileNotFoundException e) {
+//            System.out.println("File not found");
+//        } catch (IOException e) {
+//            System.out.println("Error initializing stream");
+//        }
 
         long millisEnd = System.currentTimeMillis();
         System.out.println("Data is ready under the Data folder!");

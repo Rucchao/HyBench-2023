@@ -225,7 +225,7 @@ public class Result {
         System.out.println("Query/Transaction response time(ms) histogram : ");
         if( type == 2 || type == 6 || type == 7) {
             System.out.println("------------AP-------------------");
-            for (int apidx = 0; apidx < 12; apidx++) {
+            for (int apidx = 0; apidx < 13; apidx++) {
                 System.out.printf("AP Query %2d : max rt : %10.2f | min rt : %10.2f | avg rt : %10.2f | 95%% rt : %10.2f | 99%% rt : %10.2f \n",
                         (apidx + 1),
                         hist.getAPItem(apidx).getMax(),

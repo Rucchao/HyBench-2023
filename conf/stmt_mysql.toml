@@ -117,8 +117,7 @@ and exists (select *
 from loanapps la
 where la.applicantid=c.companyid and loanapps_ts
 between str_to_date('2023-11-01','%Y-%m-%d')  and (str_to_date('2023-11-01','%Y-%m-%d') + 60))
-and not exists (select *
-from loantrans lt
+and not exists (select * from loantrans lt
 where lt.applicantid=c.companyid and loantrans_ts
 between str_to_date('2023-11-01','%Y-%m-%d')  and (str_to_date('2023-11-01','%Y-%m-%d') + 60))
 group by c.name order by total_revenue DESC;"""
@@ -163,6 +162,12 @@ where co.category =?
 and co.companyid=la.applicantid and la.applicantid=lt.applicantid
 group by cid
 order by rate DESC limit 10;"""
+
+[AP-13]
+sql = """select sourceid,targetid ,province,amount,
+rank() over (partition by province order by amount desc) as ranking
+from transfer tr,customer cu
+where tr.targetid = cu.custid and tr.sourceid = ?"""
 
 [TP-1]
 sql = "select * from customer where custid=?;"

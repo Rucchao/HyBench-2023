@@ -723,10 +723,13 @@ public class APClient extends Client{
     public ClientResult execQ13(Connection conn){
         ClientResult cr = new ClientResult();
         PreparedStatement pstmt = null;
+        int custid;
         long responseTime = 0L;
         try {
             pstmt = conn.prepareStatement(sqls.ap_q13());
+            custid = rg.getRandomint(customer_no);
             long currentStarttTs = System.currentTimeMillis();
+            pstmt.setInt(1,custid);
             pstmt.execute();
             long currentEndTs = System.currentTimeMillis();
             responseTime = currentEndTs - currentStarttTs;

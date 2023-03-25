@@ -50,12 +50,13 @@ public abstract class Client {
     boolean verbose = true;
     int round = 1;
     static int testid=2;
+    static ArrayBlockingQueue<Integer> queue_ids= null;
     List<Integer> Related_Blocked_Transfer_ids=null;
     List<Integer> Related_Blocked_Checking_ids=null;
     RandomGenerator rg = new RandomGenerator();
 
     double risk_rate=0;
-    PriorityQueue<Integer> queue_ids= null;
+
 
     ExecutorService es = null;//Executors.newFixedThreadPool(5);
 
@@ -198,9 +199,9 @@ public abstract class Client {
             es = Executors.newFixedThreadPool(threads);
             cs = new ExecutorCompletionService<ClientResult>(es);
         }
-
+        int contention_num = intParameter("contention_num",100);
         risk_rate = Double.valueOf(ConfigLoader.prop.getProperty("risk_rate","0.1"));
-        queue_ids=new PriorityQueue<Integer>();
+        queue_ids=new ArrayBlockingQueue<Integer>(contention_num);
         //set test id
         Long customernumer = CR.customer_number;
         Long companynumber = CR.company_number;

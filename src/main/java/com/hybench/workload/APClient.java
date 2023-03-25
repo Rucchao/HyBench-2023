@@ -41,19 +41,12 @@ public class APClient extends Client{
     }
 
     public int Get_blocked_account_Id(){
-        if(queue_ids.size()==0)
+        if(queue_ids.isEmpty())
             return rg.getRandomint(customer_no, customer_no+company_no);
         else{
-            int Id=0;
             int index = rg.getRandomint(queue_ids.size());
-            int i = 0;
-            for(Integer obj : queue_ids)
-            {
-                if (i == index)
-                    Id=obj;
-                i++;
-            }
-            return Id;
+            Integer[] queueArray = (Integer[]) queue_ids.toArray();
+            return queueArray[index];
         }
     }
 

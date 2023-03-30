@@ -417,7 +417,6 @@ public abstract class Client {
             }
             else if(taskType == 7){
                 ret.setApTotal(apTotalCount);
-                ret.setApRound(_res.getApRound());
                 ret.setQps(Double.valueOf(String.format("%.2f",apTotalCount/(maxElapsedTime/1000.0))));
             }
         }

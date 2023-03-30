@@ -180,7 +180,6 @@ public class Result {
             case 7 :
                 System.out.println("AP Concurrency is " + getApclient());
                 System.out.println("TP Concurrency is " + getTpclient());
-                System.out.println("Total Round is " + getApRound());
                 System.out.println("Total amount of AP Queries is " + getApTotal());
                 System.out.println("QPS is " + getQps());
                 break;

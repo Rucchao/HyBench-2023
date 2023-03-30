@@ -45,8 +45,8 @@ public class APClient extends Client{
             return rg.getRandomint(customer_no, customer_no+company_no);
         else{
             int index = rg.getRandomint(queue_ids.size());
-            Integer[] queueArray = (Integer[]) queue_ids.toArray();
-            return queueArray[index];
+            Object[] queueArray = queue_ids.toArray();
+            return Integer.valueOf(queueArray[index].toString());
         }
     }
 
@@ -88,7 +88,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -130,7 +131,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -164,7 +166,8 @@ public class APClient extends Client{
         } finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -199,7 +202,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -224,7 +228,8 @@ public class APClient extends Client{
         }finally {
 
             try {
-                stmt.close();
+                if(stmt != null)
+                    stmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -252,7 +257,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -283,7 +289,8 @@ public class APClient extends Client{
             cr.setErrorCode(String.valueOf(e.getErrorCode()));
         }  finally {
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -321,7 +328,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -346,7 +354,8 @@ public class APClient extends Client{
             throwables.printStackTrace();
         }finally {
             try {
-                stmt.close();
+                if(pstmt != null)
+                    stmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -373,7 +382,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -408,7 +418,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -443,7 +454,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -478,7 +490,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -509,7 +522,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -548,7 +562,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -579,7 +594,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -610,7 +626,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -641,7 +658,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -672,7 +690,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -705,7 +724,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -739,7 +759,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt != null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

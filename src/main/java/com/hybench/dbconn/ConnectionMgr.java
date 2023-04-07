@@ -41,6 +41,7 @@ public class ConnectionMgr {
 
         try {
             Class.forName(prop.getProperty("classname"));
+            //DriverManager.registerDriver(new oracle.jdbc.OracleDriver());
             conn = DriverManager.getConnection(
                     prop.getProperty("url"),
                     prop.getProperty("username"),
@@ -50,7 +51,8 @@ public class ConnectionMgr {
             // TODO Auto-generated catch block
             logger.error( "Getting connection failed! " + prop.getProperty("url")+" : " + prop.getProperty("username")+" : " + prop.getProperty("password"));
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

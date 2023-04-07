@@ -50,7 +50,7 @@ sql = """select cid, total_expense, sum(ch.amount) as checking_amount from
 from company co, transfer tr
 where co.companyid = tr.sourceid and co.name like 'software%'
 group by co.companyid
-order by total_expense DESC) big_company, checking ch
+order by total_expense DESC limit 10) big_company, checking ch
 where big_company.cid=ch.sourceid
 group by cid, total_expense
 order by total_expense DESC, checking_amount desc;"""
@@ -94,7 +94,7 @@ order by amount DESC limit 3);"""
 
 [AP-8]
 sql =""" With blocked_account as (select c.name as name, s.userID as id
-from customer c, savingaccount s where c.custid=s.userID and (c.isblocked=1 or c.isblocked=1) limit 100)
+from customer c, savingaccount s where c.custid=s.userID and (c.isblocked=1 or s.isblocked=1) limit 100)
 select name, t.sourceid, t.targetid, sum(t.amount) as amount
 from blocked_account b, transfer t where b.id=t.sourceid group by name, t.sourceid, t.targetid
 UNION ALL

@@ -51,7 +51,7 @@ public class TPClient extends Client {
  //   RandomGenerator rg = new RandomGenerator();
     int customer_no = 0;
     int company_no = 0;
-    int contention_num=0;
+    //int contention_num=0;
     // set init parameter before run
     @Override
     public void doInit() {
@@ -102,7 +102,10 @@ public class TPClient extends Client {
         Long companynumber = CR.company_number;
         customer_no = customernumer.intValue() + 1;
         company_no = companynumber.intValue();
-        contention_num = Integer.parseInt(ConfigLoader.prop.getProperty("contention_num","100"));
+
+        distribution=ConfigLoader.prop.getProperty("dist","uniform");
+
+        //contention_num = Integer.parseInt(ConfigLoader.prop.getProperty("contention_num","100"));
     }
 
     public int Get_blocked_transfer_Id(){
@@ -115,6 +118,23 @@ public class TPClient extends Client {
         int Id=0;
         Id=Related_Blocked_Checking_ids.get(rg.getRandomint(Related_Blocked_Checking_ids.size()));
         return Id;
+    }
+
+    public int Get_latest_account_Id(){
+        if(queue_ids.isEmpty())
+            return rg.getRandomint(customer_no, customer_no+company_no);
+        else{
+            int Id=0;
+            int index = rg.getRandomint(queue_ids.size());
+            int i = 0;
+            for(Integer obj : queue_ids)
+            {
+                if (i == index)
+                    Id=obj;
+                i++;
+            }
+            return Id;
+        }
     }
 
     public ClientResult execFresh(Connection conn) {
@@ -194,7 +214,6 @@ public class TPClient extends Client {
         return cr;
     }
 
-
     // 6 Analytical Transactions (AT)
     public ClientResult execAT1(Connection conn) {
 
@@ -208,8 +227,18 @@ public class TPClient extends Client {
         if(rand<risk_rate){
             targetId = Get_blocked_transfer_Id();
         }
-        else
-            targetId = rg.getRandomint(1,customer_no+company_no);
+        else{
+            if(distribution.equals("power")){
+                targetId = rg.getPowerIndex(customer_no+company_no, power_cdf);
+                System.out.println("the power id is "+targetId);
+            }
+            else if(distribution.equals("latest")){
+                targetId = Get_latest_account_Id();
+                System.out.println("the latest id is "+targetId);
+            }
+
+            else targetId = rg.getRandomint(1,customer_no+company_no);
+        }
 
         double amount = 0;
         if(sourceid<customer_no){
@@ -284,13 +313,18 @@ public class TPClient extends Client {
                     pstmt.setString(4, type);
                     pstmt.setTimestamp(5, ts);
                     pstmt.executeUpdate();
+
+//                    // add sourceid
+//                    System.out.println("the sourceid has been inserted into queue");
+//                    while(queue_ids.offer(targetId)==false){
+//                        queue_ids.poll();
+//                        System.out.println("the sourceid of queue has been removed");
+//                    }
                     pstmt.close();
                     rs.close();
                     conn.commit();
                 }
             }
-
-            // analyze the related blocked users
 
             long currentEndTs = System.currentTimeMillis();
             responseTime = currentEndTs - currentStarttTs;
@@ -314,7 +348,6 @@ public class TPClient extends Client {
         return cr;
     }
 
-
     public ClientResult execAT2(Connection conn ){
         ClientResult cr = new ClientResult();
 
@@ -329,8 +362,17 @@ public class TPClient extends Client {
             sourceid = Get_blocked_checking_Id();
         }
 
-        else
-            sourceid = rg.getRandomint(1,customer_no+company_no);
+        else{
+            if(distribution.equals("power")){
+                sourceid = rg.getPowerIndex(customer_no+company_no, power_cdf);
+                System.out.println("the power id is "+sourceid);
+            }
+            else if(distribution.equals("latest")){
+                sourceid = Get_latest_account_Id();
+                System.out.println("the latest id is "+sourceid);
+            }
+            else sourceid = rg.getRandomint(1,customer_no+company_no);;
+        }
 
         double amount = 0;
         if(sourceid<customer_no){
@@ -405,6 +447,14 @@ public class TPClient extends Client {
                     pstmt.setString(4,type);
                     pstmt.setTimestamp(5, ts);
                     pstmt.executeUpdate();
+
+//                    // add sourceid
+//                    System.out.println("the sourceid has been inserted into queue");
+//                    while(queue_ids.offer(sourceid)==false){
+//                        queue_ids.poll();
+//                        System.out.println("the front item of queue has been removed");
+//                    }
+
                     pstmt.close();
                     rs.close();
                     conn.commit();
@@ -531,6 +581,13 @@ public class TPClient extends Client {
                     pstmt.setTimestamp(1,new_ts);
                     pstmt.setInt(2,AT3_loanid);
                     pstmt.executeUpdate();
+
+//                    // add AT3_applicantid
+//                    System.out.println("the applicantid has been inserted into queue");
+//                    while(queue_ids.offer(AT3_applicantid)==false){
+//                        queue_ids.poll();
+//                        System.out.println("the sourceid of queue has been removed");
+//                    }
                 }
 
                 conn.commit();
@@ -640,6 +697,14 @@ public class TPClient extends Client {
             pstmt.setInt(2,AT4_loanid);
             pstmt.executeUpdate();
 
+//            // add AT4_applicantid
+//            System.out.println("the applicantid has been inserted into queue");
+//            while(queue_ids.offer(AT4_applicantid)==false){
+//                queue_ids.poll();
+//                System.out.println("the sourceid of queue has been removed");
+//            }
+
+
             pstmt.close();
             rs.close();
             conn.commit();
@@ -672,7 +737,7 @@ public class TPClient extends Client {
         int AT5_applicantid = 0 ;
         try{
             stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery( sqls.tp_at5_1());
+            ResultSet rs = stmt.executeQuery(sqls.tp_at5_1());
             if (rs.next()) {
                 AT5_applicantid= rs.getInt(1);
             }
@@ -707,6 +772,13 @@ public class TPClient extends Client {
                 int id = rs.getInt(1);
                 pstmt2.setInt(1,id);
                 pstmt2.executeUpdate();
+
+//                // add AT5_applicantid
+//                System.out.println("the applicantid has been inserted into queue");
+//                while(queue_ids.offer(AT5_applicantid)==false){
+//                    queue_ids.poll();
+//                    System.out.println("the sourceid of queue has been removed");
+//                }
             }
             conn.commit();
             long currentEndTs = System.currentTimeMillis();
@@ -734,7 +806,6 @@ public class TPClient extends Client {
 
     public ClientResult execAT6(Connection conn ){
         ClientResult cr = new ClientResult();
-
         Statement stmt = null;
         int AT6_applicantid = 0 ;
         try{
@@ -774,7 +845,7 @@ public class TPClient extends Client {
             while(rs.next()){
                 int count = rs.getInt(1);
                 if (count>0) {
-                    // block the savingaccount
+                    // block the savingaccount_loader.ctl
                     PreparedStatement pstmt2 = conn.prepareStatement(sql2);
                     pstmt2.setInt(1, AT6_applicantid);
                     pstmt2.executeUpdate();
@@ -784,11 +855,13 @@ public class TPClient extends Client {
                     pstmt3.setInt(1, AT6_applicantid);
                     pstmt3.executeUpdate();
 
-                    // add blocked accountid for IQ2
-                    queue_ids.add(AT6_applicantid);
-                    if(queue_ids.size()>contention_num)
-                        queue_ids.remove();
-                }
+//                    // add blocked accountid
+//                    System.out.println("the item has been inserted into queue");
+//                    while(queue_ids.offer(AT6_applicantid)==false){
+//                        queue_ids.poll();
+//                        System.out.println("the front item of queue has been removed");
+//                    }
+         }
                 else{
                     conn.rollback();
                 }
@@ -1263,11 +1336,11 @@ public class TPClient extends Client {
             while(rs.next()) {
                 int custid = rs.getInt(1);
 
-                // update company savingaccount
+                // update company savingaccount_loader.ctl
                 pstmt[1].setDouble(1, salary);
                 pstmt[1].setInt(2, companyid);
                 pstmt[1].executeUpdate();
-                // update employee savingaccount
+                // update employee savingaccount_loader.ctl
                 pstmt[2].setDouble(1, salary);
                 pstmt[2].setInt(2, custid);
                 pstmt[2].executeUpdate();
@@ -1941,7 +2014,7 @@ public class TPClient extends Client {
                 }
                 else
                 {
-                    // update the savingaccount balance
+                    // update the savingaccount_loader.ctl balance
                     pstmt[2].setDouble(1, amount);
                     pstmt[2].setInt(2,accountid);
                     pstmt[2].executeUpdate();
@@ -2043,7 +2116,7 @@ public class TPClient extends Client {
                 }
                 else
                 {
-                    // update the savingaccount balance
+                    // update the savingaccount_loader.ctl balance
                     pstmt[2].setDouble(1, amount);
                     pstmt[2].setInt(2,accountid);
                     pstmt[2].executeUpdate();

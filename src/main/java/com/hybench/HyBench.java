@@ -34,7 +34,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class HyBench {
-    public static Logger logger = LogManager.getLogger();
+    public static Logger logger = LogManager.getLogger(HyBench.class);
     int taskType = 0;
     Result res = new Result();
     boolean verbose = true;

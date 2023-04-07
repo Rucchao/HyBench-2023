@@ -48,7 +48,7 @@ public class Freshness {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        logger.info("Current freshness : " + freshness);
+        System.out.println("Current freshness : " + freshness);
         return freshness;
     }
 

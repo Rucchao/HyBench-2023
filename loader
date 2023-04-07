@@ -1,0 +1,3 @@
+sqlldr chao/chao@//localhost:1521/hybench_sf1x control=oracle_loader/checkingaccount_loader.ctl log=/home/oracle/loader.log
+
+sqlldr chao/chao@//localhost:1521/hybench_sf1x control=oracle_loader/savingaccount_loader.ctl log=/home/oracle/loader.log

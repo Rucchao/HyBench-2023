@@ -1,16 +1,21 @@
-sf=1x
+sf=10x
 
 db=postgreSQL
 classname=org.postgresql.Driver
-username=postgres
-password=postgres
-url=jdbc:postgresql://localhost:5433/hybench_sf1x
-url_tp=jdbc:postgresql://localhost:5433/hybench_sf1x
+username=chao
+password=chao
 
-url_ap=jdbc:postgresql://localhost:5433/hybench_sf1x
+url=jdbc:postgresql://166.111.121.55:15434/hybench_sf10x
+url_tp=jdbc:postgresql://166.111.121.55:15434/hybench_sf10x
+url_ap=jdbc:postgresql://166.111.121.55:15434/hybench_sf10x
+
+<!-- url=jdbc:postgresql://localhost:5433/hybench_sf1x -->
+<!-- url_tp=jdbc:postgresql://localhost:5433/hybench_sf1x -->
+<!-- url_ap=jdbc:postgresql://localhost:5433/hybench_sf1x -->
+
 classname_ap=org.postgresql.Driver
-username_ap=postgres
-password_ap=postgres
+username_ap=chao
+password_ap=chao
 
 at1_percent=35
 at2_percent=25
@@ -20,9 +25,23 @@ at5_percent=7
 at6_percent=3
 
 apclient=1
-tpclient=1
+tpclient=2
 
-runMins=1
+fresh_interval=20
+contention_num=1000
 
-risk_rate=0.1
-contention_num=100
+apRunMins=1
+tpRunMins=1
+xpRunMins=1
+
+xtpclient=20
+xapclient=80
+
+risk_rate=0
+contention_num=10
+
+dist=uniform
+power_alpha=0.1
+
+apround=1
+

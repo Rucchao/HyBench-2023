@@ -31,7 +31,7 @@ public class SqlReader {
 
             sqls.setAp_q1(toml.getString("AP-1.sql"));
             sqls.setAp_q2(toml.getString("AP-2.sql"));
-            sqls.setAp_q2_1(toml.getString("AP-2.sql"));
+            sqls.setAp_q2_1(toml.getString("AP-2.1.sql"));
             sqls.setAp_q3(toml.getString("AP-3.sql"));
             sqls.setAp_q4(toml.getString("AP-4.sql"));
             sqls.setAp_q5(toml.getString("AP-5.sql"));

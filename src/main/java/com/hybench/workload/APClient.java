@@ -9,6 +9,7 @@ package com.hybench.workload;
  **/
 
 
+import com.hybench.ConfigLoader;
 import com.hybench.dbconn.ConnectionMgr;
 import com.hybench.util.RandomGenerator;
 
@@ -32,6 +33,8 @@ public class APClient extends Client{
         customer_no = customer_number.intValue() + 1;
         company_no = company_number.intValue();
 
+        distribution= ConfigLoader.prop.getProperty("dist","uniform");
+
     }
 
     public int Get_blocked_transfer_Id(){
@@ -40,8 +43,8 @@ public class APClient extends Client{
         return Id;
     }
 
-    public int Get_blocked_account_Id(){
-        if(queue_ids.size()==0)
+    public int Get_latest_account_Id(){
+        if(queue_ids.isEmpty())
             return rg.getRandomint(customer_no, customer_no+company_no);
         else{
             int Id=0;
@@ -62,19 +65,26 @@ public class APClient extends Client{
     public ClientResult execIQ1(Connection conn){
         ClientResult cr = new ClientResult();
         PreparedStatement pstmt = null;
-        int custid;
+        int custid=1;
         long responseTime = 0L;
         try {
             pstmt = conn.prepareStatement(sqls.ap_iq1());
 
             double rate= rg.getRandomDouble();
-            if(rate<risk_rate/2)
+            if(rate<risk_rate)
                 custid = Get_blocked_transfer_Id();
-            else if (rate<risk_rate){
-                custid = Get_blocked_account_Id();
+            else{
+                if(distribution.equals("power")){
+                    custid = rg.getPowerIndex(customer_no, power_customer_cdf);
+                    System.out.println("the power customer id is "+custid);
+                }
+                else if(distribution.equals("latest")){
+                    custid = Get_latest_account_Id();
+                    System.out.println("the latest id is "+custid);
+                }
+                else custid=rg.getRandomint(customer_no);
             }
-            else
-                custid=rg.getRandomint(customer_no);
+
 
             pstmt.setInt(1,custid);
             pstmt.setInt(2,custid);
@@ -113,9 +123,18 @@ public class APClient extends Client{
           //  companyid = rg.getRandomint(customer_no, customer_no+company_no);
             double rate= rg.getRandomDouble();
             if(rate<risk_rate)
-                companyid = Get_blocked_account_Id();
-            else
-                companyid = rg.getRandomint(customer_no, customer_no+company_no);
+                companyid = Get_latest_account_Id();
+            else{
+                if(distribution.equals("power")){
+                    companyid = rg.getPowerIndex(customer_no+company_no, power_company_cdf);
+                    System.out.println("the power company id is "+companyid);
+                }
+                else if(distribution.equals("latest")){
+                    companyid = Get_latest_account_Id();
+                    System.out.println("the latest id is "+companyid);
+                }
+                else companyid=rg.getRandomint(customer_no);
+            }
 
 
             pstmt.setInt(1,companyid);
@@ -152,7 +171,16 @@ public class APClient extends Client{
         long responseTime = 0L;
         try {
             pstmt = conn.prepareStatement(sqls.ap_iq3());
-            companyid = rg.getRandomint(customer_no,customer_no+company_no);
+            if(distribution.equals("power")){
+                companyid = rg.getPowerIndex(customer_no+company_no, power_company_cdf);
+                System.out.println("the power company id is "+companyid);
+            }
+            else if(distribution.equals("latest")){
+                companyid = Get_latest_account_Id();
+                System.out.println("the latest id is "+companyid);
+            }
+            else companyid = rg.getRandomint(customer_no,customer_no+company_no);
+
             pstmt.setInt(1,companyid);
             long currentStarttTs = System.currentTimeMillis();
             pstmt.execute();
@@ -186,7 +214,15 @@ public class APClient extends Client{
         long responseTime = 0L;
         try {
             pstmt = conn.prepareStatement(sqls.ap_iq4());
-            companyid = rg.getRandomint(customer_no,customer_no+company_no);
+            if(distribution.equals("power")){
+                companyid = rg.getPowerIndex(customer_no+company_no, power_company_cdf);
+                System.out.println("the power company id is "+companyid);
+            }
+            else if(distribution.equals("latest")){
+                companyid = Get_latest_account_Id();
+                System.out.println("the latest id is "+companyid);
+            }
+            else companyid = rg.getRandomint(customer_no,customer_no+company_no);
             pstmt.setInt(1,companyid);
             pstmt.setInt(2,companyid);
             long currentStarttTs = System.currentTimeMillis();
@@ -224,6 +260,10 @@ public class APClient extends Client{
             ResultSet rs = stmt.executeQuery(sqls.ap_iq5_1());
             while ( rs.next() ) {
                 applicantid= rs.getInt(1);
+            }
+            if(distribution.equals("latest")){
+                applicantid = Get_latest_account_Id();
+                System.out.println("the latest id is "+applicantid);
             }
             rs.close();
         } catch (SQLException throwables) {
@@ -311,6 +351,7 @@ public class APClient extends Client{
             pstmt.setInt(2,custid);
             pstmt.setInt(3,custid);
             pstmt.setInt(4,custid);
+
             long currentStarttTs = System.currentTimeMillis();
             pstmt.execute();
             long currentEndTs = System.currentTimeMillis();
@@ -768,16 +809,16 @@ public class APClient extends Client{
                     for (int i = 1; i <= 13; i++) {
                         Method method = apClass.getMethod("execQ" + i, Connection.class);
                         ClientResult cr = (ClientResult) method.invoke(this, conn);
-                        logger.info("AP Task Q" + i + " elapsed time is  " + String.format("%.2f", cr.getRt()) + "(ms)");
+                        System.out.println("AP Task Q" + i + " elapsed time is  " + String.format("%.2f", cr.getRt()) + "(ms)");
                         totalElapsedTime += cr.getRt();
                         roundElapsedTime += cr.getRt();
                         apTotalTime += cr.getRt();
                     }
-                    logger.info( r + " round elapsed time is " + String.format("%d",roundElapsedTime) + "(ms) ,QPS is " + String.format("%.2f",12000.0/roundElapsedTime));
+                    System.out.println( r + " round elapsed time is " + String.format("%d",roundElapsedTime) + "(ms) ,QPS is " + String.format("%.2f",12000.0/roundElapsedTime));
                 }
                 ret.setRt(totalElapsedTime);
                 ret.setApRound(round);
-                logger.info("total elapsed time is  " + String.format("%.2f",ret.getRt()) + "(ms)");
+                System.out.println("total elapsed time is  " + String.format("%.2f",ret.getRt()) + "(ms)");
             }
             else if(type == 7){
                 int round = 1;
@@ -788,7 +829,7 @@ public class APClient extends Client{
                     for(int idx:runList){
                         sb.append("Q").append(idx).append(" ");
                     }
-                    logger.info(sb.toString());
+                    System.out.println(sb.toString());
                     int i = 0;
                     for ( i = 0; i < 13; i++) {
                         Method method = apClass.getMethod("execQ" + runList.get(i), Connection.class);
@@ -799,8 +840,8 @@ public class APClient extends Client{
                     if (exitFlag) {
                         break;
                     }
-                    logger.info("Current thread " + Thread.currentThread().getName() + " - round " + round + " elapsed time is " + String.format("%d",roundElapsedTime) + "(ms)");
-                    logger.info("Current thread " + Thread.currentThread().getName() + " - round " + round + " is done");
+                    System.out.println("Current thread " + Thread.currentThread().getName() + " - round " + round + " elapsed time is " + String.format("%d",roundElapsedTime) + "(ms)");
+                    System.out.println("Current thread " + Thread.currentThread().getName() + " - round " + round + " is done");
                     round++;
                 }
                 ret.setApRound(round);

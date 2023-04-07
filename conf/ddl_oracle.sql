@@ -14,7 +14,7 @@ CREATE
                 c_credit     int            ,
                 b_credit     int            ,
                 Isblocked    int            ,
-                created_date Date           ,
+                created_date timestamp           ,
                 last_update_timestamp timestamp
         );
 CREATE
@@ -32,7 +32,7 @@ CREATE
 				CheckingCredit int			,
 				LoanCredit	 int			,
                 Isblocked    int            ,
-                created_date Date           ,
+                created_date timestamp           ,
                 last_update_timestamp timestamp
         );
 CREATE

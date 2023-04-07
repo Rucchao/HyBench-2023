@@ -105,7 +105,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt!=null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -156,7 +157,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt!=null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -199,7 +201,8 @@ public class APClient extends Client{
         } finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt!=null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -242,7 +245,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt!=null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -271,7 +275,8 @@ public class APClient extends Client{
         }finally {
 
             try {
-                stmt.close();
+                if(stmt!=null)
+                    stmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -299,7 +304,8 @@ public class APClient extends Client{
         }  finally {
             cr.setRt(responseTime);
             try {
-                pstmt.close();
+                if(pstmt!=null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -330,7 +336,8 @@ public class APClient extends Client{
             cr.setErrorCode(String.valueOf(e.getErrorCode()));
         }  finally {
             try {
-                pstmt.close();
+                if(pstmt!=null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

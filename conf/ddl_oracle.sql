@@ -53,8 +53,6 @@ CREATE
                 Isblocked int            ,
                 timestamp timestamp
         );
-        
-CREATE SEQUENCE TRANSFER_SEQ INCREMENT BY 1 START WITH 1;
 
 CREATE
         TABLE TRANSFER
@@ -68,7 +66,7 @@ CREATE
                 fresh_ts timestamp default current_timestamp
         );
 
-CREATE SEQUENCE CHECKING_SEQ INCREMENT BY 1 START WITH 1;        
+
         
 CREATE
         TABLE CHECKING
@@ -81,7 +79,7 @@ CREATE
                 timestamp timestamp
         );
         
-CREATE SEQUENCE LOANAPPS_SEQ INCREMENT BY 1 START WITH 1; 
+
 
 CREATE
         TABLE LOANAPPS
@@ -93,8 +91,7 @@ CREATE
                 status      char(12)       ,
                 timestamp timestamp
         );
-        
-CREATE SEQUENCE LOANTRANS_SEQ INCREMENT BY 1 START WITH 1; 
+
         
 CREATE
         TABLE LOANTRANS

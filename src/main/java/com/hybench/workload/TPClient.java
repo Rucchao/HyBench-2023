@@ -277,6 +277,7 @@ public class TPClient extends Client {
             }
             if (flag == 1 || balance < amount){
                 conn.rollback();
+                rs.close();
             }
             else{
                 pstmt = conn.prepareStatement(sql2);
@@ -340,7 +341,10 @@ public class TPClient extends Client {
             cr.setErrorCode(String.valueOf(e.getErrorCode()));
         }  finally {
             try {
-                pstmt.close();
+                if(pstmt!=null)
+                    pstmt.close();
+                if (rs!=null)
+                    rs.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -422,6 +426,7 @@ public class TPClient extends Client {
                 }
                 if (count>0){
                     conn.rollback();
+                    rs.close();
                 }
                 else{
                     // update the source balance
@@ -475,7 +480,10 @@ public class TPClient extends Client {
             cr.setErrorCode(String.valueOf(e.getErrorCode()));
         }  finally {
             try {
-                pstmt.close();
+                if(pstmt!=null)
+                    pstmt.close();
+                if (rs!=null)
+                    rs.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -516,7 +524,8 @@ public class TPClient extends Client {
             throwables.printStackTrace();
         }finally {
             try {
-                stmt.close();
+                if(stmt!=null)
+                    stmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -607,7 +616,10 @@ public class TPClient extends Client {
             cr.setErrorCode(String.valueOf(e.getErrorCode()));
         }  finally {
             try {
-                pstmt.close();
+                if(pstmt!=null)
+                    pstmt.close();
+                if (rs!=null)
+                    rs.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -646,7 +658,8 @@ public class TPClient extends Client {
             throwables.printStackTrace();
         }finally {
             try {
-                stmt.close();
+                if(stmt!=null)
+                    stmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -722,7 +735,10 @@ public class TPClient extends Client {
             cr.setErrorCode(String.valueOf(e.getErrorCode()));
         }  finally {
             try {
-                pstmt.close();
+                if(pstmt!=null)
+                    pstmt.close();
+                if (rs!=null)
+                    rs.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -746,7 +762,8 @@ public class TPClient extends Client {
             throwables.printStackTrace();
         }finally {
             try {
-                stmt.close();
+                if(stmt!=null)
+                    stmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -780,6 +797,8 @@ public class TPClient extends Client {
 //                    System.out.println("the sourceid of queue has been removed");
 //                }
             }
+            if (rs!=null)
+                rs.close();
             conn.commit();
             long currentEndTs = System.currentTimeMillis();
             responseTime = currentEndTs - currentStarttTs;
@@ -795,8 +814,10 @@ public class TPClient extends Client {
             cr.setErrorCode(String.valueOf(e.getErrorCode()));
         }  finally {
             try {
-                pstmt1.close();
-
+                if(pstmt1!=null)
+                    pstmt1.close();
+                if (rs!=null)
+                    rs.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -807,24 +828,26 @@ public class TPClient extends Client {
     public ClientResult execAT6(Connection conn ){
         ClientResult cr = new ClientResult();
         Statement stmt = null;
+        ResultSet rs1 = null;
         int AT6_applicantid = 0 ;
         try{
             stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sqls.tp_at6_1());
-            if (rs.next()) {
-                AT6_applicantid= rs.getInt(1);
+            rs1 = stmt.executeQuery(sqls.tp_at6_1());
+            if (rs1.next()) {
+                AT6_applicantid= rs1.getInt(1);
             }
-            rs.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }finally {
             try {
-                stmt.close();
+                if(stmt!=null)
+                    stmt.close();
+                if(rs1!=null)
+                    rs1.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-
 
         PreparedStatement pstmt1 = null;
         ResultSet rs = null;
@@ -862,7 +885,7 @@ public class TPClient extends Client {
 //                        System.out.println("the front item of queue has been removed");
 //                    }
          }
-                else{
+                else {
                     conn.rollback();
                 }
             }
@@ -881,8 +904,10 @@ public class TPClient extends Client {
             cr.setErrorCode(String.valueOf(e.getErrorCode()));
         }  finally {
             try {
-                rs.close();
-                pstmt1.close();
+                if(rs!=null)
+                    rs.close();
+                if(pstmt1!=null)
+                    pstmt1.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -1370,10 +1395,14 @@ public class TPClient extends Client {
             cr.setErrorCode(String.valueOf(e.getErrorCode()));
         }  finally {
             try {
-                pstmt[0].close();
-                pstmt[1].close();
-                pstmt[2].close();
-                pstmt[3].close();
+                if(pstmt[0]!=null)
+                    pstmt[0].close();
+                if(pstmt[1]!=null)
+                    pstmt[1].close();
+                if(pstmt[2]!=null)
+                    pstmt[2].close();
+                if(pstmt[3]!=null)
+                    pstmt[3].close();
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -1503,6 +1532,7 @@ public class TPClient extends Client {
 
         Date date = rg.getRandomTimestamp(CR.loanDate, CR.endDate);
         java.sql.Timestamp ts = new Timestamp(date.getTime());
+
 
         try {
             String[] statements= sqls.tp_txn12();

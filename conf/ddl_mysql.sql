@@ -13,7 +13,7 @@ checking_credit int,
 loan_credit int,
 Isblocked int,
 created_date Date,
-last_update_timestamp timestamp,
+last_update_timestamp timestamp default current_timestamp,
 primary key(custid)
 );
 

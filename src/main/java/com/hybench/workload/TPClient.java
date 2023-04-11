@@ -174,12 +174,14 @@ public class TPClient extends Client {
             pstmt.setDouble(1,amount);
             pstmt.setInt(2,sourceid);
             pstmt.executeUpdate();
+            pstmt.close();
 
             // update the target balance
             pstmt= conn.prepareStatement(sql4);
             pstmt.setDouble(1,amount);
             pstmt.setInt(2,targetId);
             pstmt.executeUpdate();
+            pstmt.close();
 
             // Insert into the Transfer
             Date date = rg.getRandomTimestamp(CR.midPointDate, CR.endDate);
@@ -195,6 +197,7 @@ public class TPClient extends Client {
             pstmt.setTimestamp(5, ts);
             pstmt.executeUpdate();
             pstmt.close();
+
             conn.commit();
             long currentEndTs = System.currentTimeMillis();
             responseTime = currentEndTs - currentStarttTs;
@@ -206,7 +209,8 @@ public class TPClient extends Client {
             cr.setErrorCode(String.valueOf(e.getErrorCode()));
         }  finally {
             try {
-                pstmt.close();
+                if(pstmt!=null)
+                    pstmt.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

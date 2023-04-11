@@ -1,5 +1,5 @@
 load data
-infile '/sys/fs/cgroup/Data_1x/customer.csv'
+infile '/opt/oracle/oradata/customer.csv'
 badfile '/home/oracle/bad.log'
 into table customer
 fields terminated by ','

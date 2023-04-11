@@ -33,7 +33,7 @@ xpRunMins=1
 xtpclient=1
 xapclient=1
 
-risk_rate=0
+risk_rate=0.1
 contention_num=10
 
 dist=uniform

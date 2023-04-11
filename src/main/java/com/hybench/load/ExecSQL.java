@@ -33,7 +33,6 @@ public class ExecSQL {
         Statement stmt = null;
         String readLine = null;
         StringBuffer sql = new StringBuffer();
-
         try {
             conn.setAutoCommit(true);
             stmt = conn.createStatement();

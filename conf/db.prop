@@ -1,14 +1,14 @@
 #support mysql pg and oracle
 db=mysql
 classname=com.mysql.jdbc.Driver
-username=xxxx
-password=xxxx
-url=jdbc:oceanbase://<IP>:<PORT>/<db>?useUnicode=true&characterEncoding=utf-8
+username=root
+password=9+H3-rRS5_P68gvE@4
+url=jdbc:mysql://localhost:4000/hybench_sf1x?useUnicode=true&characterEncoding=utf-8
 
-url_ap=jdbc:mysql://<IP>:<PORT>/<db>?useUnicode=true&characterEncoding=utf-8
+url_ap=jdbc:mysql://localhost:4000/hybench_sf1x?useUnicode=true&characterEncoding=utf-8
 classname_ap=com.mysql.jdbc.Driver
-username_ap=xxxx
-password_ap=xxxx
+username_ap=root
+password_ap=9+H3-rRS5_P68gvE@4
 
 
 ## support 1x, 10x,100x,1000x
@@ -25,16 +25,18 @@ apclient=1
 tpclient=1
 
 risk_rate=0.1
-
 fresh_interval=20
-
 contention_num=100
 
 apRunMins=1
 tpRunMins=1
-xpRunMins=1
+xpRunMins=2
 
-xtpclient=1
+xtpclient=100
 xapclient=1
+
+
+dist=uniform
+power_alpha=0.1
 
 apround=1

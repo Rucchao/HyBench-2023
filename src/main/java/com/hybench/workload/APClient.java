@@ -858,8 +858,10 @@ public class APClient extends Client{
                 while(!exitFlag){
                     int i = rg.getRandomint(1, 7);
                     Method method = apClass.getMethod("execIQ" + i,Connection.class);
-                    ClientResult cr = (ClientResult) method.invoke(this, conn);
-                    totalElapsedTime += cr.getRt();
+                    if(!conn.isClosed()){
+                        ClientResult cr = (ClientResult) method.invoke(this, conn);
+                        totalElapsedTime += cr.getRt();
+                    }
                     if(exitFlag)
                         break;
                 }

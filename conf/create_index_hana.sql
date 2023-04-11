@@ -1,18 +1,10 @@
-CREATE SEQUENCE TRANSFER_SEQ INCREMENT BY 1 START WITH SF1_NUM;
-
-CREATE SEQUENCE CHECKING_SEQ INCREMENT BY 1 START WITH SF1_NUM;
-
-CREATE SEQUENCE LOANAPPS_SEQ INCREMENT BY 1 START WITH SF1_NUM;
-
-CREATE SEQUENCE LOANTRANS_SEQ INCREMENT BY 1 START WITH SF1_NUM;
-
 create index idx_loanapps_1 on loanapps ( applicantid );
 
-create index idx_loanapps_2 on loanapps ( timestamp );
+create index idx_loanapps_2 on loanapps ( loanapps_ts );
 
 create index idx_loantrans_1 on loantrans ( applicantid );
 
-create index idx_loantrans_2 on loantrans ( timestamp );
+create index idx_loantrans_2 on loantrans ( loantrans_ts );
 
 create index idx_transfer_1 on transfer ( sourceid );
 

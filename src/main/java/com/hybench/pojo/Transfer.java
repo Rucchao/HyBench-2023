@@ -14,7 +14,7 @@ import java.util.StringJoiner;
 
 
 public record Transfer
-        (int id,
+        (long id,
          int sourceID,
          int targetID,
          double amount,

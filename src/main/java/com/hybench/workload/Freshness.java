@@ -80,6 +80,7 @@ public class Freshness {
                     max_ts_tp = ret;
                 }
             }
+            rs_tp.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -106,6 +107,7 @@ public class Freshness {
                     max_ts_ap = ret;
                 }
             }
+            rs_ap.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

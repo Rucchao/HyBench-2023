@@ -1296,7 +1296,9 @@ public class TPClient extends Client {
             lock.unlock();
             cr.setRt(responseTime);
         } catch (SQLException e) {
-            e.printStackTrace();
+            if(!e.getMessage().contains("Interrupted during batch")){
+                e.printStackTrace();
+            }
             cr.setResult(false);
             cr.setErrorMsg(e.getMessage());
             cr.setErrorCode(String.valueOf(e.getErrorCode()));

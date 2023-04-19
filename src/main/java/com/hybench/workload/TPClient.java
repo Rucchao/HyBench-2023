@@ -140,8 +140,6 @@ public class TPClient extends Client {
         long responseTime = 0L;
         try {
             String[] statements= sqls.tp_at1();
-            String sql1=statements[0];
-            String sql2=statements[1];
             String sql3=statements[2];
             String sql4=statements[3];
             String sql5=statements[4];
@@ -1260,17 +1258,19 @@ public class TPClient extends Client {
             //get all employees
             pstmt[0].setInt(1,companyid);
             rs= pstmt[0].executeQuery();
-            while(rs.next()) {
+            int batchSize = 0;
+
+            while(rs.next() && batchSize < 100) {
                 int custid = rs.getInt(1);
 
                 // update company savingaccount
                 pstmt[1].setDouble(1, salary);
                 pstmt[1].setInt(2, companyid);
-                pstmt[1].executeUpdate();
+                pstmt[1].addBatch();
                 // update employee savingaccount
                 pstmt[2].setDouble(1, salary);
                 pstmt[2].setInt(2, custid);
-                pstmt[2].executeUpdate();
+                pstmt[2].addBatch();
                 Date date = rg.getRandomTimestamp(CR.midPointDate, CR.endDate);
                 java.sql.Timestamp ts = new Timestamp(date.getTime());
 
@@ -1279,8 +1279,13 @@ public class TPClient extends Client {
                 pstmt[3].setDouble(3,salary);
                 pstmt[3].setString(4,type);
                 pstmt[3].setTimestamp(5, ts);
-                pstmt[3].executeUpdate();
+                pstmt[3].addBatch();
+                batchSize++;
             }
+            pstmt[1].executeBatch();
+            pstmt[2].executeBatch();
+            pstmt[3].executeBatch();
+
             rs.close();
             conn.commit();
             long currentEndTs = System.currentTimeMillis();

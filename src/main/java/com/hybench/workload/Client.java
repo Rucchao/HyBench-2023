@@ -206,9 +206,8 @@ public abstract class Client {
         Long customernumer = CR.customer_number;
         Long companynumber = CR.company_number;
         int customer_no = customernumer.intValue() + 1;
-        int company_no = companynumber.intValue();
 
-        int random_num=rg.getRandomint(1, customer_no+company_no);
+        int random_num=rg.getRandomint(1, customer_no);
         setTestid(random_num);
 
         try {

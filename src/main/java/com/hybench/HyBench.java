@@ -23,6 +23,7 @@ import org.apache.logging.log4j.core.LoggerContext;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -214,6 +215,7 @@ public class HyBench {
         }
         Thread freshness = null;
         if(taskType == 4){
+            final Timestamp startTs = new Timestamp(System.currentTimeMillis());
             final int _duration = Integer.parseInt(ConfigLoader.prop.getProperty("xpRunMins"));
             final int _fresh_interval = Integer.parseInt(ConfigLoader.prop.getProperty("fresh_interval",String.valueOf(20)));
             String db = ConfigLoader.prop.getProperty("db");
@@ -227,19 +229,27 @@ public class HyBench {
                     int cnt = 0;
                     long duration = _duration * 60 * 1000L;
                     long elpased_time = 0L;
+                    boolean hasGetFreshness = false;
                     for (int i = 0; i < _fresh_interval; i++) {
                         try {
                             Thread.sleep(_duration * 60 * 1000/_fresh_interval);
                             elpased_time += _duration * 60 * 1000/_fresh_interval;
-                            Freshness fresh = new Freshness(dbType,conn_tp,conn_ap,sqls);
+                            Freshness fresh = new Freshness(dbType,conn_tp,conn_ap,sqls,startTs);
+                            if(fresh.calcFreshness() == 2147483647){
+                                continue;
+                            }
                             sum += fresh.calcFreshness();
                             cnt++;
                             res.setFresh(sum/cnt * 1.0);
+                            hasGetFreshness=true;
                         } catch (InterruptedException e) {
                             logger.info("Freshness checker was stopped in force");
                         } catch (Exception e){
                             e.printStackTrace();
                         }
+                    }
+                    if(!hasGetFreshness){
+                        res.setFresh(2147483647);
                     }
                     try {
                         if(conn_ap != null) {
@@ -281,6 +291,7 @@ public class HyBench {
     }
 
     public void runFreshness(int tt){
+
         logger.info("Begin Freshness Workload");
         runXP(tt);
         logger.info("Freshness Workload is done.");

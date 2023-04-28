@@ -23,12 +23,15 @@ public class Freshness {
     Sqlstmts sqls =null;
     Connection conn_tp = null;
     Connection conn_ap = null;
+    Timestamp startTime = null;
+    long curfreshness = 0;
 
-    public Freshness(int dbType,Connection ctp,Connection cap,Sqlstmts sqls){
+    public Freshness(int dbType,Connection ctp,Connection cap,Sqlstmts sqls,Timestamp startTime){
         this.dbType = dbType;
         conn_tp = ctp;
         conn_ap = cap;
         this.sqls = sqls;
+        this.startTime = startTime;
     }
 
     public Long calcFreshness (){
@@ -40,7 +43,14 @@ public class Freshness {
 
         CompletableFuture.allOf(queryAP,queryTP).join();
         try {
+            if(queryAP.get() == startTime.getTime()){
+                return 2147483647L;
+            }
+            if(queryTP.get() == startTime.getTime()){
+                return 2147483647L;
+            }
             freshness = Long.valueOf(queryTP.get()) - Long.valueOf(queryAP.get());
+            curfreshness = freshness;
             if(freshness < 0)
                 freshness = 0;
         } catch (InterruptedException e) {
@@ -52,10 +62,14 @@ public class Freshness {
         return freshness;
     }
 
+    public long getFresh(){
+        return curfreshness;
+    }
+
     public Long getMaxTPTs(){
         PreparedStatement pstmt_tp = null;
         ResultSet rs_tp = null;
-        Timestamp max_ts_tp = new Timestamp(System.currentTimeMillis());
+        Timestamp max_ts_tp = startTime;
         try {
             pstmt_tp = conn_tp.prepareStatement(sqls.fresh_iq1());
             pstmt_tp.setInt(1,testid);
@@ -66,6 +80,7 @@ public class Freshness {
                     max_ts_tp = ret;
                 }
             }
+            rs_tp.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -81,7 +96,7 @@ public class Freshness {
     public Long getMaxAPTs(){
         PreparedStatement pstmt_ap = null;
         ResultSet rs_ap = null;
-        Timestamp max_ts_ap = new Timestamp(System.currentTimeMillis());
+        Timestamp max_ts_ap = startTime;
         try {
             // TiDB freshness evaluation
 //            String fresh_ap="select /*+ read_from_storage(tiflash[t,c]) */ t.fresh_ts, t.transfer_ts, t.amount, c.custid, c.name from transfer as t, customer as c\n" +
@@ -97,6 +112,7 @@ public class Freshness {
                     max_ts_ap = ret;
                 }
             }
+            rs_ap.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

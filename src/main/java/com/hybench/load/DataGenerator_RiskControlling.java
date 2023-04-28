@@ -237,7 +237,7 @@ public class DataGenerator_RiskControlling {
         try {
             transfer_fileWriter = new FileWriter(DataPath+transfer_writePath, false);
             transfer_bufferedWriter = new BufferedWriter(transfer_fileWriter);
-            for (int i = 1; i <= transfer_cust_number; i++) {
+            for (long i = 1; i <= transfer_cust_number; i++) {
                 // get the random source id and target id
                 int src = 0;
                 int tar = 0;
@@ -266,10 +266,9 @@ public class DataGenerator_RiskControlling {
                 transfer_bufferedWriter.write(NEW_LINE_SEPARATOR);
             }
 
-            int lowbound_company = transfer_cust_number.intValue() + 1;
-            Long upperbound_company = transfer_number;
-            int upper_bound_company = upperbound_company.intValue();
-            for (int i = lowbound_company; i <= upper_bound_company; i++) {
+            long lowbound_company = transfer_cust_number + 1;
+            long upperbound_company = transfer_number;
+            for (long i = lowbound_company; i <= upperbound_company; i++) {
                 // get the random source id and target id
                 int src = 0;
                 int tar = 0;

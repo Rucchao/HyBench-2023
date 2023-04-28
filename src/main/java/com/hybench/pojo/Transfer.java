@@ -14,7 +14,7 @@ import java.util.StringJoiner;
 
 
 public record Transfer
-        (int id,
+        (long id,
          int sourceID,
          int targetID,
          double amount,
@@ -25,7 +25,7 @@ public record Transfer
 {
     public String toString() {
         StringJoiner joiner = new StringJoiner(",");
-        joiner.add(Integer.toString(id))
+        joiner.add(Long.toString(id))
                 .add(Integer.toString(sourceID))
                 .add(Integer.toString(targetID))
                 .add(Double.toString(amount))

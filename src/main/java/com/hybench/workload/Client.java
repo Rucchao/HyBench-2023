@@ -13,7 +13,6 @@ import com.hybench.Constant;
 import com.hybench.load.ConfigReader;
 import com.hybench.stats.Histogram;
 import com.hybench.stats.Result;
-import com.hybench.util.PowerCDF;
 import com.hybench.util.RandomGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,18 +50,12 @@ public abstract class Client {
     boolean verbose = true;
     int round = 1;
     static int testid=2;
-    static ArrayBlockingQueue<Integer> queue_ids= null;
     List<Integer> Related_Blocked_Transfer_ids=null;
     List<Integer> Related_Blocked_Checking_ids=null;
     RandomGenerator rg = new RandomGenerator();
 
-    double risk_rate = 0;
-    String distribution="uniform";
-    double power_alpha  = 0;
-    PowerCDF power_cdf = null;
-    PowerCDF power_customer_cdf = null;
-    PowerCDF power_company_cdf = null;
-
+    double risk_rate=0;
+    PriorityQueue<Integer> queue_ids= null;
 
     ExecutorService es = null;//Executors.newFixedThreadPool(5);
 
@@ -207,10 +200,7 @@ public abstract class Client {
         }
 
         risk_rate = Double.valueOf(ConfigLoader.prop.getProperty("risk_rate","0.1"));
-        int contention_num = intParameter("contention_num",100);
-
-        queue_ids=new ArrayBlockingQueue<Integer>(contention_num);
-        //System.out.println("The queue size is "+queue_ids.size());
+        queue_ids=new PriorityQueue<Integer>();
         //set test id
         Long customernumer = CR.customer_number;
         Long companynumber = CR.company_number;
@@ -219,14 +209,6 @@ public abstract class Client {
 
         int random_num=rg.getRandomint(1, customer_no+company_no);
         setTestid(random_num);
-
-        String dist = strParameter("dist");
-        if(dist.equals("power")){
-                power_alpha= Double.valueOf(ConfigLoader.prop.getProperty("power_alpha","0.05"));
-                power_cdf=new PowerCDF(1,customer_no+company_no,power_alpha);
-                power_customer_cdf=new PowerCDF(1,customer_no,power_alpha);
-                power_company_cdf=new PowerCDF(customer_no+1,customer_no+company_no,power_alpha);
-        }
 
         try {
             // load the blocking-related transfer accounts
@@ -320,10 +302,10 @@ public abstract class Client {
         }
         final int _duration = testTime;
         if(taskType == 2) {
-            System.out.println("Begin to run :" + clientName + ", Test is " + round + " round");
+            logger.info("Begin to run :" + clientName + ", Test is " + round + " round");
         }
         else{
-            System.out.println("Begin to run :" + clientName + ", Test Duration is "  + _duration + " mins");
+            logger.info("Begin to run :" + clientName + ", Test Duration is "  + _duration + " mins");
         }
 
         setTestTime(testTime);
@@ -341,7 +323,7 @@ public abstract class Client {
                                     for(int apidx = 0;apidx < 13;apidx++) {
                                         if(hist.getAPItem(apidx).getN() == 0)
                                             continue;
-                                        System.out.println("Query " + (apidx+1)
+                                        logger.info("Query " + (apidx+1)
                                                 + " : max rt : " + hist.getAPItem(apidx).getMax()
                                                 + " | min rt :" + hist.getAPItem(apidx).getMin()
                                                 + " | avg rt : " + String.format("%.2f",hist.getAPItem(apidx).getMean())
@@ -349,15 +331,15 @@ public abstract class Client {
                                                 + " | 99% rt : " + String.format("%.2f",hist.getAPItem(apidx).getPercentile(99)));
                                     }
                                     if(taskType == 4 || taskType == 0)
-                                        System.out.println("Current " + (i + 1) + "/10 time AP QPS is " + String.format("%.2f", iqTotalCount / (elpased_time / 1000.0)));
+                                        logger.info("Current " + (i + 1) + "/10 time AP QPS is " + String.format("%.2f", iqTotalCount / (elpased_time / 1000.0)));
                                     else
-                                        System.out.println("Current " + (i + 1) + "/10 time AP QPS is " + String.format("%.2f", apTotalCount / (elpased_time / 1000.0)));
+                                        logger.info("Current " + (i + 1) + "/10 time AP QPS is " + String.format("%.2f", apTotalCount / (elpased_time / 1000.0)));
                                 }
                                 if(clientName.equalsIgnoreCase("TPClient")) {
                                     for(int tpidx = 0;tpidx < 18;tpidx++) {
                                         if(hist.getTPItem(tpidx).getN() == 0)
                                             continue;
-                                        System.out.println("Transaction " + (tpidx+1)
+                                        logger.info("Transaction " + (tpidx+1)
                                                 + " : max rt : " + hist.getTPItem(tpidx).getMax()
                                                 + " | min rt :" + hist.getTPItem(tpidx).getMin()
                                                 + " | avg rt : " + String.format("%.2f",hist.getTPItem(tpidx).getMean())
@@ -365,9 +347,9 @@ public abstract class Client {
                                                 + " | 99% rt : " + String.format("%.2f",hist.getTPItem(tpidx).getPercentile(99)));
                                     }
                                     if(taskType == 4 || taskType == 0)
-                                        System.out.println("Current " + (i + 1) + "/10 time TP TPS is " + String.format("%.2f", atTotalCount / (elpased_time / 1000.0)));
+                                        logger.info("Current " + (i + 1) + "/10 time TP TPS is " + String.format("%.2f", atTotalCount / (elpased_time / 1000.0)));
                                     else
-                                        System.out.println("Current " + (i + 1) + "/10 time TP TPS is " + String.format("%.2f", tpTotalCount / (elpased_time / 1000.0)));
+                                        logger.info("Current " + (i + 1) + "/10 time TP TPS is " + String.format("%.2f", tpTotalCount / (elpased_time / 1000.0)));
                                 }
                             }
 
@@ -458,7 +440,7 @@ public abstract class Client {
         if (!es.isShutdown() || !es.isTerminated()) {
             es.shutdownNow();
         }
-        System.out.println( "Finished to execute " + clientName );
+        logger.info( "Finished to execute " + clientName );
     }
     public abstract void doInit();
 

@@ -48,7 +48,7 @@ userID int,
 balance real,
 Isblocked int,
 timestamp timestamp
-)
+);
 
 CREATE TABLE transfer (
   id int PRIMARY KEY,

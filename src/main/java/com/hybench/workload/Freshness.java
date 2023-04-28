@@ -84,11 +84,11 @@ public class Freshness {
         Timestamp max_ts_ap = new Timestamp(System.currentTimeMillis());
         try {
             // TiDB freshness evaluation
-            String fresh_ap="select /*+ read_from_storage(tiflash[t,c]) */ t.fresh_ts, t.transfer_ts, t.amount, c.custid, c.name from transfer as t, customer as c\n" +
-                    " where t.targetid=? and t.targetid=c.custid and t.fresh_ts is not null\n" +
-                    " order by t.fresh_ts DESC limit 1";
-            pstmt_ap = conn_tp.prepareStatement(fresh_ap);
-            //pstmt_ap = conn_ap.prepareStatement(sqls.fresh_iq1());
+//            String fresh_ap="select /*+ read_from_storage(tiflash[t,c]) */ t.fresh_ts, t.transfer_ts, t.amount, c.custid, c.name from transfer as t, customer as c\n" +
+//                    " where t.targetid=? and t.targetid=c.custid and t.fresh_ts is not null\n" +
+//                    " order by t.fresh_ts DESC limit 1";
+//            pstmt_ap = conn_tp.prepareStatement(fresh_ap);
+            pstmt_ap = conn_ap.prepareStatement(sqls.fresh_iq1());
             pstmt_ap.setInt(1,testid);
             rs_ap = pstmt_ap.executeQuery();
             if(rs_ap.next()){

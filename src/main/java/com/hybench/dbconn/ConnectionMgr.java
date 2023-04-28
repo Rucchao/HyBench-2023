@@ -94,7 +94,8 @@ public class ConnectionMgr {
             // TODO Auto-generated catch block
             logger.error( "Getting connection failed! " + url +" : " + username +" : " + password );
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }

@@ -200,7 +200,7 @@ sql = [
     "SELECT balance FROM savingAccount WHERE accountID = ?",
     "UPDATE savingAccount SET balance = balance - ? where accountID = ?" ,
     "UPDATE savingAccount SET balance = balance + ? where accountID = ?",
-    "INSERT INTO transfer(id,sourceID,targetID,amount,type,transfer_ts) VALUES (0, ?,?,?,?,?)"
+    "INSERT INTO transfer(sourceID,targetID,amount,type,transfer_ts) VALUES (?,?,?,?,?)"
 ]
 
 [TP-10]
@@ -208,7 +208,7 @@ sql = [
     "SELECT custID FROM CUSTOMER WHERE COMPANYID = ?",
     "UPDATE SAVINGACCOUNT SET BALANCE = BALANCE - ? WHERE ACCOUNTID = ?",
     "UPDATE SAVINGACCOUNT SET BALANCE = BALANCE + ? WHERE ACCOUNTID = ?",
-    "INSERT INTO TRANSFER(id,sourceID,targetID,amount,type,transfer_ts) VALUES (0, ?,?,?,?,?)"
+    "INSERT INTO TRANSFER(sourceID,targetID,amount,type,transfer_ts) VALUES (?,?,?,?,?)"
 ]
 
 [TP-11]
@@ -216,7 +216,7 @@ sql = [
     "SELECT balance FROM CHECKINGACCOUNT WHERE accountID = ?",
     "UPDATE CHECKINGACCOUNT SET balance = balance - ? where accountID = ?",
     "UPDATE CHECKINGACCOUNT SET balance = balance + ? where accountID = ?",
-    "INSERT INTO CHECKING VALUES (0, ?,?,?,?,?)"
+    "INSERT INTO CHECKING(sourceID,targetID,amount,type,checking_ts) VALUES (?,?,?,?,?)"
 ]
 
 [TP-12]
@@ -225,13 +225,13 @@ sql = [
     "UPDATE customer SET loan_balance = loan_balance - ? where custID = ?",
     "SELECT loan_balance FROM company WHERE companyID = ?",
     "UPDATE company SET loan_balance = loan_balance - ? where companyID = ?",
-    "INSERT INTO LOANAPPS  VALUES (0, ?,?,?,?,?);"
+    "INSERT INTO LOANAPPS(applicantID,amount,duration,status,loanapps_ts) VALUES (?,?,?,?,?);"
 ]
 
 [TP-13]
 sql = [
     "SELECT ID, APPLICANTID, AMOUNT, DURATION, LOANAPPS_ts FROM LOANAPPS WHERE status='under_review' order by LOANAPPS_ts limit 1;",
-    "INSERT INTO LOANTRANS VALUES(DEFAULT, ?,?,?,?,?,?,?,?);",
+    "INSERT INTO LOANTRANS(applicantID, appID, amount, status, loantrans_ts, duration, contract_timestamp, delinquency) VALUES(?,?,?,?,?,?,?,?);",
     "UPDATE CUSTOMER SET loan_balance = loan_balance + ? where custID = ?",
     "UPDATE COMPANY SET loan_balance = loan_balance + ? where companyID = ?",
     "UPDATE LOANAPPS SET STATUS=? WHERE ID=?;"
@@ -281,7 +281,7 @@ sql = [
     "select count(*) from transfer t, savingaccount s where t.sourceid=? and s.isblocked=1  and t.targetid = s.accountid;",
     "UPDATE savingAccount SET balance = balance - ? where accountID = ?",
     "UPDATE savingAccount SET balance = balance + ? where accountID = ?",
-    "INSERT INTO transfer(id,sourceID,targetID,amount,type,transfer_ts) VALUES (0, ?,?,?,?,?)"
+    "INSERT INTO transfer(sourceID,targetID,amount,type,transfer_ts) VALUES (?,?,?,?,?)"
 ]
 
 [AT-2]
@@ -290,30 +290,26 @@ sql = [
     "select count(*) from checking ch, checkingAccount ca where ch.sourceid=? and ca.isblocked=1 and ch.targetid=ca.accountid;",
     "UPDATE checkingAccount SET balance = balance - ? where accountID = ?",
     "UPDATE checkingAccount SET balance = balance + ? where accountID = ?",
-    "INSERT INTO checking VALUES (0, ?,?,?,?,?)"
+    "INSERT INTO checking(sourceID,targetID,amount,type,checking_ts) VALUES (?,?,?,?,?)"
 ]
 
 [AT-3]
 sql = [
     "SELECT isblocked FROM SavingAccount WHERE accountID = ?",
     """Select (inbound.t_amount-outbound.t_amount) as t_amount  from
-    (select sa.accountid as sid, sum(t.amount) as t_amount from savingaccount sa, transfer t
+    (select sa.accountid, sum(t.amount) as t_amount from savingaccount sa, transfer t
     where sa.accountid=? and sa.accountid=t.sourceid
-    group by sid) as outbound,
-    (select sa.accountid as sid, sum(t.amount) as t_amount from savingaccount sa, transfer t
+    group by sa.accountid) as outbound,
+    (select sa.accountid, sum(t.amount) as t_amount from savingaccount sa, transfer t
     where sa.accountid=? and sa.accountid=t.targetid
-    group by sid) as inbound""",
-    "INSERT INTO LOANTRANS VALUES(0, ?,?,?,?,?,?,?,?);",
+    group by sa.accountid) as inbound""",
+    "INSERT INTO LOANTRANS(applicantID, appID, amount, status, loantrans_ts, duration, contract_timestamp, delinquency) VALUES(?,?,?,?,?,?,?,?);",
     "UPDATE LoanApps SET status = 'accept',loanapps_ts=? where id = ?",
     " UPDATE LoanApps SET status = 'reject',loanapps_ts=? where id = ?"
 ]
 
 [AT-3.1]
-sql = """SELECT t1.applicantid, t1.id, t1.loanapps_ts, t1.duration
-FROM loanapps t1
-where t1.id >= (SELECT ROUND(RAND()*(SELECT MAX(id) FROM loanapps where status='under_review')) AS id)
-and t1.status='under_review'  ORDER BY t1.id LIMIT 1;
-"""
+sql = "SELECT applicantid, id, loanapps_ts, duration FROM loanapps where status='under_review' ORDER BY RAND() LIMIT 1"
 
 
 [AT-4]
@@ -324,15 +320,11 @@ sql = [
 ]
 
 [AT-4.1]
-sql = """SELECT t1.applicantid, t1.amount,t1.id, t1.loantrans_ts
-FROM loantrans t1
-where t1.id >= (SELECT ROUND(RAND()*(SELECT MAX(id) FROM loantrans where status='accept')) AS id)
-and t1.status='accept'  ORDER BY t1.id LIMIT 1;
-"""
+sql = "SELECT applicantid, amount, id, loantrans_ts FROM loantrans where status='accept' ORDER BY RAND() LIMIT 1"
 
 [AT-5]
 sql = [
-    "SELECT id FROM LoanTrans WHERE applicantID = ? and date(contract_timestamp) + duration < str_to_date('2024-01-01','%Y-%m-%d') and status!='lent';",
+    "SELECT id FROM LoanTrans WHERE applicantID = ? and ADD_DAYS(CAST(TO_TIMESTAMP(contract_timestamp,'YYYY-MM-DD HH24:MI:SS.FF9') as date),duration) < CAST('2024-01-01' as date) and status!='lent';",
     " UPDATE LoanTrans SET delinquency=1 where id = ?"
 ]
 
@@ -346,7 +338,7 @@ sql = "SELECT applicantid FROM loantrans where status='lent' and delinquency=1 O
 
 [AT-6]
 sql = [
-    "SELECT count(applicantid) FROM LoanTrans WHERE date(contract_timestamp) + duration + 365 < str_to_date('2024-01-01','%Y-%m-%d') and applicantid=?;",
+    "SELECT count(applicantid) FROM LoanTrans WHERE contract_timestamp is not null and ADD_DAYS(CAST(TO_TIMESTAMP(contract_timestamp,'YYYY-MM-DD HH24:MI:SS.FF9') as date),(duration + 365)) < CAST('2024-01-01' as date) and applicantid=?;",
     "UPDATE savingaccount SET isBlocked = 1  where accountID = ?;",
     "UPDATE checkingaccount SET isBlocked = 1 where accountID = ?;"
 ]
@@ -402,7 +394,7 @@ sql="SELECT applicantid FROM loantrans ORDER BY RAND() LIMIT 1"
 [IQ-6]
 sql =""" With abnormal_accounts as
 (select distinct(applicantid) as id, amount from loantrans lt1
-where contract_timestamp is not null and date(contract_timestamp) + duration < str_to_date('2024-01-01','%Y-%m-%d') order by amount DESC limit 100)
+where contract_timestamp is not null and ADD_DAYS(CAST(TO_TIMESTAMP(contract_timestamp,'YYYY-MM-DD HH24:MI:SS.FF9') as date),duration) < CAST('2024-01-01' as date) order by amount DESC limit 100)
 Select  aa.id, lt2.amount, lt2.loantrans_ts, lt2.status, la.loanapps_ts
 from loantrans lt2, loanapps la, abnormal_accounts aa
 where aa.id=lt2.applicantid and la.id= lt2.appid; """

@@ -25,20 +25,19 @@ at5_percent=7
 at6_percent=3
 
 apclient=1
-tpclient=2
+tpclient=1
 
 fresh_interval=20
-contention_num=1000
 
 apRunMins=1
 tpRunMins=1
 xpRunMins=1
 
-xtpclient=20
-xapclient=80
+xtpclient=1
+xapclient=1
 
 risk_rate=0
-contention_num=10
+contention_num=100
 
 dist=uniform
 power_alpha=0.1

@@ -321,10 +321,12 @@ public class TPClient extends Client {
 
 //                    // add sourceid
 //                    System.out.println("the sourceid has been inserted into queue");
-//                    while(queue_ids.offer(targetId)==false){
-//                        queue_ids.poll();
-//                        System.out.println("the sourceid of queue has been removed");
-//                    }
+                    if(distribution.equals("latest")) {
+                        while (queue_ids.offer(targetId) == false) {
+                            queue_ids.poll();
+                            System.out.println("the sourceid of queue has been removed");
+                        }
+                    }
                     pstmt.close();
                     rs.close();
                     conn.commit();
@@ -459,10 +461,12 @@ public class TPClient extends Client {
 
 //                    // add sourceid
 //                    System.out.println("the sourceid has been inserted into queue");
-//                    while(queue_ids.offer(sourceid)==false){
-//                        queue_ids.poll();
-//                        System.out.println("the front item of queue has been removed");
-//                    }
+                    if(distribution.equals("latest")) {
+                        while (queue_ids.offer(sourceid) == false) {
+                            queue_ids.poll();
+                            System.out.println("the front item of queue has been removed");
+                        }
+                    }
 
                     pstmt.close();
                     rs.close();
@@ -597,10 +601,12 @@ public class TPClient extends Client {
 
 //                    // add AT3_applicantid
 //                    System.out.println("the applicantid has been inserted into queue");
-//                    while(queue_ids.offer(AT3_applicantid)==false){
-//                        queue_ids.poll();
-//                        System.out.println("the sourceid of queue has been removed");
-//                    }
+                    if(distribution.equals("latest")) {
+                        while (queue_ids.offer(AT3_applicantid) == false) {
+                            queue_ids.poll();
+                            System.out.println("the sourceid of queue has been removed");
+                        }
+                    }
                 }
 
                 conn.commit();
@@ -716,11 +722,12 @@ public class TPClient extends Client {
 
 //            // add AT4_applicantid
 //            System.out.println("the applicantid has been inserted into queue");
-//            while(queue_ids.offer(AT4_applicantid)==false){
-//                queue_ids.poll();
-//                System.out.println("the sourceid of queue has been removed");
-//            }
-
+            if(distribution.equals("latest")) {
+                while (queue_ids.offer(AT4_applicantid) == false) {
+                    queue_ids.poll();
+                    System.out.println("the sourceid of queue has been removed");
+                }
+            }
 
             pstmt.close();
             rs.close();
@@ -796,10 +803,12 @@ public class TPClient extends Client {
 
 //                // add AT5_applicantid
 //                System.out.println("the applicantid has been inserted into queue");
-//                while(queue_ids.offer(AT5_applicantid)==false){
-//                    queue_ids.poll();
-//                    System.out.println("the sourceid of queue has been removed");
-//                }
+                if(distribution.equals("latest")) {
+                    while (queue_ids.offer(AT5_applicantid) == false) {
+                        queue_ids.poll();
+                        System.out.println("the sourceid of queue has been removed");
+                    }
+                }
             }
             if (rs!=null)
                 rs.close();
@@ -882,12 +891,14 @@ public class TPClient extends Client {
                     pstmt3.setInt(1, AT6_applicantid);
                     pstmt3.executeUpdate();
 
-//                    // add blocked accountid
-//                    System.out.println("the item has been inserted into queue");
-//                    while(queue_ids.offer(AT6_applicantid)==false){
-//                        queue_ids.poll();
-//                        System.out.println("the front item of queue has been removed");
-//                    }
+                    // add blocked accountid
+                    //System.out.println("the item has been inserted into queue");
+                    if(distribution.equals("latest")) {
+                        while (queue_ids.offer(AT6_applicantid) == false) {
+                            queue_ids.poll();
+                            System.out.println("the front item of queue has been removed");
+                        }
+                    }
          }
                 else {
                     conn.rollback();

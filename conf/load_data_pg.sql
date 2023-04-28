@@ -1,15 +1,15 @@
-Copy customer from '/Users/chao/Documents/new_hybench/HyBench/Data_1x/customer.csv' CSV DELIMITER ',' ;
+Copy customer from '/Path-to-File/customer.csv' CSV DELIMITER ',' ;
 
-Copy company from '/Users/chao/Documents/new_hybench/HyBench/Data_1x/company.csv' CSV DELIMITER ',' ;
+Copy company from '/Path-to-File/company.csv' CSV DELIMITER ',' ;
 
-Copy transfer from '/Users/chao/Documents/new_hybench/HyBench/Data_1x/transfer.csv' CSV DELIMITER ',' ;
+Copy transfer from '/Path-to-File/transfer.csv' CSV DELIMITER ',' ;
 
-Copy checking from '/Users/chao/Documents/new_hybench/HyBench/Data_1x/checking.csv' CSV DELIMITER ',' ;
+Copy checking from '/Path-to-File/checking.csv' CSV DELIMITER ',' ;
 
-Copy checkingAccount from '/Users/chao/Documents/new_hybench/HyBench/Data_1x/checkingAccount.csv' CSV DELIMITER ',' ;
+Copy checkingAccount from '/Path-to-File/checkingAccount.csv' CSV DELIMITER ',' ;
 
-Copy savingAccount from '/Users/chao/Documents/new_hybench/HyBench/Data_1x/savingAccount.csv' CSV DELIMITER ',' ;
+Copy savingAccount from '/Path-to-File/savingAccount.csv' CSV DELIMITER ',' ;
 
-Copy loanApps from '/Users/chao/Documents/new_hybench/HyBench/Data_1x/loanApps.csv' CSV DELIMITER ',' ;
+Copy loanApps from '/Path-to-File/loanApps.csv' CSV DELIMITER ',' ;
 
-Copy loanTrans from '/Users/chao/Documents/new_hybench/HyBench/Data_1x/loanTrans.csv' CSV DELIMITER ',' ;
+Copy loanTrans from '/Path-to-File/loanTrans.csv' CSV DELIMITER ',' ;

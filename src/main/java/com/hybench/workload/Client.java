@@ -210,7 +210,7 @@ public abstract class Client {
         int contention_num = intParameter("contention_num",100);
 
         queue_ids=new ArrayBlockingQueue<Integer>(contention_num);
-        System.out.println("The queue size is "+queue_ids.size());
+        //System.out.println("The queue size is "+queue_ids.size());
         //set test id
         Long customernumer = CR.customer_number;
         Long companynumber = CR.company_number;

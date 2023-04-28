@@ -1,7 +1,7 @@
-SET SCHEMA HYBENCH1X_COLUMN;
+SET SCHEMA HYBENCH1X_ROW;
 
 IMPORT FROM CSV FILE '/hana/mounts/Data_1x/customer.csv'
-    INTO HYBENCH1X_COLUMN.customer
+    INTO HYBENCH1X_ROW.customer
     WITH THREADS 10
     BATCH 50000
     RECORD DELIMITED BY '\n'
@@ -12,7 +12,7 @@ IMPORT FROM CSV FILE '/hana/mounts/Data_1x/customer.csv'
 ;
 
 IMPORT FROM CSV FILE '/hana/mounts/Data_1x/company.csv'
-    INTO HYBENCH1X_COLUMN.company
+    INTO HYBENCH1X_ROW.company
     WITH THREADS 10
     BATCH 50000
     RECORD DELIMITED BY '\n'
@@ -23,7 +23,7 @@ IMPORT FROM CSV FILE '/hana/mounts/Data_1x/company.csv'
 ;
 
 IMPORT FROM CSV FILE '/hana/mounts/Data_1x/savingAccount.csv'
-    INTO HYBENCH1X_COLUMN.savingaccount
+    INTO HYBENCH1X_ROW.savingaccount
     WITH THREADS 10
     BATCH 50000
     RECORD DELIMITED BY '\n'
@@ -34,7 +34,7 @@ IMPORT FROM CSV FILE '/hana/mounts/Data_1x/savingAccount.csv'
 ;
 
 IMPORT FROM CSV FILE '/hana/mounts/Data_1x/checkingAccount.csv'
-    INTO HYBENCH1X_COLUMN.checkingaccount
+    INTO HYBENCH1X_ROW.checkingaccount
     WITH THREADS 10
     BATCH 50000
     RECORD DELIMITED BY '\n'
@@ -45,7 +45,7 @@ IMPORT FROM CSV FILE '/hana/mounts/Data_1x/checkingAccount.csv'
 ;
 
 IMPORT FROM CSV FILE '/hana/mounts/Data_1x/checking.csv'
-    INTO HYBENCH1X_COLUMN.checking
+    INTO HYBENCH1X_ROW.checking
     WITH THREADS 10
     BATCH 50000
     RECORD DELIMITED BY '\n'
@@ -56,7 +56,7 @@ IMPORT FROM CSV FILE '/hana/mounts/Data_1x/checking.csv'
 ;
 
 IMPORT FROM CSV FILE '/hana/mounts/Data_1x/loanApps.csv'
-    INTO HYBENCH1X_COLUMN.loanapps
+    INTO HYBENCH1X_ROW.loanapps
     WITH THREADS 10
     BATCH 50000
     RECORD DELIMITED BY '\n'
@@ -67,7 +67,7 @@ IMPORT FROM CSV FILE '/hana/mounts/Data_1x/loanApps.csv'
 ;
 
 IMPORT FROM CSV FILE '/hana/mounts/Data_1x/loanTrans.csv'
-    INTO HYBENCH1X_COLUMN.loantrans
+    INTO HYBENCH1X_ROW.loantrans
     WITH THREADS 10
     BATCH 50000 RECORD
     DELIMITED BY '\n'
@@ -78,7 +78,7 @@ IMPORT FROM CSV FILE '/hana/mounts/Data_1x/loanTrans.csv'
 ;
 
 IMPORT FROM CSV FILE '/hana/mounts/Data_1x/transfer.csv'
-   INTO HYBENCH1X_COLUMN.transfer
+   INTO HYBENCH1X_ROW.transfer
    WITH THREADS 10
    BATCH 50000 RECORD
    DELIMITED BY '\n'

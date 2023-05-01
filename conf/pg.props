@@ -2,8 +2,8 @@ sf=1x
 
 db=postgreSQL
 classname=org.postgresql.Driver
-username=chao
-password=chao
+username=YourName
+password=Yourpasswd
 
 
 url=jdbc:postgresql://localhost:5432/hybench_sf1x
@@ -11,8 +11,8 @@ url_tp=jdbc:postgresql://localhost:5432/hybench_sf1x
 url_ap=jdbc:postgresql://localhost:5432/hybench_sf1x
 
 classname_ap=org.postgresql.Driver
-username_ap=chao
-password_ap=chao
+username_ap=YourName
+password_ap=Yourpasswd
 
 at1_percent=35
 at2_percent=25

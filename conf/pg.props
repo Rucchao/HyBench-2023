@@ -1,17 +1,14 @@
-sf=10x
+sf=1x
 
 db=postgreSQL
 classname=org.postgresql.Driver
 username=chao
 password=chao
 
-url=jdbc:postgresql://166.111.121.55:15434/hybench_sf10x
-url_tp=jdbc:postgresql://166.111.121.55:15434/hybench_sf10x
-url_ap=jdbc:postgresql://166.111.121.55:15434/hybench_sf10x
 
-<!-- url=jdbc:postgresql://localhost:5433/hybench_sf1x -->
-<!-- url_tp=jdbc:postgresql://localhost:5433/hybench_sf1x -->
-<!-- url_ap=jdbc:postgresql://localhost:5433/hybench_sf1x -->
+url=jdbc:postgresql://localhost:5432/hybench_sf1x
+url_tp=jdbc:postgresql://localhost:5432/hybench_sf1x
+url_ap=jdbc:postgresql://localhost:5432/hybench_sf1x
 
 classname_ap=org.postgresql.Driver
 username_ap=chao

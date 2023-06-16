@@ -1,4 +1,4 @@
-CREATE TABLE customer （
+CREATE TABLE customer (
 custID int PRIMARY KEY,
 companyID int,
 gender char(6),

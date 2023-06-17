@@ -24,4 +24,4 @@ bash hybench -t runall -c conf/pg.props -f conf/stmt_postgres.toml
 ```
 
 ## Performance Metrics
-![Alt text](image link)
+[![Alt text](image link)](https://github.com/Rucchao/HyBench-2023/blob/master/metrics.png?raw=true)

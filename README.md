@@ -47,3 +47,9 @@ Solution: modify the path to lib directory in the hybench file
 Solution: once re-compiled with mvn clean pacakge, replace the HyBench-1.0-SNAPSHOT.jar in the lib folder with the newly-generated file in the target folder
 ```
 
+(3) File not Found for PG data loading
+```
+Solution: modify the path to data directory in the conf/load_data_pg.sql file
+```
+
+

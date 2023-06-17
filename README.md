@@ -14,11 +14,11 @@ Tested OS: |MacOS Ventura 13.2.1|Ubuntu 22.04|CentOS 7
 ```
 cd HyBench-2023
 
+sudo -u postgres psql -c 'create database hybench_sf1x;'
+
 bash hybench -t sql -c conf/pg.props -f conf/ddl_pg.sql
 
 bash hybench -t gendata -c conf/pg.props -f conf/stmt_postgres.toml
-
-sudo -u postgres psql -c 'create database hybench_sf1x;'
 
 psql -h localhost -U postgres -d hybench_sf1x -f conf/load_data_pg.sql
 ```

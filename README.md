@@ -2,7 +2,7 @@
 
 ## Environments
 ```
-> JAVA 17
+JAVA version > 17
 
 Tested OS: |MacOS Ventura 13.2.1|Ubuntu 22.04|CentOS 7
 

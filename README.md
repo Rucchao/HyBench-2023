@@ -8,7 +8,7 @@ bash hybench -t sql -c conf/pg.props -f conf/ddl_pg.sql
 
 bash hybench -t gendata -c conf/pg.props -f conf/stmt_postgres.toml
 
-bash hybench -t sql -c conf/pg.props -f conf/load_data_pg.sql
+psql -h localhost -U postgres -d hybench_sf1x -f conf/load_data_pg.sql
 ```
 
 ## Index Building 

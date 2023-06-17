@@ -51,7 +51,7 @@ Solution: once re-compiled with mvn clean pacakge, replace the HyBench-1.0-SNAPS
 
 (3) File not Found for PG data loading
 ```
-Solution: modify the path to data directory in the conf/load_data_pg.sql file
+Solution: modify the path to data directory in the conf/load_data_pg.sql file. For instance, replace '/Path-to-File/customer.csv' with '/home/YourUserName/HyBench-2023/Data_1x/customer.csv'
 ```
 
 

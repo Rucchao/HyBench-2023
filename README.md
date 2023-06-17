@@ -22,3 +22,6 @@ bash hybench -t sql -c conf/pg.props -f conf/create_index_pg.sql
 ```
 bash hybench -t runall -c conf/pg.props -f conf/stmt_postgres.toml
 ```
+
+## Performance Metrics
+![Alt text](image link)

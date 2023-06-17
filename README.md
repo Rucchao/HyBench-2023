@@ -1,8 +1,14 @@
 # HyBench - A New Benchmark for HTAP Databases
 
+## Environments
+```
+> JAVA 17
+
+Tested OS: |MacOS Ventura 13.2.1|Ubuntu 22.04|CentOS 7
+
+```
 
 ## Data Generation and Loading
-
 ```
 bash hybench -t sql -c conf/pg.props -f conf/ddl_pg.sql
 

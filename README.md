@@ -37,7 +37,7 @@ bash hybench -t runall -c conf/pg.props -f conf/stmt_postgres.toml
 ## Benchmarking Notes
 (1) Error: Could not find or load main class com.hybench.HyBench
 ```
-Solution: modify the path to lib directory
+Solution: modify the path to lib directory in the hybench file
 ```
 
 (2) mvn clean package...Failed to execute goal on project HyBench:HyBench:jar:1.0-SNAPSHOT

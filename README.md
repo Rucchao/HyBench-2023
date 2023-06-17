@@ -10,6 +10,8 @@ Tested OS: |MacOS Ventura 13.2.1|Ubuntu 22.04|CentOS 7
 
 ## Data Generation and Loading [PostgreSQL]
 ```
+cd HyBench-2023
+
 bash hybench -t sql -c conf/pg.props -f conf/ddl_pg.sql
 
 bash hybench -t gendata -c conf/pg.props -f conf/stmt_postgres.toml
@@ -31,3 +33,15 @@ bash hybench -t runall -c conf/pg.props -f conf/stmt_postgres.toml
 
 ## Performance Metrics
 ![Model](https://github.com/Rucchao/HyBench-2023/blob/master/Metrics.png)
+
+## Benchmarking Notes
+(1) Error: Could not find or load main class com.hybench.HyBench
+```
+Solution: modify the path to lib directory
+```
+
+(2) mvn clean package...Failed to execute goal on project HyBench:HyBench:jar:1.0-SNAPSHOT
+```
+Solution: once re-compiled with mvn clean pacakge, replace the HyBench-1.0-SNAPSHOT.jar in the lib folder with the newly-generated file in the targe folder
+```
+

@@ -72,4 +72,8 @@ Solution: once re-compiled with mvn clean pacakge, replace the HyBench-1.0-SNAPS
 Solution: modify the path to data directory in the conf/load_data_pg.sql file. For instance, replace 'Data_1x/customer.csv' with 'Data_10x/customer.csv'
 ```
 
+(4) Benchmarking other HTAP databases
+
+Please refer to [[wiki]](https://github.com/Rucchao/HyBench-2023/wiki) for benchmarking more HTAP databases.
+
 

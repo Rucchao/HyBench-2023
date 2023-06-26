@@ -74,6 +74,6 @@ Solution: modify the path to data directory in the conf/load_data_pg.sql file. F
 
 (4) Benchmarking other HTAP databases
 
-Please refer to [[wiki]](https://github.com/Rucchao/HyBench-2023/wiki) for benchmarking more HTAP databases.
+Please refer to [wiki](https://github.com/Rucchao/HyBench-2023/wiki) for benchmarking more HTAP databases.
 
 

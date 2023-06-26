@@ -10,6 +10,14 @@ Tested OS: |MacOS Ventura 13.2.1|Ubuntu 22.04|CentOS 7
 
 ```
 
+## PostgreSQL Streaming Replication
+
+Please install the PostgreSQL 14 Streaming Replication following the offical guide:
+
+```
+https://wiki.postgresql.org/wiki/Streaming_Replication
+```
+
 ## Data Generation and Loading [PostgreSQL]
 ```
 cd HyBench-2023

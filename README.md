@@ -26,8 +26,6 @@ Configure the parameters such as scale factor, endpoints (i.e., urls), and clien
 vim https://github.com/Rucchao/HyBench-2023/blob/master/conf/pg.props
 ```
 
-
-
 ## Data Generation and Loading [PostgreSQL]
 ```
 cd HyBench-2023

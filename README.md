@@ -18,6 +18,16 @@ Please install the PostgreSQL 14 and configure the streaming replication as foll
 https://wiki.postgresql.org/wiki/Streaming_Replication
 ```
 
+## Benchmark Configuration
+
+Configure the parameters such as scale factor, endpoints (i.e., urls), and client number as follows:
+
+```
+vim https://github.com/Rucchao/HyBench-2023/blob/master/conf/pg.props
+```
+
+
+
 ## Data Generation and Loading [PostgreSQL]
 ```
 cd HyBench-2023

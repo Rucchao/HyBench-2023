@@ -1,0 +1,13 @@
+sqlldr user/passwd@//localhost:1521/hybench_sf1x control=oracle_loader/savingaccount_loader.ctl log=/home/oracle/loader.log
+
+sqlldr user/passwd@//localhost:1521/hybench_sf1x control=oracle_loader/checking_loader.ctl log=/home/oracle/loader.log
+
+sqlldr user/passwd@//localhost:1521/hybench_sf1x control=oracle_loader/customer_loader.ctl log=/home/oracle/loader.log
+
+sqlldr user/passwd@//localhost:1521/hybench_sf1x control=oracle_loader/company_loader.ctl log=/home/oracle/loader.log
+
+sqlldr user/passwd@//localhost:1521/hybench_sf1x control=oracle_loader/transfer_loader.ctl log=/home/oracle/loader.log
+
+sqlldr user/passwd@//localhost:1521/hybench_sf1x control=oracle_loader/loanapps_loader.ctl log=/home/oracle/loader.log
+
+sqlldr user/passwd@//localhost:1521/hybench_sf1x control=oracle_loader/loantrans_loader.ctl log=/home/oracle/loader.log

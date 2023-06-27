@@ -1,0 +1,15 @@
+alter table customer INMEMORY;
+alter table company INMEMORY;
+alter table savingaccount INMEMORY;
+alter table checkingaccount INMEMORY;
+alter table checking INMEMORY;
+alter table transfer INMEMORY;
+alter table loanapps INMEMORY;
+alter table loantrans INMEMORY;
+EXEC DBMS_INMEMORY.POPULATE('user', 'COMPANY');
+EXEC DBMS_INMEMORY.POPULATE('user', 'CHECKINGACCOUNT');
+EXEC DBMS_INMEMORY.POPULATE('user', 'SAVINGACCOUNT');
+EXEC DBMS_INMEMORY.POPULATE('user', 'CHECKING');
+EXEC DBMS_INMEMORY.POPULATE('user', 'TRANSFER');
+EXEC DBMS_INMEMORY.POPULATE('user', 'LOANAPPS');
+EXEC DBMS_INMEMORY.POPULATE('user', 'LOANTRANS');

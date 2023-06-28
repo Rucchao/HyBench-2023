@@ -1,17 +1,21 @@
-#support mysql pg and oracle
-db=mysql
-classname=com.mysql.jdbc.Driver
-username=root
-password=9+H3-rRS5_P68gvE@4
-url=jdbc:mysql://localhost:4000/hybench_sf1x?useUnicode=true&characterEncoding=utf-8
-
-url_ap=jdbc:mysql://localhost:4000/hybench_sf1x?useUnicode=true&characterEncoding=utf-8
-classname_ap=com.mysql.jdbc.Driver
-username_ap=root
-password_ap=9+H3-rRS5_P68gvE@4
-
-## support 1x, 10x,100x,1000x
 sf=1x
+
+db=postgreSQL
+classname=org.postgresql.Driver
+username=@username
+password=@passwd
+
+url=jdbc:postgresql://localhost:5435/hybench_sf1x
+url_tp=jdbc:postgresql://localhost:5435/hybench_sf1x
+url_ap=jdbc:postgresql://172.6.31.14:5435/hybench_sf1x
+
+<!-- spark12 url=jdbc:postgresql://172.6.31.14:5435/hybench_sf1x -->
+<!-- spark11 url_tp=jdbc:postgresql://172.6.31.13:5435/hybench_sf1x -->
+<!-- spark10 url_ap=jdbc:postgresql://172.6.31.12:5433/hybench_sf1x -->
+
+classname_ap=org.postgresql.Driver
+username_ap=@username
+password_ap=@passwd
 
 at1_percent=35
 at2_percent=25
@@ -20,22 +24,22 @@ at4_percent=15
 at5_percent=7
 at6_percent=3
 
-apclient=1
 tpclient=1
+apclient=1
 
-risk_rate=0.1
 fresh_interval=20
-contention_num=100
 
 apRunMins=1
 tpRunMins=1
-xpRunMins=2
+xpRunMins=1
 
 xtpclient=1
 xapclient=1
 
+risk_rate=0
+contention_num=100
 
 dist=uniform
-power_alpha=0.1
+power_alpha=0.01
 
 apround=1

@@ -7,11 +7,7 @@ password=@passwd
 
 url=jdbc:postgresql://localhost:5435/hybench_sf1x
 url_tp=jdbc:postgresql://localhost:5435/hybench_sf1x
-url_ap=jdbc:postgresql://172.6.31.14:5435/hybench_sf1x
-
-<!-- spark12 url=jdbc:postgresql://172.6.31.14:5435/hybench_sf1x -->
-<!-- spark11 url_tp=jdbc:postgresql://172.6.31.13:5435/hybench_sf1x -->
-<!-- spark10 url_ap=jdbc:postgresql://172.6.31.12:5433/hybench_sf1x -->
+url_ap=jdbc:postgresql://localhost:5435/hybench_sf1x
 
 classname_ap=org.postgresql.Driver
 username_ap=@username

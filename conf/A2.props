@@ -1,17 +1,17 @@
-sf=1x
-
-db=postgreSQL
-classname=org.postgresql.Driver
+#support mysql pg and oracle
+db=mysql
+classname=com.mysql.jdbc.Driver
 username=@username
 password=@passwd
+url=jdbc:mysql://localhost:4000/hybench_sf1x?useUnicode=true&characterEncoding=utf-8
 
-url=jdbc:postgresql://localhost:5435/hybench_sf1x
-url_tp=jdbc:postgresql://localhost:5435/hybench_sf1x
-url_ap=jdbc:postgresql://localhost:5435/hybench_sf1x
-
-classname_ap=org.postgresql.Driver
+url_ap=jdbc:mysql://localhost:4000/hybench_sf1x?useUnicode=true&characterEncoding=utf-8
+classname_ap=com.mysql.jdbc.Driver
 username_ap=@username
 password_ap=@passwd
+
+## support 1x, 10x,100x,1000x
+sf=1x
 
 at1_percent=35
 at2_percent=25
@@ -20,22 +20,24 @@ at4_percent=15
 at5_percent=7
 at6_percent=3
 
-tpclient=1
 apclient=1
+tpclient=1
 
+risk_rate=0.1
 fresh_interval=20
+contention_num=100
 
 apRunMins=1
 tpRunMins=1
-xpRunMins=1
+xpRunMins=2
 
 xtpclient=1
 xapclient=1
 
-risk_rate=0
-contention_num=100
 
 dist=uniform
-power_alpha=0.01
+power_alpha=0.1
+
+apround=1
 
 apround=1

@@ -1,17 +1,17 @@
 sf=1x
 
-db=oracle
+db=A1
 classname=oracle.jdbc.OracleDriver
-username=chao
-password=chao
+username=@username
+password=@passwd
 
 url=jdbc:oracle:thin:@localhost:1530/hybench_sf1x
 url_tp=jdbc:oracle:thin:@localhost:1530/hybench_sf1x
 url_ap=jdbc:oracle:thin:@localhost:1530/hybench_sf1x
 
 classname_ap=oracle.jdbc.OracleDriver
-username_ap=chao
-password_ap=chao
+username_ap=@username
+password_ap=@passwd
 
 at1_percent=35
 at2_percent=25

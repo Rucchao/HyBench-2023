@@ -2240,6 +2240,7 @@ public class TPClient extends Client {
                     if(type == 4 && Thread.currentThread().getName().equalsIgnoreCase("T1")){
                         if(rand < fresh_percent){
                             cr = execFresh(conn);
+                            // cr = execFresh2(conn);
                         }
                         else
                             continue;

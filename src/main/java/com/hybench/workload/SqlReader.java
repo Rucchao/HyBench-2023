@@ -29,6 +29,7 @@ public class SqlReader {
             BufferedReader Br = new BufferedReader(new FileReader(filePath));
             Toml toml = new Toml().read(Br);
 
+            
             sqls.setAp_q1(toml.getString("AP-1.sql"));
             sqls.setAp_q2(toml.getString("AP-2.sql"));
             sqls.setAp_q2_1(toml.getString("AP-2.1.sql"));
@@ -52,7 +53,7 @@ public class SqlReader {
             sqls.setAp_iq5_1(toml.getString("IQ-5.1.sql"));
             sqls.setAp_iq6(toml.getString("IQ-6.sql"));
 
-
+            sqls.setTp_at0(getSqlArrayFromList(toml.getList("AT-0.sql")));
             sqls.setTp_at1(getSqlArrayFromList(toml.getList("AT-1.sql")));
             sqls.setTp_at2(getSqlArrayFromList(toml.getList("AT-2.sql")));
             sqls.setTp_at3(getSqlArrayFromList(toml.getList("AT-3.sql")));

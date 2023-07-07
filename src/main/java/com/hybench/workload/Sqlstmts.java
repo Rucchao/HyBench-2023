@@ -439,6 +439,11 @@ public class Sqlstmts {
         this.fresh_iq1 = fresh_iq1;
     }
 
+    public String[] tp_at0() { return tp_at0; }
+
+    public void setTp_at0(String[] tp_at0) {
+        this.tp_at0 = tp_at0;
+    }
 
     public String tp_at6_1() {
         return tp_at6_1;

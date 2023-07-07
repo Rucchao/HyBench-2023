@@ -272,6 +272,12 @@ sql = [
     "UPDATE SAVINGACCOUNT SET BALANCE = BALANCE + ? WHERE ACCOUNTID = ?"
 ]
 
+[AT-0]
+sql= [
+"select custID from customer where companyID = ? order by created_date limit 10",
+"update savingAccount set fresh_ts=current_timestamp where accountID = ?"
+]
+
 [AT-1]
 sql = [
     "SELECT isblocked, balance FROM savingAccount WHERE accountID = ?",

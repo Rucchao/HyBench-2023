@@ -117,6 +117,64 @@ public class TPClient extends Client {
         return Id;
     }
 
+    public ClientResult execFresh2(Connection conn){
+        ClientResult cr = new ClientResult();
+        String type = null;
+
+        int targetId =testid;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        long responseTime = 0L;
+        try {
+            String[] statements= sqls.tp_at0();
+            String sql0=statements[0];
+            String sql1=statements[1];
+
+            long currentStarttTs = System.currentTimeMillis();
+            // transaction begins
+            conn.setAutoCommit(false);
+
+            // get top 10 employees
+            pstmt= conn.prepareStatement(sql0);
+            pstmt.setInt(1,targetId);
+
+            rs = pstmt.executeQuery();
+            int stopId = rg.getRandomint(1,10);
+            int idx = 1;
+            int custId = 0;
+            while(rs.next()){
+                custId = rs.getInt(1);
+                idx++;
+                if(idx == stopId){
+                    break;
+                }
+            }
+            // update ts
+            pstmt= conn.prepareStatement(sql1);
+            pstmt.setInt(1,custId);
+            pstmt.executeUpdate();
+
+            pstmt.close();
+            conn.commit();
+            long currentEndTs = System.currentTimeMillis();
+            responseTime = currentEndTs - currentStarttTs;
+            cr.setRt(responseTime);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            cr.setResult(false);
+            cr.setErrorMsg(e.getMessage());
+            cr.setErrorCode(String.valueOf(e.getErrorCode()));
+        }  finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return cr;
+    }
+
+    
     public ClientResult execFresh(Connection conn) {
         ClientResult cr = new ClientResult();
         String type = null;

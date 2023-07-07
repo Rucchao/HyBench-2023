@@ -44,6 +44,7 @@ public class Sqlstmts {
     private  String[] tp_txn17 = null;
     private  String[] tp_txn18 = null;
     // AT SQLs, total 6
+    private  String[] tp_at0 = null;
     private  String[] tp_at1 = null;
     private  String[] tp_at2 = null;
     private  String[] tp_at3 = null;

@@ -208,6 +208,9 @@ public abstract class Client {
         int company_no = companynumber.intValue();
 
         int random_num=rg.getRandomint(1, customer_no+company_no);
+
+	// release this for Freshness2
+	// int random_num=rg.getRandomint(customer_no, customer_no+company_no);
         setTestid(random_num);
 
         try {

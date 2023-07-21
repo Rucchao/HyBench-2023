@@ -29,7 +29,7 @@ vim https://github.com/Rucchao/HyBench-2023/blob/master/conf/pg.props
 ```
 cd HyBench-2023
 
-psql -U postgres -c 'create database hybench_sf1x;'
+psql -h localhost -U postgres -c 'create database hybench_sf1x;'
 
 bash hybench -t sql -c conf/pg.props -f conf/ddl_pg.sql
 

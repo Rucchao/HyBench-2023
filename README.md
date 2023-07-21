@@ -25,7 +25,7 @@ Configure the parameters such as scale factor, endpoints (i.e., urls), and clien
 ```
 vim https://github.com/Rucchao/HyBench-2023/blob/master/conf/pg.props
 ```
-## Data Generation and Loading [PostgreSQL]
+## Step 1: Data Generation and Loading [PostgreSQL]
 ```
 cd HyBench-2023
 
@@ -38,13 +38,13 @@ bash hybench -t gendata -c conf/pg.props -f conf/stmt_postgres.toml
 psql -h localhost -U postgres -d hybench_sf1x -f conf/load_data_pg.sql
 ```
 
-## Index Building [PostgreSQL]
+## Step 2: Index Building [PostgreSQL]
 
 ```
 bash hybench -t sql -c conf/pg.props -f conf/create_index_pg.sql
 ```
 
-## Run the Benchmark [PostgreSQL]
+## Step 3: Run the Benchmark [PostgreSQL]
 
 ```
 bash hybench -t runall -c conf/pg.props -f conf/stmt_postgres.toml

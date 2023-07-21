@@ -20,7 +20,7 @@ https://wiki.postgresql.org/wiki/Streaming_Replication
 
 ## Benchmark Configuration
 
-Configure the parameters such as scale factor, endpoints (i.e., urls), and client number as follows:
+Configure the parameters such as username and password in the following file:
 
 ```
 vim https://github.com/Rucchao/HyBench-2023/blob/master/conf/pg.props

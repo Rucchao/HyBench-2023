@@ -13,7 +13,7 @@ Tested OS: |MacOS Ventura 13.2.1|Ubuntu 22.04|CentOS 7
 
 ## Benchmark Configuration
 
-Configure the parameters such as username and password in the following file:
+Configure the parameters for PostgreSQL such as username and password in the following file:
 
 ```
 vim https://github.com/Rucchao/HyBench-2023/blob/master/conf/pg.props

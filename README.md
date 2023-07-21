@@ -1,4 +1,4 @@
-# HyBench - A New Benchmark for HTAP Databases
+# HyBench - A New Benchmark for HTAP Databases 
 
 ## Environments
 ```

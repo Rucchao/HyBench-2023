@@ -101,5 +101,5 @@ Please refer to [wiki](https://github.com/Rucchao/HyBench-2023/wiki) for benchma
 | xapclient      | 1                                         | XP-IQS concurrency                                                                |                                          |   |
 | apround        | 1                                         | AP round，at least 1 round should be evaluated                                                                | AP Power test                      |   |
 
-(6) Please refer to [parameters.toml](https://github.com/Rucchao/HyBench-2023/blob/master/src/main/resources/parameters.toml) for the parameters of data generation.
+(7) Please refer to [parameters.toml](https://github.com/Rucchao/HyBench-2023/blob/master/src/main/resources/parameters.toml) for the parameters of data generation.
 

@@ -6,7 +6,7 @@ MAVEN version > 3.0
 
 JAVA version > 17
 
-Tested OS: |MacOS Ventura 13.2.1|Ubuntu 22.04|CentOS 7
+Tested OS: |MacOS Ventura 13.2.1|Ubuntu 22.04|CentOS 7| Windows
 
 An example for JAVA installation in MacOS: brew install openjdk@17
 ```

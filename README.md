@@ -60,16 +60,16 @@ Solution: once re-compiled with mvn clean pacakge, replace the HyBench-1.0-SNAPS
 
 (3) With the Window OS, you may use the Java command to run HyBench: java -cp "HyBench-1.0-SNAPSHOT.jar;lib/*" com.hybench.HyBench [-t][-c][-f]
 
-(3) File not Found for PG data loading
+(4) File not Found for PG data loading
 ```
 Solution: modify the path to data directory in the conf/load_data_pg.sql file. For instance, replace 'Data_1x/customer.csv' with 'Data_10x/customer.csv'
 ```
 
-(4) Benchmarking other HTAP databases
+(5) Benchmarking other HTAP databases
 
 Please refer to [wiki](https://github.com/Rucchao/HyBench-2023/wiki) for benchmarking more HTAP databases.
 
-(5) Benchmarking Parameters
+(6) Benchmarking Parameters
 
 ### Parameter List
 

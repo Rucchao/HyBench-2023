@@ -17,7 +17,7 @@ An example for JAVA installation in MacOS: brew install openjdk@17
 Configure the parameters for PostgreSQL including username, password, username_ap, password_ap in the following file (NB: configure the same URL for a standalone setting):
 
 ```
-vim https://github.com/Rucchao/HyBench-2023/blob/master/conf/pg.props
+vim ./conf/pg.props
 ```
 ## Step 1: Data Generation and Loading [PostgreSQL]
 ```

@@ -1,9 +1,7 @@
 package com.hybench.workload;
 /**
  *
- * @time 2023-07-06
- * @version 1.0.0
- * @file Freshness.java
+ * @file Freshness2.java
  * @description
  *   calc freshness.
  **/

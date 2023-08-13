@@ -22,8 +22,6 @@ vim ./conf/pg.props
 ```
 ## Step 1: Data Generation and Loading [PostgreSQL]
 ```
-cd HyBench-2023
-
 psql -h localhost -U postgres -c 'create database hybench_sf1x;'
 
 bash hybench -t sql -c conf/pg.props -f conf/ddl_pg.sql

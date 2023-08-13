@@ -14,7 +14,7 @@ An example for JAVA installation in MacOS: brew install openjdk@17
 
 ## Benchmark Configuration
 
-Configure the parameters for PostgreSQL 14 including username, password, username_ap, password_ap in the following file (NB: configure the same URL for a standalone setting):
+Configure the parameters for PostgreSQL 14 including **username, password, username_ap, password_ap** in the following file (NB: configure the same URL for a standalone setting):
 
 ```
 cd HyBench-2023

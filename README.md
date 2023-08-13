@@ -14,13 +14,13 @@ An example for JAVA installation in MacOS: brew install openjdk@17
 
 ## Benchmark Configuration
 
-Configure the parameters for PostgreSQL including username, password, username_ap, password_ap in the following file (NB: configure the same URL for a standalone setting):
+Configure the parameters for PostgreSQL 14 including username, password, username_ap, password_ap in the following file (NB: configure the same URL for a standalone setting):
 
 ```
 cd HyBench-2023
 vim ./conf/pg.props
 ```
-## Step 1: Data Generation and Loading [PostgreSQL]
+## Step 1: Data Generation and Loading [PostgreSQL 14]
 ```
 psql -h localhost -U postgres -c 'create database hybench_sf1x;'
 
@@ -31,13 +31,13 @@ bash hybench -t gendata -c conf/pg.props -f conf/stmt_postgres.toml
 psql -h localhost -U postgres -d hybench_sf1x -f conf/load_data_pg.sql
 ```
 
-## Step 2: Index Building [PostgreSQL]
+## Step 2: Index Building [PostgreSQL 14]
 
 ```
 bash hybench -t sql -c conf/pg.props -f conf/create_index_pg.sql
 ```
 
-## Step 3: Run the Benchmark [PostgreSQL]
+## Step 3: Run the Benchmark [PostgreSQL 14]
 
 ```
 bash hybench -t runall -c conf/pg.props -f conf/stmt_postgres.toml

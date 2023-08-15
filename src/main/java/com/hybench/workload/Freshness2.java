@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -44,13 +46,29 @@ public class Freshness2 {
             HashMap<Integer,Long> ret_ap = queryAP.get();
             HashMap<Integer,Long> ret_tp = queryTP.get();
 
-            for(Integer cid : ret_tp.keySet()){
-                long ts_ap = ret_ap.get(cid);
-                long ts_tp = ret_tp.get(cid);
-                if(ts_ap != 0 && (ts_tp - ts_ap) > freshness )
-                    freshness = ts_tp - ts_ap;
-            }
+            // get the union of the keyset
+            HashSet<Integer> union = new HashSet <Integer>();
+            union.addAll(ret_tp.keySet());
+            union.addAll(ret_ap.keySet());
+            Iterator<Integer> IDIterator = union.iterator();
 
+            while(IDIterator.hasNext()){
+                long tid = IDIterator.next();
+                long ts_ap = ret_ap.get(tid);
+                long ts_tp = ret_tp.get(tid);
+                long diff=0;
+                // update
+                if(ret_ap.containsValue(tid) && ret_tp.containsValue(tid))
+                    diff = ts_tp - ts_ap;
+                // insert
+                if(ret_tp.containsValue(tid) && !ret_ap.containsValue(tid))
+                    diff = startTime.getTime() - ts_tp;
+                //delete
+                if(ret_ap.containsValue(tid) && !ret_tp.containsValue(tid))
+                    diff = startTime.getTime() - ts_ap;
+                if(diff > freshness)
+                    freshness = diff;
+            }
 
         } catch (InterruptedException e) {
             e.printStackTrace();

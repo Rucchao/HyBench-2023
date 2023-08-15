@@ -63,9 +63,10 @@ public class Freshness2 {
                 // insert
                 if(ret_tp.containsValue(tid) && !ret_ap.containsValue(tid))
                     diff = startTime.getTime() - ts_tp;
-                //delete
+                // delete
                 if(ret_ap.containsValue(tid) && !ret_tp.containsValue(tid))
                     diff = startTime.getTime() - ts_ap;
+                // max
                 if(diff > freshness)
                     freshness = diff;
             }

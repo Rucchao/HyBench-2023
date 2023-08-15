@@ -1,6 +1,6 @@
 # HyBench - A New Benchmark for HTAP Databases 
 
-## Environments
+## Software Environments
 ```
 MAVEN version > 3.0
 

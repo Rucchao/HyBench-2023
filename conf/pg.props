@@ -2,8 +2,8 @@ sf=1x
 
 db=postgreSQL
 classname=org.postgresql.Driver
-username=YourName
-password=Yourpasswd
+username=postgres
+password=postgres
 
 
 url=jdbc:postgresql://localhost:5432/hybench_sf1x
@@ -11,8 +11,8 @@ url_tp=jdbc:postgresql://localhost:5432/hybench_sf1x
 url_ap=jdbc:postgresql://localhost:5432/hybench_sf1x
 
 classname_ap=org.postgresql.Driver
-username_ap=YourName
-password_ap=Yourpasswd
+username_ap=postgres
+password_ap=postgres
 
 at1_percent=35
 at2_percent=25
@@ -21,8 +21,9 @@ at4_percent=15
 at5_percent=7
 at6_percent=3
 
-apclient=1
 tpclient=1
+apclient=1
+
 
 fresh_interval=20
 
@@ -33,7 +34,7 @@ xpRunMins=1
 xtpclient=1
 xapclient=1
 
-risk_rate=0
+risk_rate=0.1
 contention_num=100
 
 dist=uniform

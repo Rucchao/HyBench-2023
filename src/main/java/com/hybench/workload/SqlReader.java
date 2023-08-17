@@ -84,7 +84,8 @@ public class SqlReader {
             sqls.setTp_txn17(getSqlArrayFromList(toml.getList("TP-17.sql")));
             sqls.setTp_txn18(getSqlArrayFromList(toml.getList("TP-18.sql")));
 
-            sqls.setFresh_iq1(toml.getString("fresh.sql"));
+            sqls.setFresh_iq(toml.getString("fresh.sql"));
+            sqls.setFresh_iq1(toml.getString("fresh-1.sql"));
 
         }catch(Exception e){
             e.printStackTrace();

@@ -28,23 +28,23 @@ create index idx_ca_1 on checkingaccount ( userid );
 CREATE SEQUENCE IF NOT EXISTS transfer_id_seq;
 SELECT SETVAL('transfer_id_seq', (SELECT max(id) FROM transfer));
 ALTER TABLE transfer ALTER COLUMN id SET DEFAULT nextval('transfer_id_seq'::regclass);
-ALTER sequence transfer_id_seq owner to postgres;
+ALTER sequence transfer_id_seq owner to chao;
 ALTER SEQUENCE transfer_id_seq OWNED BY transfer.id;
 
 CREATE SEQUENCE IF NOT EXISTS checking_id_seq;
 SELECT SETVAL('checking_id_seq', (SELECT max(id) FROM checking));
 ALTER TABLE checking ALTER COLUMN id SET DEFAULT nextval('checking_id_seq'::regclass);
-ALTER sequence checking_id_seq owner to postgres;
+ALTER sequence checking_id_seq owner to chao;
 ALTER SEQUENCE checking_id_seq OWNED BY checking.id;
 
 CREATE SEQUENCE IF NOT EXISTS loanapps_id_seq;
 SELECT SETVAL('loanapps_id_seq', (SELECT max(id) FROM loanapps));
 ALTER TABLE loanapps ALTER COLUMN id SET DEFAULT nextval('loanapps_id_seq'::regclass);
-ALTER sequence loanapps_id_seq owner to postgres;
+ALTER sequence loanapps_id_seq owner to chao;
 ALTER SEQUENCE loanapps_id_seq OWNED BY loanapps.id;
 
 CREATE SEQUENCE IF NOT EXISTS loantrans_id_seq;
 SELECT SETVAL('loantrans_id_seq', (SELECT max(id) FROM loantrans));
 ALTER TABLE loantrans ALTER COLUMN id SET DEFAULT nextval('loantrans_id_seq'::regclass);
-ALTER sequence loantrans_id_seq owner to postgres;
+ALTER sequence loantrans_id_seq owner to chao;
 ALTER SEQUENCE loantrans_id_seq OWNED BY loantrans.id;

@@ -161,7 +161,7 @@ public class DataGenerator_RiskControlling {
                 cust_bufferedWriter.write(NEW_LINE_SEPARATOR);
 
                 // get the customer saving balance
-                SavingAccount sa = new SavingAccount(i, i, CR.customer_savingbalance, blocked, date);
+                SavingAccount sa = new SavingAccount(i, i, CR.customer_savingbalance, blocked, date, null);
                 savingAccount_bufferedWriter.write(sa.toString());
                 savingAccount_bufferedWriter.write(NEW_LINE_SEPARATOR);
 
@@ -210,7 +210,7 @@ public class DataGenerator_RiskControlling {
                 company_bufferedWriter.write(NEW_LINE_SEPARATOR);
 
                 // get the company saving balance
-                SavingAccount sa = new SavingAccount(i, i, CR.company_savingbalance, blocked, date);
+                SavingAccount sa = new SavingAccount(i, i, CR.company_savingbalance, blocked, date, null);
                 savingAccount_bufferedWriter.write(sa.toString());
                 savingAccount_bufferedWriter.write(NEW_LINE_SEPARATOR);
 

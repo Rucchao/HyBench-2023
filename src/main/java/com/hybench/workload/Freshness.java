@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 
 public class Freshness {
     public static Logger logger = LogManager.getLogger(Freshness.class);
-    int testid = Client.testid;;
+    int testid = Client.testid1;
     int dbType;
     Sqlstmts sqls =null;
     Connection conn_tp = null;

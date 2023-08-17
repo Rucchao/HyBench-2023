@@ -121,7 +121,7 @@ public class TPClient extends Client {
         ClientResult cr = new ClientResult();
         String type = null;
 
-        int targetId =testid;
+        int targetId =testid2;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         long responseTime = 0L;
@@ -182,7 +182,7 @@ public class TPClient extends Client {
         int sourceid = rg.getRandomint(1,customer_no+company_no);
         // Get customized targetid
 
-        int targetId =testid;
+        int targetId =testid1;
 
         double amount = 0;
         if(sourceid<customer_no){
@@ -2238,9 +2238,11 @@ public class TPClient extends Client {
                 while(!exitFlag){
                     int rand = ThreadLocalRandom.current().nextInt(1, 100);
                     if(type == 4 && Thread.currentThread().getName().equalsIgnoreCase("T1")){
-                        if(rand < fresh_percent){
-                            cr = execFresh(conn);
-                            // cr = execFresh2(conn);
+                        if(rand < fresh_percent/2){
+                            cr= execFresh(conn);
+                        }
+                        else if(rand < fresh_percent){
+                           cr= execFresh2(conn);
                         }
                         else
                             continue;

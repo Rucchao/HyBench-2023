@@ -19,7 +19,8 @@ public record SavingAccount
          int userID,
          double balance,
          int isBlocked,
-         Date timestamp
+         Date timestamp,
+         Date fresh_ts
         )
 {
     @Override
@@ -29,7 +30,8 @@ public record SavingAccount
                 .add(Integer.toString(userID))
                 .add(Double.toString(balance))
                 .add(Integer.toString(isBlocked))
-                .add(convertDateToString(timestamp));
+                .add(convertDateToString(timestamp))
+                .add("");
         return joiner.toString();
     }
 

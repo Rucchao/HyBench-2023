@@ -65,6 +65,7 @@ public class Sqlstmts {
     private  String ap_iq6 = null;
 
     // Fresh sql
+    private  String fresh_iq = null;
     private  String fresh_iq1 = null;
 
     public String[] tp_at1() { return tp_at1; }
@@ -431,6 +432,12 @@ public class Sqlstmts {
 
     public void setAp_iq6(String ap_iq6) {
         this.ap_iq6 = ap_iq6;
+    }
+
+    public String fresh_iq() { return fresh_iq; }
+
+    public void setFresh_iq(String fresh_iq) {
+        this.fresh_iq = fresh_iq;
     }
 
     public String fresh_iq1() { return fresh_iq1; }

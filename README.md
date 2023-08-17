@@ -2,7 +2,7 @@
 
 ## Software Environments
 ```
-MAVEN version > 3.0
+MAVEN version > 3.6.3
 
 JAVA version > 17
 
@@ -54,7 +54,7 @@ Solution: modify the path to lib directory in the hybench file
 
 (2) mvn clean package...Failed to execute goal on project HyBench:HyBench:jar:1.0-SNAPSHOT
 ```
-Solution: once re-compiled with mvn clean pacakge, replace the HyBench-1.0-SNAPSHOT.jar in the lib folder with the newly-generated file in the target folder
+Solution: when the Maven version is greater than 3.8, you need to remove the tags of blocked mirrors of $Maven_home/conf/settings.xml. 
 ```
 
 (3) With the Window OS, you may use the Java command to run HyBench: 

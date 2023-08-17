@@ -49,9 +49,12 @@ public abstract class Client {
     Histogram hist = null;
     boolean verbose = true;
     int round = 1;
-    static int testid=2;
+    static int testid1=1;
+    static int testid2=300001;
     List<Integer> Related_Blocked_Transfer_ids=null;
     List<Integer> Related_Blocked_Checking_ids=null;
+    static HashSet<Integer> delete_set1 = new HashSet <Integer>();
+    static HashSet<Integer> delete_set2 = new HashSet <Integer>();
     RandomGenerator rg = new RandomGenerator();
 
     double risk_rate=0;
@@ -59,8 +62,12 @@ public abstract class Client {
 
     ExecutorService es = null;//Executors.newFixedThreadPool(5);
 
-    public void setTestid(int random_num){
-        this.testid = random_num;
+    public void setTestid1(int random_num){
+        this.testid1 = random_num;
+    }
+
+    public void setTestid2(int random_num){
+        this.testid2 = random_num;
     }
 
     public void setVerbose(boolean verbose){
@@ -207,11 +214,11 @@ public abstract class Client {
         int customer_no = customernumer.intValue() + 1;
         int company_no = companynumber.intValue();
 
-        int random_num=rg.getRandomint(1, customer_no+company_no);
+        int random_num1=rg.getRandomint(1, customer_no+company_no);
+        setTestid1(random_num1);
 
-	// release this for Freshness2
-	// int random_num=rg.getRandomint(customer_no, customer_no+company_no);
-        setTestid(random_num);
+	    int random_num2=rg.getRandomint(customer_no, customer_no+company_no);
+        setTestid2(random_num2);
 
         try {
             // load the blocking-related transfer accounts

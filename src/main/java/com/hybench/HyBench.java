@@ -13,10 +13,7 @@ import com.hybench.dbconn.ConnectionMgr;
 import com.hybench.load.DataGenerator_RiskControlling;
 import com.hybench.load.ExecSQL;
 import com.hybench.stats.Result;
-import com.hybench.workload.Client;
-import com.hybench.workload.Freshness;
-import com.hybench.workload.SqlReader;
-import com.hybench.workload.Sqlstmts;
+import com.hybench.workload.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -234,7 +231,7 @@ public class HyBench {
                         try {
                             Thread.sleep(_duration * 60 * 1000/_fresh_interval);
                             elpased_time += _duration * 60 * 1000/_fresh_interval;
-                            Freshness fresh = new Freshness(dbType,conn_tp,conn_ap,sqls,startTs);
+                            Freshness2 fresh = new Freshness2(dbType,conn_tp,conn_ap,sqls,startTs);
                             if(fresh.calcFreshness() == 2147483647){
                                 continue;
                             }

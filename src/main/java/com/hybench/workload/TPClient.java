@@ -843,9 +843,9 @@ public class TPClient extends Client {
                     pstmt3.executeUpdate();
 
                     // add blocked accountid for IQ2
-                    queue_ids.add(AT6_applicantid);
-                    if(queue_ids.size()>contention_num)
-                        queue_ids.remove();
+                    while(queue_ids.offer(AT6_applicantid)==false){
+                        queue_ids.poll();
+                    }
                 }
                 else{
                     conn.rollback();

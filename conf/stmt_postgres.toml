@@ -403,11 +403,11 @@ where aa.id=lt2.applicantid and la.id= lt2.appid; """
 [fresh]
 sql = """select t.id, t.fresh_ts
 from transfer t, customer c
-where t.targetid=? and t.targetid=c.custid and t.fresh_ts is not null
+where t.targetid=? and t.targetid=c.custid
 order by t.fresh_ts DESC limit 10 ;"""
 
 [fresh-1]
 sql="""select sa.accountID, sa.fresh_ts
 from savingaccount sa,company co,customer cu
-where sa.accountid=cu.custid and co.companyid=? and co.companyID = cu.companyID and sa.fresh_ts is not null
+where sa.accountid=cu.custid and co.companyid=? and co.companyID = cu.companyID
  order by sa.fresh_ts DESC limit 10;"""

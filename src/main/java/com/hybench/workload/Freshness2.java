@@ -10,9 +10,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.TimeZone;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -22,23 +25,27 @@ public class Freshness2 {
     int testid2 = Client.testid2;
     HashSet<Integer> delete_set1 = Client.delete_set1;
     HashSet<Integer> delete_set2 = Client.delete_set2;
+    SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     int dbType;
     Sqlstmts sqls =null;
     Connection conn_tp = null;
     Connection conn_ap = null;
-    Timestamp startTime = null;
+    long startTime = 0;
     long curfreshness = 0;
     long ts_Q1 =0;
     long ts_Q2 =0;
-    long max_Q1 =0;
-    long max_Q2 =0;
+    long max_Q1=0;
+    long max_Q2=0;
 
-    public Freshness2(int dbType,Connection ctp,Connection cap,Sqlstmts sqls,Timestamp startTime){
+    public Freshness2(int dbType,Connection ctp,Connection cap,Sqlstmts sqls,long startTime){
         this.dbType = dbType;
         conn_tp = ctp;
         conn_ap = cap;
         this.sqls = sqls;
         this.startTime = startTime;
+        // make sure the time zone is the same as the database
+        TimeZone defaultTimeZone = TimeZone.getDefault();
+        System.out.println(defaultTimeZone.getID());
     }
 
     public Long calcFreshness (){
@@ -46,6 +53,8 @@ public class Freshness2 {
         long freshness2 = 0;
         logger.info("testid1 is : " + testid1);
         logger.info("testid2 is : " + testid2);
+        max_Q1=0;
+        max_Q2=0;
         CompletableFuture<HashMap<Integer,Long>> queryTP1 =
                 CompletableFuture.supplyAsync(() -> {return getTPTsList1();});
         CompletableFuture<HashMap<Integer,Long>> queryAP1 =
@@ -87,10 +96,12 @@ public class Freshness2 {
                 else if(ret_tp.containsKey(tid) && !ret_ap.containsKey(tid)){
                     ts_tp = ret_tp.get(tid);
                     if(ts_tp>max_Q1){
+                        logger.info("max_Q1 is "+ max_Q1);
+                        logger.info("TP Query starting time is : " + ts_Q1);
                         logger.info("Q1: this is an insert case!");
-                        diff = ts_Q1 - ts_tp;
                         logger.info("ts_tp is : " + ts_tp);
                         logger.info("ts_ap is : " + ts_ap);
+                        diff = ts_Q1 - ts_tp;
                         logger.info("the insert diff is: "+diff);
                     }
                 }
@@ -142,7 +153,7 @@ public class Freshness2 {
                     ts_tp = ret_tp.get(tid);
                     diff = ts_tp - ts_ap;
                     if(diff>0){
-                        logger.info("TP Query starting time is : " + ts_Q1);
+                        logger.info("TP Query starting time is : " + ts_Q2);
                         logger.info("Q2: this is an update case!");
                         logger.info("join id is "+tid);
                         logger.info("ts_tp is : " + ts_tp);
@@ -156,6 +167,7 @@ public class Freshness2 {
                     if(ts_tp>max_Q2){
                         logger.info("Q2: this is an insert case!");
                         logger.info("TP Query starting time is : " + ts_Q2);
+                        logger.info("The max time is : " + max_Q2);
                         logger.info("ts_tp is : " + ts_tp);
                         logger.info("ts_ap is : " + ts_ap);
                         diff = ts_Q2 - ts_tp;
@@ -199,11 +211,16 @@ public class Freshness2 {
             pstmt_tp = conn_tp.prepareStatement(sqls.fresh_iq());
             pstmt_tp.setInt(1,testid1);
             ts_Q1 = System.currentTimeMillis();
+            // get the UTC time
+            //ts_Q1= Instant.now().toEpochMilli();
             rs_tp = pstmt_tp.executeQuery();
 
           //  logger.info("fresh query is "+sqls.fresh_iq());
             while(rs_tp.next()){
                 Timestamp ret = rs_tp.getTimestamp(2);
+                if(ret == null){
+                    list.put(rs_tp.getInt(1), startTime);
+                }
                 if( ret != null){
                     list.put(rs_tp.getInt(1),rs_tp.getTimestamp(2).getTime());
                 }
@@ -226,17 +243,28 @@ public class Freshness2 {
         PreparedStatement pstmt_ap = null;
         ResultSet rs_ap = null;
         try {
+//            String fresh_ap1="select /*+ read_from_storage(tiflash[t,c]) */ t.fresh_ts, t.transfer_ts, t.amount, c.custid, c.name from transfer as t, customer as c\n" +
+//                    " where t.targetid=? and t.targetid=c.custid and t.fresh_ts is not null\n" +
+//                    " order by t.fresh_ts DESC limit 10";
+//            pstmt_ap = conn_ap.prepareStatement(fresh_ap1);
             pstmt_ap = conn_ap.prepareStatement(sqls.fresh_iq());
             pstmt_ap.setInt(1,testid1);
+            ts_Q1 = System.currentTimeMillis();
+            // get the UTC time
+            //ts_Q1= Instant.now().toEpochMilli();
             rs_ap = pstmt_ap.executeQuery();
-
+            System.out.println("current system time is "+sdf.format(ts_Q1));
             while(rs_ap.next()){
                 Timestamp ret = rs_ap.getTimestamp(2);
-                if(rs_ap.isFirst()){
+                if(ret == null){
+                    list.put(rs_ap.getInt(1), startTime);
+                }
+                if(rs_ap.isFirst() & ret!=null){
                     max_Q1=ret.getTime();
                 }
                 if( ret != null){
                     list.put(rs_ap.getInt(1),rs_ap.getTimestamp(2).getTime());
+                    System.out.println("current database time is "+ret);
                 }
             }
             rs_ap.close();
@@ -260,9 +288,14 @@ public class Freshness2 {
             pstmt_tp = conn_tp.prepareStatement(sqls.fresh_iq1());
             pstmt_tp.setInt(1,testid2);
             ts_Q2 = System.currentTimeMillis();
+            // get the UTC time
+            //ts_Q2= Instant.now().toEpochMilli();
             rs_tp = pstmt_tp.executeQuery();
             while(rs_tp.next()){
                 Timestamp ret = rs_tp.getTimestamp(2);
+                if(ret == null){
+                    list.put(rs_tp.getInt(1), startTime);
+                }
                 if( ret != null){
                     list.put(rs_tp.getInt(1),rs_tp.getTimestamp(2).getTime());
                 }
@@ -285,15 +318,26 @@ public class Freshness2 {
         PreparedStatement pstmt_ap = null;
         ResultSet rs_ap = null;
         try {
+//             String fresh_ap2="select /*+ read_from_storage(tiflash[sa,co,cu]) */ sa.accountID, sa.fresh_ts "+
+//                            "from savingaccount sa,company co,customer cu "+
+//                            "where sa.accountid=cu.custid and co.companyid=? and co.companyID = cu.companyID and sa.fresh_ts is not null "+
+//                            "order by sa.fresh_ts DESC limit 10";
+//            pstmt_ap = conn_ap.prepareStatement(fresh_ap2);
             pstmt_ap = conn_ap.prepareStatement(sqls.fresh_iq1());
             pstmt_ap.setInt(1,testid2);
+            ts_Q2 = System.currentTimeMillis();
+            // get the UTC time
+            //ts_Q2= Instant.now().toEpochMilli();
             rs_ap = pstmt_ap.executeQuery();
             while(rs_ap.next()){
                 Timestamp ret = rs_ap.getTimestamp(2);
-                if(rs_ap.isLast()){
+                if(ret == null){
+                    list.put(rs_ap.getInt(1), startTime);
+                }
+                if(rs_ap.isFirst() & ret!=null){
                     max_Q2=ret.getTime();
                 }
-                if( ret != null){
+                if(ret!=null){
                     list.put(rs_ap.getInt(1),rs_ap.getTimestamp(2).getTime());
                 }
             }

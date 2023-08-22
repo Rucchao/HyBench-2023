@@ -174,7 +174,6 @@ public class TPClient extends Client {
         return cr;
     }
 
-    
     public ClientResult execFresh(Connection conn) {
         ClientResult cr = new ClientResult();
         String type = null;
@@ -251,7 +250,6 @@ public class TPClient extends Client {
         }
         return cr;
     }
-
 
     // 6 Analytical Transactions (AT)
     public ClientResult execAT1(Connection conn) {
@@ -371,7 +369,6 @@ public class TPClient extends Client {
         }
         return cr;
     }
-
 
     public ClientResult execAT2(Connection conn ){
         ClientResult cr = new ClientResult();

@@ -276,6 +276,11 @@ sql = [
 "UPDATE SAVINGACCOUNT SET BALANCE = BALANCE + ? WHERE ACCOUNTID = ?"
 ]
 
+[AT-0]
+sql= [
+    "select custID from customer where companyID = ? order by created_date limit 10",
+    "update savingAccount set fresh_ts=current_timestamp where accountID = ?"
+]
 
 [AT-1]
 sql = [
@@ -410,7 +415,13 @@ from loantrans lt2, loanapps la, abnormal_accounts aa
 where aa.id=lt2.applicantid and la.id= lt2.appid; """
 
 [fresh]
-sql = """select t.fresh_ts, t.transfer_ts, t.amount, c.custid, c.name
+sql = """select t.id, t.fresh_ts
 from transfer t, customer c
 where t.targetid=? and t.targetid=c.custid and t.fresh_ts is not null
-order by t.fresh_ts DESC limit 1 """
+order by t.fresh_ts DESC limit 10 """
+
+[fresh-1]
+sql="""select sa.accountID, sa.fresh_ts
+from savingaccount sa,company co,customer cu
+where sa.accountid=cu.custid and co.companyid=? and co.companyID = cu.companyID and sa.fresh_ts is not null
+ order by sa.fresh_ts DESC limit 10;"""

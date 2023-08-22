@@ -1,4 +1,9 @@
 package com.hybench.stats;
+
+import com.hybench.HyBench;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  *
  * @time 2023-03-04
@@ -9,6 +14,7 @@ package com.hybench.stats;
  **/
 
 public class Result {
+    public static Logger logger = LogManager.getLogger(Result.class);
     private String dbType = null;
     private long tpTotal;
     private long apTotal;
@@ -157,71 +163,71 @@ public class Result {
     }
 
     public void printResult(int type){
-        System.out.println("====================Test Summary========================");
-        System.out.println("Test starts at " + getStartTS());
-        System.out.println("Test ends at " + getEndTs());
-	    System.out.println("Risk Rate is " + getRiskRate());
+        logger.info("====================Test Summary========================");
+        logger.info("Test starts at " + getStartTS());
+        logger.info("Test ends at " + getEndTs());
+	    logger.info("Risk Rate is " + getRiskRate());
         switch(type){
             case 0:
-                System.out.println("XP-IQ Concurrency is " + getXapclient());
-                System.out.println("XP-AT Concurrency is " + getXtpclient());
-                System.out.println("Total amount of XP-IQ Queries is " + getIqTotal());
-                System.out.println("Total amount of XP-AT Transaction is " + getAtTotal());
-                System.out.println("XP-QPS is " + getXpqps());
-                System.out.println("XP-TPS is " + getXptps());
+                logger.info("XP-IQ Concurrency is " + getXapclient());
+                logger.info("XP-AT Concurrency is " + getXtpclient());
+                logger.info("Total amount of XP-IQ Queries is " + getIqTotal());
+                logger.info("Total amount of XP-AT Transaction is " + getAtTotal());
+                logger.info("XP-QPS is " + getXpqps());
+                logger.info("XP-TPS is " + getXptps());
                 break;
             case 1:
-                System.out.println("AP Concurrency is " + getApclient());
-                System.out.println("TP Concurrency is " + getTpclient());
-                System.out.println("Total amount of TP Transaction is " + getTpTotal());
-                System.out.println("TPS is " + getTps());
+                logger.info("AP Concurrency is " + getApclient());
+                logger.info("TP Concurrency is " + getTpclient());
+                logger.info("Total amount of TP Transaction is " + getTpTotal());
+                logger.info("TPS is " + getTps());
                 break;
             case 2 :
             case 7 :
-                System.out.println("AP Concurrency is " + getApclient());
-                System.out.println("TP Concurrency is " + getTpclient());
-                System.out.println("Total amount of AP Queries is " + getApTotal());
-                System.out.println("QPS is " + getQps());
+                logger.info("AP Concurrency is " + getApclient());
+                logger.info("TP Concurrency is " + getTpclient());
+                logger.info("Total amount of AP Queries is " + getApTotal());
+                logger.info("QPS is " + getQps());
                 break;
             case 3:
-                System.out.println("AP Concurrency is " + getApclient());
-                System.out.println("TP Concurrency is " + getTpclient());
-                System.out.println("XP-IQ Concurrency is " + getXapclient());
-                System.out.println("XP-AT Concurrency is " + getXtpclient());
-                System.out.println("Total amount of TP Transaction is " + getTpTotal());
-                System.out.println("TPS is " + getTps());
-                System.out.println("Total amount of AP Queries is " + getApTotal());
-                System.out.println("QPS is " + getQps());
-                System.out.println("Total amount of XP-IQ Queries is " + getIqTotal());
-                System.out.println("Total amount of XP-AT Transaction is " + getAtTotal());
-                System.out.println("XP-QPS is " + getXpqps());
-                System.out.println("XP-TPS is " + getXptps());
+                logger.info("AP Concurrency is " + getApclient());
+                logger.info("TP Concurrency is " + getTpclient());
+                logger.info("XP-IQ Concurrency is " + getXapclient());
+                logger.info("XP-AT Concurrency is " + getXtpclient());
+                logger.info("Total amount of TP Transaction is " + getTpTotal());
+                logger.info("TPS is " + getTps());
+                logger.info("Total amount of AP Queries is " + getApTotal());
+                logger.info("QPS is " + getQps());
+                logger.info("Total amount of XP-IQ Queries is " + getIqTotal());
+                logger.info("Total amount of XP-AT Transaction is " + getAtTotal());
+                logger.info("XP-QPS is " + getXpqps());
+                logger.info("XP-TPS is " + getXptps());
                 break;
             case 4:
-                System.out.println("XP-IQ Concurrency is " + getXapclient());
-                System.out.println("XP-AT Concurrency is " + getXtpclient());
-                System.out.println("Total amount of XP-IQ Queries is " + getIqTotal());
-                System.out.println("Total amount of XP-AT Transaction is " + getAtTotal());
-                System.out.println("Fresh-XP-QPS is " + getXpqps());
-                System.out.println("Fresh-XP-TPS is " + getXptps());
+                logger.info("XP-IQ Concurrency is " + getXapclient());
+                logger.info("XP-AT Concurrency is " + getXtpclient());
+                logger.info("Total amount of XP-IQ Queries is " + getIqTotal());
+                logger.info("Total amount of XP-AT Transaction is " + getAtTotal());
+                logger.info("Fresh-XP-QPS is " + getXpqps());
+                logger.info("Fresh-XP-TPS is " + getXptps());
                 break;
             case 6:
-                System.out.println("AP Concurrency is " + getApclient());
-                System.out.println("TP Concurrency is " + getTpclient());
-                System.out.println("Total amount of TP Transaction is " + getTpTotal());
-                System.out.println("TPS is " + getTps());
-                System.out.println("Total amount of AP Queries is " + getApTotal());
-                System.out.println("QPS is " + getQps());
-                System.out.println("XP-IQ Concurrency is " + getXapclient());
-                System.out.println("XP-AT Concurrency is " + getXtpclient());
-                System.out.println("Total amount of XP-IQ Queries is " + getIqTotal());
-                System.out.println("Total amount of XP-AT Transaction is " + getAtTotal());
-                System.out.println("Fresh-XP-QPS is " + getXpqps());
-                System.out.println("Fresh-XP-TPS is " + getXptps());
+                logger.info("AP Concurrency is " + getApclient());
+                logger.info("TP Concurrency is " + getTpclient());
+                logger.info("Total amount of TP Transaction is " + getTpTotal());
+                logger.info("TPS is " + getTps());
+                logger.info("Total amount of AP Queries is " + getApTotal());
+                logger.info("QPS is " + getQps());
+                logger.info("XP-IQ Concurrency is " + getXapclient());
+                logger.info("XP-AT Concurrency is " + getXtpclient());
+                logger.info("Total amount of XP-IQ Queries is " + getIqTotal());
+                logger.info("Total amount of XP-AT Transaction is " + getAtTotal());
+                logger.info("Fresh-XP-QPS is " + getXpqps());
+                logger.info("Fresh-XP-TPS is " + getXptps());
                 break;
 
         }
-        System.out.println("Query/Transaction response time(ms) histogram : ");
+        logger.info("Query/Transaction response time(ms) histogram : ");
         if( type == 2 || type == 6 || type == 7) {
             System.out.println("------------AP-------------------");
             for (int apidx = 0; apidx < 13; apidx++) {
@@ -275,39 +281,40 @@ public class Result {
         }
 
         if( type == 3 ) {
-            System.out.println("-----------HTAP-Summary--------------------");
-            System.out.println("-----------AP-Part--------------------");
-            System.out.printf("QPS : %10.2f \n",qps );
-            System.out.println("-----------TP-Part--------------------");
-            System.out.printf("TPS : %10.2f \n",tps );
-            System.out.println("-----------XP-Part--------------------");
-            System.out.printf("XP-QPS : %10.2f \n",xpqps );
-            System.out.printf("XP-TPS : %10.2f \n",xptps );
-            System.out.println("-----------HTAP-Score--------------------");
-            System.out.printf("Geometric Mean : %10.2f \n", Math.pow(qps*tps*(xpqps+xptps), 1/3.0));
+            logger.info("-----------HTAP-Summary--------------------");
+            logger.info("-----------AP-Part--------------------");
+            logger.info("QPS : "+qps );
+            logger.info("-----------TP-Part--------------------");
+            logger.info("TPS : "+tps );
+            logger.info("-----------XP-Part--------------------");
+            logger.info("XP-QPS : "+xpqps );
+            logger.info("XP-TPS : "+xptps );
+            logger.info("-----------HTAP-Score--------------------");
+            logger.info("Geometric Mean : "+Math.pow(qps*tps*(xpqps+xptps), 1/3.0));
+
         }
 
         if( type == 6 ) {
-            System.out.println("-----------HTAP-Summary--------------------");
-            System.out.println("-----------AP-Part--------------------");
-            System.out.printf("QPS : %10.2f \n",qps );
-            System.out.println("-----------TP-Part--------------------");
-            System.out.printf("TPS : %10.2f \n",tps );
-            System.out.println("-----------XP-Part--------------------");
-            System.out.printf("XP-QPS : %10.2f \n",xpqps );
-            System.out.printf("XP-TPS : %10.2f \n",xptps );
-            System.out.println("-----------Avg-Freshness-Score--------------------");
-            System.out.printf("Freshness(ms) : %10.2f \n", getFresh() * 1.0);
-            System.out.println("-----------HTAP-Score--------------------");
-            System.out.printf("Geometric Mean : %10.2f \n", Math.pow(qps*tps*(xpqps+xptps), 1/3.0)/(1+getFresh()/1000));
+            logger.info("-----------HTAP-Summary--------------------");
+            logger.info("-----------AP-Part--------------------");
+            logger.info("QPS : "+qps );
+            logger.info("-----------TP-Part--------------------");
+            logger.info("TPS : "+tps );
+            logger.info("-----------XP-Part--------------------");
+            logger.info("XP-QPS : "+xpqps );
+            logger.info("XP-TPS : "+xptps );
+            logger.info("-----------Avg-Freshness-Score--------------------");
+            logger.info("Freshness(ms) : "+getFresh() * 1.0);
+            logger.info("-----------HTAP-Score--------------------");
+            logger.info("Geometric Mean : "+Math.pow(qps*tps*(xpqps+xptps), 1/3.0)/(1+getFresh()/1000));
         }
 
         if(type == 4){
-            System.out.println("-----------Avg-Freshness-Score--------------------");
-            System.out.printf("Freshness(ms) : %10.2f \n", getFresh() * 1.0);
+            logger.info("-----------Avg-Freshness-Score--------------------");
+            logger.info("Freshness(ms) : "+ getFresh() * 1.0);
         }
 
-        System.out.println("====================Thank you!========================");
+        logger.info("====================Thank you!========================");
     }
 
 

@@ -683,4 +683,12 @@ sql = """SELECT * FROM
 from transfer t, customer c
 where t.targetid=? and t.targetid=c.custid and t.fresh_ts is not null
 order by t.fresh_ts DESC)
-WHERE ROWNUM<=1"""
+WHERE ROWNUM<=10"""
+
+[fresh-1]
+sql="""SELECT * FROM
+(select sa.accountID, sa.fresh_ts
+from savingaccount sa,company co,customer cu
+where sa.accountid=cu.custid and co.companyid=? and co.companyID = cu.companyID and sa.fresh_ts is not null
+ order by sa.fresh_ts DESC)
+ WHERE ROWNUM<=10"""

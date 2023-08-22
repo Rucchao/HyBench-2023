@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -212,7 +213,8 @@ public class HyBench {
         }
         Thread freshness = null;
         if(taskType == 4){
-            final Timestamp startTs = new Timestamp(System.currentTimeMillis());
+            final long startTs = System.currentTimeMillis();
+            //final long startTs = Instant.now().toEpochMilli();
             final int _duration = Integer.parseInt(ConfigLoader.prop.getProperty("xpRunMins"));
             final int _fresh_interval = Integer.parseInt(ConfigLoader.prop.getProperty("fresh_interval",String.valueOf(20)));
             String db = ConfigLoader.prop.getProperty("db");

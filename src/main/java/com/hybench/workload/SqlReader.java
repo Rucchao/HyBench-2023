@@ -53,6 +53,7 @@ public class SqlReader {
             sqls.setAp_iq5_1(toml.getString("IQ-5.1.sql"));
             sqls.setAp_iq6(toml.getString("IQ-6.sql"));
 
+            sqls.setTp_at00(getSqlArrayFromList(toml.getList("AT-00.sql")));
             sqls.setTp_at0(getSqlArrayFromList(toml.getList("AT-0.sql")));
             sqls.setTp_at1(getSqlArrayFromList(toml.getList("AT-1.sql")));
             sqls.setTp_at2(getSqlArrayFromList(toml.getList("AT-2.sql")));

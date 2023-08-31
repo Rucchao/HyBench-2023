@@ -1,3 +1,5 @@
+sqlldr user/passwd@//localhost:1521/hybench_sf1x control=data_loader/checkingaccount_loader.ctl log=/home/A1/loader.log
+
 sqlldr user/passwd@//localhost:1521/hybench_sf1x control=data_loader/savingaccount_loader.ctl log=/home/A1/loader.log
 
 sqlldr user/passwd@//localhost:1521/hybench_sf1x control=data_loader/checking_loader.ctl log=/home/A1/loader.log

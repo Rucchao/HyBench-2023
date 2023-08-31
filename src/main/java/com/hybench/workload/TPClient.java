@@ -14,9 +14,11 @@ import com.hybench.util.RandomGenerator;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.*;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 
 public class TPClient extends Client {
@@ -28,7 +30,6 @@ public class TPClient extends Client {
     int at6_percent = 3;
 
     int fresh_percent = 50;
-
     int tp1_percent = 5;
     int tp2_percent = 3;
     int tp3_percent = 5;
@@ -117,6 +118,86 @@ public class TPClient extends Client {
         return Id;
     }
 
+    public ClientResult execFresh(Connection conn) {
+        ClientResult cr = new ClientResult();
+        String type = null;
+
+        int sourceid = rg.getRandomint(1,customer_no+company_no);
+        // Get customized targetid
+
+        int targetId =testid1;
+
+        double amount = 0;
+        if(sourceid<customer_no){
+            type = rg.getRandomCustTransferType();
+            amount = rg.getRandomDouble(CR.customer_savingbalance * 0.0001);
+        }
+        else{
+            type = rg.getRandomCompanyTransferType();
+            amount = rg.getRandomDouble(CR.company_savingbalance * 0.0001);
+        }
+
+        PreparedStatement pstmt = null;
+        long responseTime = 0L;
+        try {
+            String[] statements= sqls.tp_at1();
+            String sql1=statements[0];
+            String sql2=statements[1];
+            String sql3=statements[2];
+            String sql4=statements[3];
+            String sql5=statements[4];
+            long currentStarttTs = System.currentTimeMillis();
+            // transaction begins
+            conn.setAutoCommit(false);
+
+            // update the source balance
+            pstmt= conn.prepareStatement(sql3);
+            pstmt.setDouble(1,amount);
+            pstmt.setInt(2,sourceid);
+            pstmt.executeUpdate();
+
+            // update the target balance
+            pstmt= conn.prepareStatement(sql4);
+            pstmt.setDouble(1,amount);
+            pstmt.setInt(2,targetId);
+            pstmt.executeUpdate();
+
+            // Insert into the Transfer
+            Date date = rg.getRandomTimestamp(CR.midPointDate, CR.endDate);
+            java.sql.Timestamp ts = new Timestamp(date.getTime());
+
+            pstmt= conn.prepareStatement(sql5);
+            pstmt.setInt(1,sourceid);
+            pstmt.setInt(2,targetId);
+            pstmt.setDouble(3,amount);
+            pstmt.setString(4,type);
+            pstmt.setTimestamp(5, ts);
+
+////            // TODO: Set it with UTC time
+//            java.sql.Timestamp fresh_ts = new Timestamp(Instant.now().minusMillis(TimeUnit.HOURS.toMillis(8)).toEpochMilli());
+//            pstmt.setTimestamp(6, ts);
+
+            pstmt.executeUpdate();
+            pstmt.close();
+            conn.commit();
+            long currentEndTs = System.currentTimeMillis();
+            responseTime = currentEndTs - currentStarttTs;
+            cr.setRt(responseTime);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            cr.setResult(false);
+            cr.setErrorMsg(e.getMessage());
+            cr.setErrorCode(String.valueOf(e.getErrorCode()));
+        }  finally {
+            try {
+                pstmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return cr;
+    }
+
     public ClientResult execFresh2(Connection conn){
         ClientResult cr = new ClientResult();
         String type = null;
@@ -174,63 +255,45 @@ public class TPClient extends Client {
         return cr;
     }
 
-    public ClientResult execFresh(Connection conn) {
+    public ClientResult execFresh3(Connection conn){
         ClientResult cr = new ClientResult();
         String type = null;
 
-        int sourceid = rg.getRandomint(1,customer_no+company_no);
-        // Get customized targetid
-
-        int targetId =testid1;
-
-        double amount = 0;
-        if(sourceid<customer_no){
-            type = rg.getRandomCustTransferType();
-            amount = rg.getRandomDouble(CR.customer_savingbalance * 0.0001);
-        }
-        else{
-            type = rg.getRandomCompanyTransferType();
-            amount = rg.getRandomDouble(CR.company_savingbalance * 0.0001);
-        }
-
+        int targetId =testid3;
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
         long responseTime = 0L;
         try {
-            String[] statements= sqls.tp_at1();
-            String sql1=statements[0];
-            String sql2=statements[1];
-            String sql3=statements[2];
-            String sql4=statements[3];
-            String sql5=statements[4];
+            String[] statements= sqls.tp_at00();
+            String sql0=statements[0];
+            String sql1=statements[1];
+
             long currentStarttTs = System.currentTimeMillis();
             // transaction begins
             conn.setAutoCommit(false);
 
-            // update the source balance
-            pstmt= conn.prepareStatement(sql3);
-            pstmt.setDouble(1,amount);
-            pstmt.setInt(2,sourceid);
+            // get top 10 employees
+            pstmt= conn.prepareStatement(sql0);
+            pstmt.setInt(1,targetId);
+
+            rs = pstmt.executeQuery();
+            int stopId = rg.getRandomint(1,10);
+            int idx = 1;
+            int custId = 0;
+            while(rs.next()){
+                custId = rs.getInt(1);
+                idx++;
+                if(idx == stopId){
+                    break;
+                }
+            }
+            // update ts
+            pstmt= conn.prepareStatement(sql1);
+            pstmt.setInt(1,custId);
             pstmt.executeUpdate();
 
-            // update the target balance
-            pstmt= conn.prepareStatement(sql4);
-            pstmt.setDouble(1,amount);
-            pstmt.setInt(2,targetId);
-            pstmt.executeUpdate();
+            delete_map2.put(custId, System.currentTimeMillis());
 
-            // Insert into the Transfer
-            Date date = rg.getRandomTimestamp(CR.midPointDate, CR.endDate);
-            java.sql.Timestamp ts = new Timestamp(date.getTime());
-            // TODO: Set it with current database time
-            // java.sql.Timestamp fresh_ts = new Timestamp(new Date().getTime());
-
-            pstmt= conn.prepareStatement(sql5);
-            pstmt.setInt(1,sourceid);
-            pstmt.setInt(2,targetId);
-            pstmt.setDouble(3,amount);
-            pstmt.setString(4,type);
-            pstmt.setTimestamp(5, ts);
-            pstmt.executeUpdate();
             pstmt.close();
             conn.commit();
             long currentEndTs = System.currentTimeMillis();
@@ -250,6 +313,7 @@ public class TPClient extends Client {
         }
         return cr;
     }
+
 
     // 6 Analytical Transactions (AT)
     public ClientResult execAT1(Connection conn) {
@@ -2235,11 +2299,14 @@ public class TPClient extends Client {
                 while(!exitFlag){
                     int rand = ThreadLocalRandom.current().nextInt(1, 100);
                     if(type == 4 && Thread.currentThread().getName().equalsIgnoreCase("T1")){
-                        if(rand < fresh_percent/2){
-                            cr= execFresh(conn);
+//                        if(rand < fresh_percent){
+//                            cr= execFresh3(conn);
+//                        }
+                       if(rand < fresh_percent/2){
+                            cr= execFresh2(conn);
                         }
                         else if(rand < fresh_percent){
-                           cr= execFresh2(conn);
+                           cr= execFresh(conn);
                         }
                         else
                             continue;

@@ -44,6 +44,7 @@ public class Sqlstmts {
     private  String[] tp_txn17 = null;
     private  String[] tp_txn18 = null;
     // AT SQLs, total 6
+    private  String[] tp_at00 = null;
     private  String[] tp_at0 = null;
     private  String[] tp_at1 = null;
     private  String[] tp_at2 = null;
@@ -450,6 +451,12 @@ public class Sqlstmts {
 
     public void setTp_at0(String[] tp_at0) {
         this.tp_at0 = tp_at0;
+    }
+
+    public String[] tp_at00() { return tp_at00; }
+
+    public void setTp_at00(String[] tp_at00) {
+        this.tp_at00 = tp_at00;
     }
 
     public String tp_at6_1() {

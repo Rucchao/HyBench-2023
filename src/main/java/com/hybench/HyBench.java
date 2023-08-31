@@ -214,6 +214,7 @@ public class HyBench {
         Thread freshness = null;
         if(taskType == 4){
             final long startTs = System.currentTimeMillis();
+            //System.out.println("Start time is "+Instant.now());
             //final long startTs = Instant.now().toEpochMilli();
             final int _duration = Integer.parseInt(ConfigLoader.prop.getProperty("xpRunMins"));
             final int _fresh_interval = Integer.parseInt(ConfigLoader.prop.getProperty("fresh_interval",String.valueOf(20)));

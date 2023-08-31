@@ -40,7 +40,8 @@ CREATE TABLE SAVINGACCOUNT
                 userID    int            ,
                 balance   real           ,
                 Isblocked int            ,
-                timestamp timestamp
+                timestamp timestamp,
+                fresh_ts timestamp default current_timestamp
         );
 CREATE TABLE CHECKINGACCOUNT
         (

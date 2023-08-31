@@ -51,10 +51,11 @@ public abstract class Client {
     int round = 1;
     static int testid1=1;
     static int testid2=300001;
+    static int testid3=300001;
     List<Integer> Related_Blocked_Transfer_ids=null;
     List<Integer> Related_Blocked_Checking_ids=null;
-    static HashSet<Integer> delete_set1 = new HashSet <Integer>();
-    static HashSet<Integer> delete_set2 = new HashSet <Integer>();
+    static HashMap<Integer, Long> delete_map1 = new HashMap<Integer, Long>();
+    static  HashMap<Integer, Long> delete_map2 = new HashMap<Integer, Long>();
     RandomGenerator rg = new RandomGenerator();
 
     double risk_rate=0;
@@ -68,6 +69,10 @@ public abstract class Client {
 
     public void setTestid2(int random_num){
         this.testid2 = random_num;
+    }
+
+    public void setTestid3(int random_num){
+        this.testid3 = random_num;
     }
 
     public void setVerbose(boolean verbose){
@@ -219,6 +224,9 @@ public abstract class Client {
 
 	    int random_num2=rg.getRandomint(customer_no, customer_no+company_no);
         setTestid2(random_num2);
+
+        int random_num3=rg.getRandomint(customer_no, customer_no+company_no);
+        setTestid3(random_num3);
 
         try {
             // load the blocking-related transfer accounts

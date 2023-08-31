@@ -21,8 +21,8 @@ primary key(custid)
 
 CREATE TABLE company (
 companyID int,
-name varchar,
-category varchar,
+name varchar(50),
+category varchar(50),
 staff_size int,
 loan_balance real,
 phone char(11),

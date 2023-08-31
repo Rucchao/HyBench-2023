@@ -274,6 +274,11 @@ sql = [
     "UPDATE SAVINGACCOUNT SET BALANCE = BALANCE + ? WHERE ACCOUNTID = ?"
 ]
 
+[AT-00]
+sql= [
+    "select custID from customer where companyID = ? order by created_date ASC limit 10",
+    "delete from savingAccount where accountID = ?"
+]
 
 [AT-1]
 sql = [

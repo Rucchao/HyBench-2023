@@ -1,96 +1,92 @@
-CREATE TABLE IF NOT EXISTS  customer (
-custID int ,
+CREATE TABLE customer (
+custID int PRIMARY KEY,
 companyID int,
-gender varchar(6),
-name varchar(15),
+gender char(6),
+name char(15),
 age int,
-phone varchar(11),
-province varchar(15),
-city varchar(15),
-loan_balance decimal(15,2),
+phone char(11),
+province char(15),
+city char(15),
+loan_balance real,
 saving_credit int,
 checking_credit int,
 loan_credit int,
 Isblocked int,
 created_date Date,
-last_update_timestamp timestamp default current_timestamp,
-primary key(custid)
+last_update_timestamp timestamp
 );
 
-CREATE TABLE IF NOT EXISTS  company (
+CREATE TABLE company (
 companyID int PRIMARY KEY,
-name varchar(100),
-category varchar(100),
+name varchar,
+category varchar,
 staff_size int,
-loan_balance decimal(15,2),
-phone varchar(11),
-province varchar(15),
-city varchar(15),
+loan_balance real,
+phone char(11),
+province char(15),
+city char(15),
 saving_credit int,
 checking_credit int,
 loan_credit int,
 Isblocked int,
 created_date Date,
-last_update_timestamp timestamp default current_timestamp
+last_update_timestamp timestamp
 );
 
 
-CREATE TABLE IF NOT EXISTS  savingAccount (
+CREATE TABLE savingAccount (
  accountID int PRIMARY KEY,
  userID int,
- balance decimal(15,2),
+ balance real,
  Isblocked int,
- savingAccount_ts timestamp default current_timestamp
+ timestamp timestamp,
+ fresh_ts timestamp  default current_timestamp
 );
 
-CREATE TABLE IF NOT EXISTS  checkingAccount (
+CREATE TABLE checkingAccount (
 accountID int PRIMARY KEY,
 userID int,
-balance decimal(15,2),
+balance real,
 Isblocked int,
-checkingAccount_ts timestamp
+timestamp timestamp
 );
 
-CREATE TABLE IF NOT EXISTS  transfer (
-  id bigint  auto_increment ,
+CREATE TABLE transfer (
+  id int PRIMARY KEY,
   sourceID int,
   targetID int,
-  amount decimal(15,2),
-  type varchar(100),
-  transfer_ts timestamp default current_timestamp,
-  fresh_ts timestamp  default current_timestamp,
-  PRIMARY KEY(id)
+  amount real,
+  type char(10),
+  timestamp timestamp,
+  fresh_ts timestamp  default current_timestamp
 );
 
-CREATE TABLE IF NOT EXISTS  checking (
-  id int auto_increment,
+CREATE TABLE checking (
+  id int PRIMARY KEY,
   sourceID int,
   targetID int,
-  amount decimal(15,2),
-  type varchar(100),
-  checking_ts timestamp default current_timestamp,
-   PRIMARY KEY(id)
+  amount real,
+  type char(10),
+  timestamp timestamp
 );
 
-CREATE TABLE IF NOT EXISTS  loanapps (
-  id int auto_increment,
+CREATE TABLE loanapps (
+  id int PRIMARY KEY,
   applicantID int,
-  amount decimal(15,2),
+  amount real,
   duration int,
-  status varchar(12),
-  loanapps_ts timestamp default current_timestamp,
-  PRIMARY KEY(id)
+  status char(12),
+  timestamp timestamp
 );
 
-CREATE TABLE IF NOT EXISTS  loantrans (
-  id int auto_increment,
+CREATE TABLE loantrans (
+  id int PRIMARY KEY,
   applicantID int,
   appID int,
-  amount decimal(15,2),
-  status varchar(12),
-  loantrans_ts timestamp,
+  amount real,
+  status char(12),
+  timestamp timestamp,
   duration int,
-  contract_timestamp timestamp default current_timestamp,
-  delinquency int,
-  PRIMARY KEY(id)
-) ;
+  contract_timestamp timestamp,
+  delinquency int
+);

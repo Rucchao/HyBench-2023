@@ -5,7 +5,6 @@ classname=org.postgresql.Driver
 username=postgres
 password=postgres
 
-
 url=jdbc:postgresql://localhost:5432/hybench_sf1x
 url_tp=jdbc:postgresql://localhost:5432/hybench_sf1x
 url_ap=jdbc:postgresql://localhost:5432/hybench_sf1x

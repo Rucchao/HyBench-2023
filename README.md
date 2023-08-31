@@ -66,11 +66,17 @@ Solution: java -cp "HyBench-1.0-SNAPSHOT.jar;lib/*" com.hybench.HyBench [-t][-c]
 Solution: modify the path to data directory in the conf/load_data_pg.sql file. For instance, replace 'Data_1x/customer.csv' with 'Data_10x/customer.csv'
 ```
 
-(5) Benchmarking other HTAP databases
+(5) java.util.concurrent.ExecutionException: java.lang.NullPointerException: Cannot invoke "java.util.List.size()" because "this.Related_Blocked_Checking_ids" is null
+
+```
+Solution: make sure the data directory is under the working path and contains two files: 'Related_checking_bids' with Related_transfer_bids'
+```
+
+(6) Benchmarking other HTAP databases
 
 Please refer to [wiki](https://github.com/Rucchao/HyBench-2023/wiki) for benchmarking more HTAP databases.
 
-(6) Benchmarking Parameters
+(7) Benchmarking Parameters
 
 ### Parameter List
 

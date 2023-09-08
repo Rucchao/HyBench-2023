@@ -88,8 +88,10 @@ public class DataGenerator_RiskControlling {
         Long companyNumber = CR.company_number;
         int customer_size = customerNumber.intValue();
         int company_size = companyNumber.intValue();
+        int account_bound = customerNumber.intValue() + companyNumber.intValue();
+        int blocked_num = (int) (account_bound * CR.prob_blocked);
 
-        // Generate 1% blocked ids
+        // Generate blocked ids with prob_blocked
         Set<Integer> Blocked_ids = new HashSet<>();
         // AT1 Risk Controlling
         List<Integer> Related_Blocked_Transfer_ids = new ArrayList<>();
@@ -100,8 +102,6 @@ public class DataGenerator_RiskControlling {
         FileWriter blocked_checking_fileWriter = null;
         BufferedWriter blocked_checking_bufferedWriter = null;
 
-        int account_bound = customerNumber.intValue() + companyNumber.intValue();
-        int blocked_num = (int) (account_bound * 0.01);
         for (int i = 0; i < blocked_num; i++) {
             int id = RG.getRandomint(account_bound);
             Blocked_ids.add(id);

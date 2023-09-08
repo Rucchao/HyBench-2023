@@ -50,6 +50,7 @@ public class ConfigReader {
     public long loantrans_number;
     public double cust_rate;
     public double loan_rate;
+    public double prob_blocked;
     public ConfigReader(String scale_factor){
         load("parameters.toml", scale_factor);
     }
@@ -72,6 +73,7 @@ public class ConfigReader {
             endDate = new SimpleDateFormat("yyyy-MM-dd").parse(endDate_str);
             loanDate = new SimpleDateFormat("yyyy-MM-dd").parse(loanDate_str);
             cust_rate = toml.getDouble(scale_factor + ".cust_rate").doubleValue();
+            prob_blocked = toml.getDouble(scale_factor + ".prob_blocked").doubleValue();
             savingaccount_datapath = toml.getString(scale_factor + ".savingaccount_datapath");
             checkingaccount_datapath = toml.getString(scale_factor + ".checkingaccount_datapath");
             transfer_number = toml.getLong(scale_factor + ".transfer_number");

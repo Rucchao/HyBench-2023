@@ -57,7 +57,7 @@ Solution: modify the path to lib directory in the hybench file
 Solution: when the Maven version is greater than 3.8, you need to remove the tags of blocked mirrors of $Maven_home/conf/settings.xml. 
 ```
 
-(3) With the Window OS, you may use the Java command to run HyBench: 
+(3) With the OS in Windows, you may use the Java command to run HyBench: 
 ```
 Solution: java -cp "HyBench-1.0-SNAPSHOT.jar;lib/*" com.hybench.HyBench [-t][-c][-f]
 ```

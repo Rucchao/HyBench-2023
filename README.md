@@ -72,11 +72,16 @@ Solution: modify the path to data directory in the conf/load_data_pg.sql file. F
 Solution: make sure the data directory is under the working path and contains two files: 'Related_checking_bids' with Related_transfer_bids'
 ```
 
-(6) Benchmarking other HTAP databases
+(6) Fail to generate data
+```
+make sure the user has the write permission to the folder or use the sudo command: sudo bash hybench -t gendata -c conf/pg.props -f conf/stmt_postgres.toml
+```
+
+(7) Benchmarking other HTAP databases
 
 Please refer to [wiki](https://github.com/Rucchao/HyBench-2023/wiki) for benchmarking more HTAP databases.
 
-(7) Benchmarking Parameters
+(8) Benchmarking Parameters
 
 ### Parameter List
 
@@ -108,5 +113,5 @@ Please refer to [wiki](https://github.com/Rucchao/HyBench-2023/wiki) for benchma
 | xapclient      | 1                                         | XP-IQS concurrency                                                                |                                          |   |
 | apround        | 1                                         | AP round，at least 1 round should be evaluated                                                                | AP Power test                      |   |
 
-(7) Please refer to [parameters.toml](https://github.com/Rucchao/HyBench-2023/blob/master/src/main/resources/parameters.toml) for the parameters of data generation.
+(9) Please refer to [parameters.toml](https://github.com/Rucchao/HyBench-2023/blob/master/src/main/resources/parameters.toml) for the parameters of data generation.
 

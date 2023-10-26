@@ -77,7 +77,7 @@ Solution: make sure the data directory is under the working path and contains tw
 make sure the user has the write permission to the folder or use the sudo command: sudo bash hybench -t gendata -c conf/pg.props -f conf/stmt_postgres.toml
 ```
 
-(7) Benchmarking other HTAP databases
+(7) Benchmarking other HTAP databases in the paper (A1, A2, A3 and A4)
 
 Please refer to [wiki](https://github.com/Rucchao/HyBench-2023/wiki) for benchmarking more HTAP databases.
 

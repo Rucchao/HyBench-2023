@@ -1,14 +1,14 @@
 #support mysql pg and oracle
 db=mysql
 classname=com.mysql.jdbc.Driver
-username=root
-password=9+H3-rRS5_P68gvE@4
-url=jdbc:mysql://localhost:4000/hybench_sf1x?useUnicode=true&characterEncoding=utf-8
+username=root@tenant1
+password=
+url=jdbc:oceanbase://localhost:2881/hybench_sf1x?useUnicode=true&characterEncoding=utf-8
 
-url_ap=jdbc:mysql://localhost:4000/hybench_sf1x?useUnicode=true&characterEncoding=utf-8
+url_ap=jdbc:oceanbase://localhost:2881/hybench_sf1x?useUnicode=true&characterEncoding=utf-8
 classname_ap=com.mysql.jdbc.Driver
-username_ap=root
-password_ap=9+H3-rRS5_P68gvE@4
+username_ap=root@tenant1
+password_ap=
 
 ## support 1x, 10x,100x,1000x
 sf=1x

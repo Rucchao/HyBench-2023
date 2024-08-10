@@ -120,7 +120,7 @@ between '2023-11-01' and (cast('2023-11-01' as date) + 60))
 group by c.name order by total_revenue DESC;"""
 
 [AP-10]
-sql = """With big_account_inbound as (select t.targetid as id, c.name as name, t.amount as amount
+sql = """With big_account_inbound as (select t.targetid as id, c.name as name, sum(t.amount) as amount
 from customer c, transfer t
 where date(t.timestamp::timestamp) between '2023-11-01' and (cast('2023-11-01' as date) + 60)
 and c.custid=t.targetid

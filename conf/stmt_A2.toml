@@ -345,7 +345,7 @@ and t1.status='accept'  ORDER BY t1.id LIMIT 1;
 
 [AT-5]
 sql = [
-"SELECT id FROM LoanTrans WHERE applicantID = ? and date(contract_timestamp) + duration < str_to_date('2024-01-01','%Y-%m-%d') and status!='lent';",
+"SELECT id FROM LoanTrans WHERE applicantID = ? and date(contract_timestamp) + duration < str_to_date('2024-01-01','%Y-%m-%d') and status='lent';",
 " UPDATE LoanTrans SET delinquency=1 where id = ?"
 ]
 

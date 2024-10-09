@@ -5,6 +5,7 @@ Please refer to our [VLDB 2024 Research Paper](https://vldb.org/pvldb/volumes/17
 ```
 Zhang, Chao, Guoliang Li, and Tao Lv. "HyBench: A New Benchmark for HTAP Databases." Proceedings of the VLDB Endowment 17.5 (2024): 939-951.
 ```
+Please cite our paper as follows:
 
 @article{zhang2024hybench,
   title={HyBench: A New Benchmark for HTAP Databases},\

@@ -7,7 +7,9 @@ Zhang, Chao, Guoliang Li, and Tao Lv. "HyBench: A New Benchmark for HTAP Databas
 ```
 
 @article{zhang2024hybench,
+
   title={HyBench: A New Benchmark for HTAP Databases},
+  
   author={Zhang, Chao and Li, Guoliang and Lv, Tao},
   journal={Proceedings of the VLDB Endowment},
   volume={17},
